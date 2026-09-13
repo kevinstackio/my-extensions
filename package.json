@@ -11,7 +11,9 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "tg:dev": "pnpm --filter @my-extensions/tg-download dev",
+    "tg:build": "pnpm --filter @my-extensions/tg-download build"
   },
   "devDependencies": {
     "turbo": "2.10.12"
