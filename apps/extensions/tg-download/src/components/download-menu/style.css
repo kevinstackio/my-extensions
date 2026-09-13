@@ -1,0 +1,56 @@
+.tg-download-menu {
+  --tg-download-icon: url("~/assets/icons/download.svg?no-inline");
+  --tg-download-loader: url("~/assets/icons/loader.svg?no-inline");
+  position: fixed;
+  z-index: 2147483647;
+  opacity: 1;
+  transition: opacity .3s ease;
+}
+
+.tg-download-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  padding: 9px 14px;
+  border-radius: 7px;
+  background: #2481cc;
+  color: #fff;
+  cursor: pointer;
+  font: 14px system-ui, sans-serif;
+}
+
+.tg-download-menu__item:hover:not(:disabled) {
+  background: #1d6fae;
+}
+
+.tg-download-menu__item:disabled {
+  cursor: progress;
+  opacity: .75;
+}
+
+.tg-download-menu--leaving {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.tg-download-menu__icon {
+  width: 16px;
+  height: 16px;
+  background-color: currentcolor;
+  mask: center / contain no-repeat var(--tg-download-icon);
+  -webkit-mask: center / contain no-repeat var(--tg-download-icon);
+}
+
+.tg-download-menu__item[data-state='loading'] .tg-download-menu__icon {
+  mask-image: var(--tg-download-loader);
+  -webkit-mask-image: var(--tg-download-loader);
+  animation: tg-download-spin .8s linear infinite;
+}
+
+@keyframes tg-download-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
