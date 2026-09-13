@@ -4,3 +4,5 @@ docs/
 .vscode/
 node_modules/
 .turbo/
+.wxt/
+dist/

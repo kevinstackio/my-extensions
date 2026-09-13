@@ -4,7 +4,7 @@
 
 ```text
 my-extensions/
-├─ apps/                    # 应用项目
+├─ apps/                   # 应用项目
 │  ├─ extensions/          # Chrome 和 Edge 扩展
 │  │  ├─ my-tabs/          # 我的标签页
 │  │  └─ tg-download/      # Telegram 资源下载插件
