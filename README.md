@@ -24,3 +24,9 @@ my-extensions/
 
 ## TG Download
 在 Telegram Web 中右键保存图片和视频。
+
+## 项目文档
+
+- [Monorepo 使用指南](docs/monorepo.md)
+- [WXT 使用指南](docs/wxt.md)
+- [扩展迁移到 WXT](docs/migrations/extension-to-wxt.md)

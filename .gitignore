@@ -31,5 +31,5 @@ bun-debug.log*
 .env.*
 !.env.example
 
-# 根目录生成文档
-/docs/
+# 生成的内部文档
+/docs/superpowers/
