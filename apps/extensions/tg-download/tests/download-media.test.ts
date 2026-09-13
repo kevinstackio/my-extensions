@@ -16,8 +16,7 @@ describe('媒体保存', () => {
   it('用户取消保存时不请求媒体', async () => {
     const fetchMedia = vi.fn();
     const menu = createMenu();
-    const error = new Error('取消保存');
-    error.name = 'AbortError';
+    const error = { name: 'AbortError' };
 
     await saveMedia(
       { tagName: 'IMG', currentSrc: '', src: 'blob:test' },
@@ -33,6 +32,38 @@ describe('媒体保存', () => {
 
     expect(fetchMedia).not.toHaveBeenCalled();
     expect(menu.close).toHaveBeenCalledOnce();
+  });
+
+  it('调用原生文件选择器时保留 Window 接收对象', async () => {
+    const runtime = globalThis as typeof globalThis & {
+      showSaveFilePicker?: (options: unknown) => Promise<unknown>;
+    };
+    const previous = Object.getOwnPropertyDescriptor(runtime, 'showSaveFilePicker');
+    let receiver: unknown;
+
+    Object.defineProperty(runtime, 'showSaveFilePicker', {
+      configurable: true,
+      value: function (this: unknown) {
+        receiver = this;
+        const error = new Error('取消保存');
+        error.name = 'AbortError';
+        throw error;
+      },
+    });
+
+    try {
+      await saveMedia(
+        { tagName: 'IMG', currentSrc: '', src: 'blob:test' },
+        createMenu(),
+      );
+      expect(receiver).toBe(runtime);
+    } finally {
+      if (previous) {
+        Object.defineProperty(runtime, 'showSaveFilePicker', previous);
+      } else {
+        delete runtime.showSaveFilePicker;
+      }
+    }
   });
 
   it('完整响应直接写入并关闭文件', async () => {

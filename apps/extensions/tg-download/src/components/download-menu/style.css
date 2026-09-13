@@ -1,6 +1,4 @@
 .tg-download-menu {
-  --tg-download-icon: url("~/assets/icons/download.svg?no-inline");
-  --tg-download-loader: url("~/assets/icons/loader.svg?no-inline");
   position: fixed;
   z-index: 2147483647;
   opacity: 1;

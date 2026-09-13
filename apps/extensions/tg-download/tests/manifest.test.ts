@@ -24,7 +24,7 @@ describe('WXT 扩展清单', () => {
     expect(action.default_icon).toEqual(icons);
     expect(accessible).toEqual([{
       matches: ['https://web.telegram.org/*'],
-      resources: ['/assets/*.svg'],
+      resources: ['/icon/*.svg'],
     }]);
   });
 
@@ -48,6 +48,17 @@ describe('WXT 扩展清单', () => {
 
       expect(icon.readUInt32BE(16)).toBe(size);
       expect(icon.readUInt32BE(20)).toBe(size);
+    }
+  });
+
+  it('按钮状态 SVG 位于公共扩展资源目录', async () => {
+    for (const name of ['download', 'loader']) {
+      const svg = await readFile(
+        new URL('../public/icon/' + name + '.svg', import.meta.url),
+        'utf8',
+      );
+
+      expect(svg).toContain('<svg');
     }
   });
 });

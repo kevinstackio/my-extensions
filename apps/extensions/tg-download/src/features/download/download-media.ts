@@ -46,8 +46,17 @@ function defaultDependencies(): SaveMediaDependencies {
     logger: console,
     now: Date.now,
     setTimeout: globalThis.setTimeout.bind(globalThis),
-    showSaveFilePicker: runtime.showSaveFilePicker,
+    showSaveFilePicker: runtime.showSaveFilePicker?.bind(runtime),
   };
+}
+
+function isAbortError(error: unknown): boolean {
+  return Boolean(
+    error
+    && typeof error === 'object'
+    && 'name' in error
+    && error.name === 'AbortError',
+  );
 }
 
 export async function saveMedia(
@@ -94,7 +103,7 @@ export async function saveMedia(
       menu.dismiss(300);
     }, remaining);
   } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
+    if (isAbortError(error)) {
       menu.close();
       return;
     }

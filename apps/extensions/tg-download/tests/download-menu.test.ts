@@ -108,14 +108,13 @@ describe('下载菜单', () => {
     expect(card.removed).toBe(true);
   });
 
-  it('菜单样式引用独立 SVG 文件而不是内联数据', async () => {
+  it('菜单样式不内联 SVG，由运行时注入资源 URL', async () => {
     const css = await readFile(
       new URL('../src/components/download-menu/style.css', import.meta.url),
       'utf8',
     );
 
-    expect(css).toContain('~/assets/icons/download.svg?no-inline');
-    expect(css).toContain('~/assets/icons/loader.svg?no-inline');
+    expect(css).not.toMatch(/url\(/);
     expect(css).not.toContain('data:image/svg+xml');
   });
 });

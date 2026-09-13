@@ -25,7 +25,7 @@ export default defineConfig({
     web_accessible_resources: [
       {
         matches: ['https://web.telegram.org/*'],
-        resources: ['/assets/*.svg'],
+        resources: ['/icon/*.svg'],
       },
     ],
   },
