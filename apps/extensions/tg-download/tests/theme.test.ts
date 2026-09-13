@@ -23,7 +23,7 @@ describe('系统主题同步', () => {
     });
   });
 
-  it('工具栏图标使用 public 中的固定路径', () => {
+  it('工具栏图标使用构建输出中的固定路径', () => {
     expect(actionIconPaths.light).toEqual({
       16: '/icon/tg-download-light-16.png',
       32: '/icon/tg-download-light-32.png',

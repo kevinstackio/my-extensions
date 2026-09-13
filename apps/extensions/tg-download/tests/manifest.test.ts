@@ -28,6 +28,28 @@ describe('WXT 扩展清单', () => {
     }]);
   });
 
+  it('把源码资源映射到扩展输出的 icon 目录', () => {
+    const hooks = config.hooks as Record<string, (wxt: unknown, value: unknown[]) => void>;
+    const paths: unknown[] = [];
+    const files: unknown[] = [];
+
+    hooks['prepare:publicPaths']?.({}, paths);
+    hooks['build:publicAssets']?.({}, files);
+
+    expect(paths).toEqual(expect.arrayContaining([
+      '/icon/tg-download-16.png',
+      '/icon/tg-download-128.png',
+      '/icon/download.svg',
+      '/icon/loader.svg',
+    ]));
+    expect(files).toEqual(expect.arrayContaining([
+      expect.objectContaining({ relativeDest: 'icon/tg-download-16.png' }),
+      expect.objectContaining({ relativeDest: 'icon/tg-download-128.png' }),
+      expect.objectContaining({ relativeDest: 'icon/download.svg' }),
+      expect.objectContaining({ relativeDest: 'icon/loader.svg' }),
+    ]));
+  });
+
   it('两个内容脚本声明正确的执行世界和时机', () => {
     expect(themeEntrypoint).toMatchObject({
       matches: ['https://web.telegram.org/*'],
@@ -43,7 +65,7 @@ describe('WXT 扩展清单', () => {
   it('固定品牌图标的 PNG 尺寸正确', async () => {
     for (const size of sizes) {
       const icon = await readFile(
-        new URL('../public/icon/tg-download-' + size + '.png', import.meta.url),
+        new URL('../src/assets/logo/tg-download-' + size + '.png', import.meta.url),
       );
 
       expect(icon.readUInt32BE(16)).toBe(size);
@@ -51,10 +73,10 @@ describe('WXT 扩展清单', () => {
     }
   });
 
-  it('按钮状态 SVG 位于公共扩展资源目录', async () => {
+  it('按钮状态 SVG 位于源码资源目录', async () => {
     for (const name of ['download', 'loader']) {
       const svg = await readFile(
-        new URL('../public/icon/' + name + '.svg', import.meta.url),
+        new URL('../src/assets/icons/' + name + '.svg', import.meta.url),
         'utf8',
       );
 

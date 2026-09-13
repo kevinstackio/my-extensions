@@ -6,11 +6,10 @@
 
 ```text
 tg-download/
-├─ public/
-│  └─ icon/              # Manifest 与工具栏使用的固定图标
 ├─ src/
 │  ├─ assets/
-│  │  └─ icons/          # 组件使用并参与构建的 SVG 图标
+│  │  ├─ icons/          # 下载按钮使用的 SVG 图标
+│  │  └─ logo/           # Manifest 与工具栏使用的品牌图标
 │  ├─ components/
 │  │  └─ download-menu/  # 下载菜单组件
 │  ├─ entrypoints/       # WXT 扩展入口
