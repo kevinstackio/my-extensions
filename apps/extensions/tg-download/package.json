@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@my-extensions/stable-extension-dev": "1.0.0",
     "@types/chrome": "0.2.9",
     "@types/node": "24.13.4",
     "typescript": "7.0.2",

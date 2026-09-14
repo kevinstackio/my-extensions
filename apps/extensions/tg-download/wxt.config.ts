@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 
+import { createStableDevelopmentHooks } from '@my-extensions/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
 const logoFiles = [
@@ -35,6 +36,7 @@ export default defineConfig({
   srcDir: 'src',
   outDir: 'dist',
   hooks: {
+    ...createStableDevelopmentHooks(),
     'prepare:publicPaths': (_, paths) => {
       paths.push(...outputIconPaths);
     },
