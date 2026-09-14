@@ -99,19 +99,11 @@ apps/extensions/tg-download/dist/chrome-mv3/
 
 ### 稳定开发目录
 
-WXT 的开发构建会先清空临时目录，因此浏览器不得直接加载：
+WXT 的开发构建会重建临时输出目录，因此浏览器不得直接加载该目录。接入稳定开发产物机制的扩展，应让浏览器加载项目约定的 `*-dev-stable` 目录。
 
-```text
-apps/extensions/tg-download/dist/chrome-mv3-dev/
-```
+只有完整开发构建成功后，稳定目录才会更新；构建失败时继续保留上一份成功产物。该机制不改变项目原有的开发命令，也不要求额外启动常驻脚本或终端。
 
-仓库公共工具 `packages/stable-extension-dev` 已通过 `wxt.config.ts` 的 `build:done` hook 接入 `tg-download`。每次开发构建成功后，它会先校验 `manifest.json` 和 WXT 输出文件，再把完整产物发布到：
-
-```text
-apps/extensions/tg-download/dist/chrome-mv3-dev-stable/
-```
-
-浏览器应始终加载 `chrome-mv3-dev-stable`。构建失败时，公共工具不会执行发布，稳定目录继续保留上一份成功产物；恢复代码并重新构建成功后，稳定目录才会更新。开发者不需要额外启动常驻脚本或终端，继续运行 `pnpm tg:dev` 即可。
+具体接入方式和发布规则见 [`stable-extension-dev` README](../packages/stable-extension-dev/README.md)。
 
 ## 浏览器加载
 

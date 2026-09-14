@@ -16,6 +16,7 @@ import {
 } from 'node:path';
 
 const nodeFileSystem = {
+  // 默认使用 Node 文件系统；测试可以注入替代实现来模拟跨平台异常。
   cp,
   lstat,
   mkdir,
@@ -38,6 +39,7 @@ export async function publishStableBuild({
   requiredFiles = [],
   fileSystem = nodeFileSystem,
 }) {
+  // 先校验源目录，再在稳定目录旁创建暂存目录，避免半成品直接暴露给浏览器。
   const sourcePath = resolve(sourceDir);
   const targetPath = resolve(targetDir);
 
@@ -48,6 +50,7 @@ export async function publishStableBuild({
   const normalizedRequiredFiles = normalizeRequiredFiles(requiredFiles);
   await validateBuild(sourcePath, normalizedRequiredFiles, fileSystem);
 
+  // 暂存目录和备份目录必须与目标目录同级，保证目录替换发生在同一文件系统内。
   const stagingPath = `${targetPath}.staging-${randomUUID()}`;
   const backupPath = `${targetPath}.backup-${randomUUID()}`;
   let stagingExists = false;
@@ -61,10 +64,12 @@ export async function publishStableBuild({
       force: true,
     });
     stagingExists = true;
+    // 复制完成后再次校验，防止复制过程中的文件缺失进入稳定目录。
     await validateBuild(stagingPath, normalizedRequiredFiles, fileSystem);
 
     if (await pathExists(targetPath, fileSystem)) {
       try {
+        // 先暂存旧版本，只有新版本安装成功后才清理它。
         await fileSystem.rename(targetPath, backupPath);
         backupExists = true;
       } catch (error) {
@@ -76,6 +81,7 @@ export async function publishStableBuild({
     }
 
     try {
+      // 同级 rename 完成目录切换；失败时立即尝试恢复旧版本。
       await fileSystem.rename(stagingPath, targetPath);
       stagingExists = false;
     } catch (error) {
@@ -99,6 +105,7 @@ export async function publishStableBuild({
 
     if (backupExists) {
       try {
+        // 旧版本只在新版本已经成为目标目录后才允许清理。
         await fileSystem.rm(backupPath, {
           recursive: true,
           force: true,
@@ -129,8 +136,10 @@ export function createStableDevelopmentHooks({ suffix = '-stable' } = {}) {
 
   return {
     'build:done': async (wxt, output) => {
+      // 生产构建仍使用 WXT 原始输出，不额外维护稳定目录。
       if (wxt.config.command !== 'serve') return;
 
+      // WXT 的构建报告提供公共资源和 chunk，全部纳入发布前校验。
       const requiredFiles = [
         'manifest.json',
         ...(output?.publicAssets ?? []).map(asset => asset.fileName),
@@ -194,6 +203,7 @@ async function validateBuild(directory, requiredFiles, fileSystem) {
     }
   }
 
+  // Manifest 是扩展能否被浏览器识别的最低完整性检查。
   let manifest;
   try {
     manifest = JSON.parse(
