@@ -69,11 +69,13 @@ pnpm --filter @my-extensions/<项目名> build
 pnpm --filter @my-extensions/<项目名> test
 ```
 
-当前 TG Download 已提供：
+当前 WXT 扩展已提供：
 
 ```bash
 pnpm tg:dev
 pnpm tg:build
+pnpm tabs:dev
+pnpm tabs:build
 ```
 
 ## 新增 Node 项目
@@ -88,7 +90,7 @@ pnpm tg:build
 
 ## 共享配置边界
 
-当前只有 TG Download 完成 WXT 化，因此暂不提取共享 WXT、TypeScript 或 Vitest 配置。My Tabs 完成迁移后，再比较两个项目的共同部分：
+TG Download 与 My Tabs 均已完成 WXT 化，但暂不提取共享 WXT、TypeScript 或 Vitest 配置。两个项目的共同部分应在形成稳定重复模式后再考虑提取：
 
 - 完全相同且会持续同步的配置可以提取到 `packages`。
 - Manifest 权限、入口、页面和业务代码继续留在各自项目中。

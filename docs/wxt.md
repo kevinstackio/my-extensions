@@ -2,7 +2,7 @@
 
 WXT 是浏览器扩展的开发和构建框架，负责入口发现、Manifest 生成、开发监听和生产构建。它不是 React 或 Vue 的替代品；扩展可以使用原生 JavaScript、TypeScript、React 或 Vue。
 
-本仓库当前以 TG Download 作为第一个 WXT 项目，后续迁移 My Tabs 时会在相同基础上评估 React。
+本仓库当前包含 TG Download 和 My Tabs 两个 WXT 项目。WXT 只负责扩展入口、Manifest、开发监听和构建流程；是否使用 React、TypeScript 或其他视图层技术由各项目自行决定。
 
 ## 推荐目录
 
@@ -75,24 +75,37 @@ TG Download 不保留 `public` 源码目录，而是在 `wxt.config.ts` 中使�
 
 ## 开发和构建
 
-TG Download 开发模式：
+扩展开发模式：
 
 ```bash
 pnpm tg:dev
 ```
 
+My Tabs 使用：
+
+```bash
+pnpm tabs:dev
+```
+
 WXT 会监听源码变化并重新构建扩展。扩展重新加载后，已打开且匹配内容脚本的网页可能同步刷新，以便重新注入最新脚本；这是开发流程的一部分。
 
-生产构建：
+TG Download 生产构建：
 
 ```bash
 pnpm tg:build
 ```
 
-构建产物位于：
+My Tabs 生产构建：
+
+```bash
+pnpm tabs:build
+```
+
+生产构建产物分别位于：
 
 ```text
 apps/extensions/tg-download/dist/chrome-mv3/
+apps/extensions/my-tabs/dist/chrome-mv3/
 ```
 
 日常开发预览不需要每次手动运行生产构建。保持 `dev` 命令运行即可；准备发布、手动验证生产产物或检查最终体积时再执行 `build`。
@@ -118,8 +131,8 @@ WXT 的开发构建会重建临时输出目录，因此浏览器不得直接加�
 React 适合 popup、options、新标签页等具有较多交互状态的扩展页面，但不是 WXT 的必选项。
 
 - 简单内容脚本优先保持原生 TypeScript，避免增加运行时和构建复杂度。
-- My Tabs 可以在迁移 WXT 时引入 React，但应先保留现有功能和测试基线。
-- React 目录、组件状态和测试规范应在 My Tabs 实际迁移后形成单独文档，不提前写成所有扩展的强制规范。
+- My Tabs 当前保持原生 JavaScript 和 CSS，不引入 React；未来如需引入，应作为独立变更评估并保留现有功能和测试基线。
+- React 目录、组件状态和测试规范不作为所有 WXT 项目的强制规范，由实际使用 React 的项目单独约定。
 
 ## 测试建议
 

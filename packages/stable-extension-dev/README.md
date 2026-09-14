@@ -143,4 +143,4 @@ pnpm --filter @my-extensions/stable-extension-dev test
 
 ## 当前状态
 
-当前包作为 `my-extensions` monorepo 中的验证实现，首个接入项目是 `apps/extensions/tg-download`。它的通用目标是沉淀为独立的 WXT 开发工具；扩展项目不应复制内部的校验、复制或目录替换逻辑。
+当前包作为 `my-extensions` monorepo 中的共享 WXT 开发工具，已由 `apps/extensions/tg-download` 和 `apps/extensions/my-tabs` 接入。扩展项目不应复制内部的校验、复制或目录替换逻辑。
