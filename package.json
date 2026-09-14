@@ -13,7 +13,9 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "tg:dev": "pnpm --filter @my-extensions/tg-download dev",
-    "tg:build": "pnpm --filter @my-extensions/tg-download build"
+    "tg:build": "pnpm --filter @my-extensions/tg-download build",
+    "tabs:dev": "pnpm --filter @my-extensions/my-tabs dev",
+    "tabs:build": "pnpm --filter @my-extensions/my-tabs build"
   },
   "devDependencies": {
     "turbo": "2.10.12"
