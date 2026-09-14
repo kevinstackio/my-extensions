@@ -97,12 +97,28 @@ apps/extensions/tg-download/dist/chrome-mv3/
 
 日常开发预览不需要每次手动运行生产构建。保持 `dev` 命令运行即可；准备发布、手动验证生产产物或检查最终体积时再执行 `build`。
 
+### 稳定开发目录
+
+WXT 的开发构建会先清空临时目录，因此浏览器不得直接加载：
+
+```text
+apps/extensions/tg-download/dist/chrome-mv3-dev/
+```
+
+仓库公共工具 `packages/stable-extension-dev` 已通过 `wxt.config.ts` 的 `build:done` hook 接入 `tg-download`。每次开发构建成功后，它会先校验 `manifest.json` 和 WXT 输出文件，再把完整产物发布到：
+
+```text
+apps/extensions/tg-download/dist/chrome-mv3-dev-stable/
+```
+
+浏览器应始终加载 `chrome-mv3-dev-stable`。构建失败时，公共工具不会执行发布，稳定目录继续保留上一份成功产物；恢复代码并重新构建成功后，稳定目录才会更新。开发者不需要额外启动常驻脚本或终端，继续运行 `pnpm tg:dev` 即可。
+
 ## 浏览器加载
 
 1. 打开 Chrome 或 Edge 的扩展管理页面。
 2. 开启开发者模式。
 3. 选择“加载已解压的扩展程序”。
-4. 开发时选择 `dist/chrome-mv3-dev`，生产验收时选择 `dist/chrome-mv3`。
+4. 开发时选择 `dist/chrome-mv3-dev-stable`，生产验收时选择 `dist/chrome-mv3`。
 5. 修改扩展入口或 Manifest 后，确认扩展和目标页面均加载了最新版本。
 
 ## React 的定位
@@ -119,6 +135,7 @@ React 适合 popup、options、新标签页等具有较多交互状态的扩展�
 - Manifest、入口配置和资源映射需要自动化测试。
 - 浏览器 API 使用小型接口隔离，测试时替换边界，不模拟整个浏览器。
 - 每次迁移必须执行项目测试、类型检查、项目构建和根级任务。
+- 使用稳定开发目录的项目还必须验证成功构建、失败构建保留旧稳定产物以及恢复构建更新稳定目录。
 - 自动化测试通过后，还需要在 Chrome 或 Edge 中完成核心流程验收。
 
 ## 常见问题

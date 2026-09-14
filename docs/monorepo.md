@@ -35,6 +35,8 @@ packages:
 - Swift、Xcode 等非 Node 项目可以继续放在 `apps` 中，不要求为了加入目录而创建 `package.json`。
 - 只有确实需要由根命令调度非 Node 项目时，才为它增加薄包装脚本或专用构建任务。
 
+仓库级扩展开发工具位于 `packages/stable-extension-dev`，用于把 WXT 成功开发构建发布到不会被失败构建破坏的稳定目录。
+
 检查 workspace 识别结果：
 
 ```bash
