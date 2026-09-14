@@ -19,8 +19,11 @@ export function createBookmarkFolder(document, folder, onOpenBookmark) {
   element.className = 'bookmark-folder';
   element.setAttribute('aria-label', folder.name);
   preview.className = 'bookmark-folder__preview';
+  let firstBookmark = null;
   preview.append(...folder.items.map((bookmark) => {
     const item = createBookmarkCard(document, bookmark);
+
+    firstBookmark ??= item;
 
     item.addEventListener('click', (event) => {
       // 保留链接语义，但由扩展创建标签以便将其加入对应分组。
@@ -55,7 +58,7 @@ export function createBookmarkFolder(document, folder, onOpenBookmark) {
       isBlurred = false;
       element.className = 'bookmark-folder';
       blurButton.className = 'bookmark-folder__blur bookmark-folder__blur--hidden';
-      blurButton.setAttribute('aria-hidden', 'true');
+      firstBookmark?.focus();
     });
     preview.append(blurButton);
   }
