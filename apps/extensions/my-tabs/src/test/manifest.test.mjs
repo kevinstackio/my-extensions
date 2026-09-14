@@ -3,29 +3,34 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 
 const iconSizes = [16, 32, 48, 128];
-const darkIcons = Object.fromEntries(
-  iconSizes.map((size) => [size, `src/assets/logo/my-tabs-dark-${size}.png`]),
-);
+const darkIconPaths = iconSizes.map((size) => `/src/assets/logo/my-tabs-dark-${size}.png`);
 
 // 验证扩展配置将首页设置为浏览器新标签页，并申请标签组权限。
 test('Manifest 覆盖新标签页并声明标签组权限', async () => {
-  const manifest = JSON.parse(
-    await readFile(new URL('../../manifest.json', import.meta.url)),
-  );
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
 
-  assert.equal(manifest.manifest_version, 3);
-  assert.equal(manifest.name, 'My Tabs');
-  assert.equal(manifest.version, '1.0.0');
-  assert.equal(manifest.description, '我的标签页，保存和组织我喜爱的网站。');
-  assert.equal(manifest.chrome_url_overrides.newtab, 'src/views/home/index.html');
-  assert.deepEqual(manifest.icons, darkIcons);
-  assert.deepEqual(manifest.action.default_icon, darkIcons);
-  assert.deepEqual(manifest.permissions, ['tabGroups']);
+  assert.match(config, /name:\s*'My Tabs'/);
+  assert.match(config, /version:\s*'1\.0\.0'/);
+  assert.match(config, /description:\s*'我的标签页，保存和组织我喜爱的网站。'/);
+  assert.match(config, /permissions:\s*\['tabGroups'\]/);
+  for (const iconPath of darkIconPaths) {
+    assert.match(config, new RegExp(`['"]${iconPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]`));
+  }
+});
+
+// 验证 WXT 配置接入稳定开发产物，并保留旧版运行时使用的资源目录。
+test('WXT 配置发布稳定目录并映射静态资源', async () => {
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+
+  assert.match(config, /createStableDevelopmentHooks\(\)/);
+  assert.match(config, /'prepare:publicPaths'/);
+  assert.match(config, /'build:publicAssets'/);
+  assert.match(config, /relativeDest: `src\/assets\/\$\{file\}`/);
 });
 
 // 验证首页声明书签入口、标签页图标回退资源与挂载节点。
 test('首页加载书签入口', async () => {
-  const home = await readFile(new URL('../views/home/index.html', import.meta.url), 'utf8');
+  const home = await readFile(new URL('../entrypoints/newtab/index.html', import.meta.url), 'utf8');
 
   assert.match(home, /reset\.css/);
   assert.match(home, /styles\/index\.css/);
@@ -36,7 +41,7 @@ test('首页加载书签入口', async () => {
   assert.match(home, /<main/);
   assert.match(home, /data-bookmarks/);
   assert.match(home, /data-bookmark-dock/);
-  assert.match(home, /<script type="module" src="index\.js"><\/script>/);
+  assert.match(home, /<script type="module" src="\.\.\/\.\.\/views\/home\/index\.js"><\/script>/);
   assert.match(home, /<link rel="icon" href="..\/..\/assets\/logo\/my-tabs-dark-16\.png">/);
 });
 
@@ -79,14 +84,13 @@ test('ChatGPT 收藏图标遵循品牌 SVG 规范', async () => {
 
 // 验证根目录规范持续约束项目、资源与测试结构。
 test('根目录约定包含项目、资源与测试规范', async () => {
-  const instructions = await readFile(new URL('../../../AGENTS.md', import.meta.url), 'utf8');
+  const instructions = await readFile(new URL('../../../../../AGENTS.md', import.meta.url), 'utf8');
 
   assert.match(instructions, /## 项目结构/);
-  assert.match(instructions, /├─ my-tabs\//);
-  assert.match(instructions, /## 静态资源规范/);
+  assert.match(instructions, /## 编码规范/);
   assert.match(instructions, /已有同类 Issue/);
   assert.match(instructions, /Browser Extensions/);
   assert.match(instructions, /## 自动化测试规范/);
   assert.match(instructions, /UTF-8/);
-  assert.match(instructions, /getExtensionAsset/);
+  assert.match(instructions, /## 稳定开发产物/);
 });

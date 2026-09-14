@@ -5,8 +5,9 @@ import { createBookmarkFolder } from '../../components/bookmark-folder/index.js'
 
 // 以最小 DOM 实现模拟书签文件夹所需的元素行为。
 class FakeElement {
-  constructor(tagName) {
+  constructor(tagName, document) {
     this.tagName = tagName;
+    this.ownerDocument = document;
     this.children = [];
     this.attributes = new Map();
     this.className = '';
@@ -24,6 +25,14 @@ class FakeElement {
   addEventListener(name, listener) {
     this.listeners.set(name, listener);
   }
+
+  focus() {
+    this.ownerDocument.activeElement = this;
+  }
+
+  querySelector(selector) {
+    return this.children.find((child) => child.className === selector.slice(1)) ?? null;
+  }
 }
 
 /**
@@ -32,9 +41,12 @@ class FakeElement {
  * @returns {{createElement: (tagName: string) => FakeElement}} 最小 DOM 文档替身。
  */
 function createDocument() {
-  return {
-    createElement: (tagName) => new FakeElement(tagName),
+  const document = {
+    activeElement: null,
+    createElement: (tagName) => new FakeElement(tagName, document),
   };
+
+  return document;
 }
 
 // 验证文件夹中的单个书签打开后加入所属标签组。
@@ -115,6 +127,29 @@ test('带 blur 配置的文件夹点击后解除模糊层', () => {
 
   assert.equal(folder.className, 'bookmark-folder');
   assert.equal(blurButton.className, 'bookmark-folder__blur bookmark-folder__blur--hidden');
+});
+
+// 验证解除遮罩后焦点转移到第一个书签，避免隐藏仍持有焦点的 aria-hidden 按钮。
+test('解除模糊层后不隐藏当前焦点并将焦点交给第一个书签', () => {
+  const edu = {
+    name: 'EDU',
+    blur: true,
+    items: [{ id: 'pmi', name: 'PMI', url: 'https://www.pmi.org/', icon: 'brand/text-pmi.svg' }],
+  };
+  const document = createDocument();
+  const folder = createBookmarkFolder(document, edu, () => {});
+  const preview = folder.children[0];
+  const firstBookmark = preview.children[0];
+  const blurButton = preview.children.at(-1);
+
+  blurButton.focus();
+  blurButton.listeners.get('click')({
+    prevented: false,
+    preventDefault() { this.prevented = true; },
+  });
+
+  assert.equal(blurButton.attributes.get('aria-hidden'), undefined);
+  assert.equal(document.activeElement, firstBookmark);
 });
 
 // 验证文件夹由固定内边距和内部书签间距自然撑开。
