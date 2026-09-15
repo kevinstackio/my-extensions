@@ -1,6 +1,8 @@
+import type { Bookmark, BookmarkGridItem, BookmarkGroup } from '../types/bookmarks';
+
 // 书签配置按页面区域直接导出，避免调用方依赖聚合对象。
 // 首页 Grid 只消费文件夹和普通书签，不包含底部 Dock 的内容。
-export const BOOKMARK_GRID = [
+export const BOOKMARK_GRID: BookmarkGridItem[] = [
   {
     type: 'folder',
     id: 'social-media',
@@ -44,14 +46,14 @@ export const BOOKMARK_GRID = [
 ];
 
 // Dock 收藏区只保存直接可点击的常用书签。
-export const DOCK_FAVORITES = [
+export const DOCK_FAVORITES: Bookmark[] = [
   { type: 'bookmark', id: 'chatgpt', name: 'ChatGPT', url: 'https://chatgpt.com', icon: 'brand/chatgpt.svg' },
   { type: 'bookmark', id: 'github', name: 'GitHub', url: 'https://github.com', icon: 'brand/github.svg' },
   { type: 'bookmark', id: 'gmail', name: 'Gmail', url: 'https://mail.google.com', icon: 'brand/gmail.svg' },
 ];
 
 // Components 与 DevTools 都是 Dock 内的聚合入口，内部书签按各自名称加入标签组。
-export const DOCK_COMPONENTS = {
+export const DOCK_COMPONENTS: BookmarkGroup = {
   type: 'bookmark-group',
   id: 'components',
   name: 'Components',
@@ -66,7 +68,7 @@ export const DOCK_COMPONENTS = {
 };
 
 // DevTools 卡片与其内部工具列表必须保持同一配置，供后续 Popover 直接消费。
-export const DOCK_DEVTOOLS = {
+export const DOCK_DEVTOOLS: BookmarkGroup = {
   type: 'bookmark-group',
   id: 'devtools',
   name: 'DevTools',
