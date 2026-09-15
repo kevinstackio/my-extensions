@@ -28,6 +28,13 @@ test('WXT 配置发布稳定目录并映射静态资源', async () => {
   assert.match(config, /relativeDest: `src\/assets\/\$\{file\}`/);
 });
 
+// 依赖扫描只读取源码入口，避免与 WXT 清空临时构建目录产生竞态。
+test('Vite 依赖扫描排除 WXT 临时与稳定产物', async () => {
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+
+  assert.match(config, /optimizeDeps:\s*\{\s*entries:\s*\['src\/entrypoints\/newtab\/index\.html'\]/s);
+});
+
 // 验证首页声明书签入口、标签页图标回退资源与挂载节点。
 test('首页加载书签入口', async () => {
   const home = await readFile(new URL('../entrypoints/newtab/index.html', import.meta.url), 'utf8');

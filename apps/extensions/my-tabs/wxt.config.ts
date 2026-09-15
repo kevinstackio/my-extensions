@@ -54,6 +54,12 @@ export default defineConfig({
   srcDir: 'src',
   outDir: 'dist',
   modules: ['@wxt-dev/module-react'],
+  vite: () => ({
+    // 只扫描源码入口，避免 WXT 重建临时目录时与 Vite 的 HTML 扫描发生竞态。
+    optimizeDeps: {
+      entries: ['src/entrypoints/newtab/index.html'],
+    },
+  }),
   hooks: {
     ...createStableDevelopmentHooks(),
     'prepare:publicPaths': (_, paths) => {
