@@ -29,7 +29,7 @@ WXT 的临时开发目录会在构建过程中被重建，不能直接作为浏�
 apps/extensions/my-tabs/dist/chrome-mv3/
 ```
 
-当前生产构建共 36 个文件、284.01 KiB（其中 React 页面 chunk 约 227.87 kB）；迁移前 Issue 基线约 70.2 KiB，体积差异主要来自 React 运行时与模块化组件代码。
+当前生产构建共 36 个文件、290.55 kB（其中 React 页面 chunk 约 227.73 kB）。相较 React 升级后的 284.01 KiB 基线，文件数不变、主 chunk 基本不变；相较迁移前约 70.2 KiB 的基线，体积差异主要来自 React 运行时与模块化组件代码。
 
 ## 浏览器加载
 
@@ -48,9 +48,10 @@ my-tabs/
 │  ├─ components/      # 书签卡片、文件夹、列表和 Popover
 │  ├─ entrypoints/     # WXT 新标签页入口
 │  ├─ styles/          # 通用样式
+│  ├─ types/           # 书签领域的共享类型
 │  ├─ utils/           # 浏览器 API 和通用工具
 │  └─ views/           # 新标签页视图
-└─ src/test/            # node:test 行为测试
+└─ src/test/            # Vitest 行为测试
 ```
 
-React 组件测试与原有 `node:test` 行为测试并存，覆盖书签卡片、文件夹遮罩、Popover 语义和标签组打开逻辑。生产构建产物以 `dist/chrome-mv3/` 为准，开发构建必须加载 `dist/chrome-mv3-dev-stable/`。
+测试通过 Vitest 在 DOM 环境中直接渲染 TSX 组件，覆盖书签卡片、文件夹遮罩、Popover 语义、视图组合和标签组打开逻辑；不再保留原生 DOM 兼容实现。当前共 41 项测试。生产构建产物以 `dist/chrome-mv3/` 为准，开发构建必须加载 `dist/chrome-mv3-dev-stable/`。

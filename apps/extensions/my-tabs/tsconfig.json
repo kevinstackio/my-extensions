@@ -5,6 +5,7 @@
     "checkJs": false,
     "jsx": "react-jsx",
     "noEmit": true,
-    "strict": true
+    "strict": true,
+    "types": ["chrome"]
   }
 }
