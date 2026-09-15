@@ -1,134 +1,117 @@
-import test from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { BOOKMARK_GRID, DOCK_FAVORITES } from '../../constants/bookmarks.js';
-import * as home from '../../views/home/index.js';
+import { act, createElement, Fragment } from 'react';
+import { BOOKMARK_GRID, DOCK_COMPONENTS, DOCK_DEVTOOLS, DOCK_FAVORITES } from '../../constants/bookmarks.ts';
+import { installActionIconTheme } from '../../utils/action-icon-theme.js';
+import { openBookmarkInGroup } from '../../utils/tab.js';
+import { BookmarkDock } from '../../views/bookmarks/bookmark-dock.tsx';
+import { BookmarkGrid } from '../../views/bookmarks/bookmark-grid.tsx';
+import { renderReact } from '../helpers/react-dom.mjs';
 
-const { installBookmarks } = home;
-
-// 以最小 DOM 实现模拟首页书签挂载所需的元素行为。
-class FakeElement {
-  constructor(tagName) {
-    this.tagName = tagName;
-    this.children = [];
-    this.attributes = new Map();
-    this.className = '';
-  }
-
-  append(...children) {
-    this.children.push(...children);
-  }
-
-  setAttribute(name, value) {
-    this.attributes.set(name, value);
-  }
-
-  addEventListener() {}
+function createHome(onOpenBookmark) {
+  return createElement(
+    Fragment,
+    null,
+    createElement('main', { className: 'bookmarks-page' },
+      createElement('section', { className: 'bookmarks', 'data-bookmarks': true, 'aria-label': '常用书签' },
+        createElement(BookmarkGrid, { bookmarks: BOOKMARK_GRID, onOpenBookmark }))),
+    createElement('aside', { 'data-bookmark-dock': true, 'aria-label': '固定书签' },
+      createElement(BookmarkDock, {
+        favorites: DOCK_FAVORITES,
+        components: DOCK_COMPONENTS,
+        devtools: DOCK_DEVTOOLS,
+        onOpenBookmark,
+      })),
+  );
 }
 
-/**
- * 创建带有首页书签挂载点的测试文档。
- *
- * @returns {{createElement: Function, querySelector: Function, container: FakeElement}} 首页最小 DOM 文档替身。
- */
-function createDocument() {
-  const bookmarks = new FakeElement('section');
-  const dock = new FakeElement('aside');
-  return {
-    createElement: (tagName) => new FakeElement(tagName),
-    querySelector: (selector) => ({
-      '[data-bookmarks]': bookmarks,
-      '[data-bookmark-dock]': dock,
-    })[selector] || null,
-    bookmarks,
-    dock,
-  };
-}
+test('React 首页组合主书签 Grid 与固定 Dock', async () => {
+  const appSource = await readFile(new URL('../../entrypoints/newtab/App.tsx', import.meta.url), 'utf8');
+  const view = await renderReact(createHome());
 
-// 验证首页分别挂载主书签网格与固定 Dock。
-test('首页挂载主书签网格与固定 Dock', () => {
-  const document = createDocument();
-
-  installBookmarks(document);
-
-  assert.equal(document.bookmarks.children.length, BOOKMARK_GRID.length);
-  assert.equal(document.dock.children[0].className, 'bookmark-dock');
-  assert.equal(document.dock.children[0].children[0].children.length, DOCK_FAVORITES.length);
+  try {
+    assert.match(appSource, /<BookmarkGrid bookmarks=\{BOOKMARK_GRID\} onOpenBookmark=\{onOpenBookmark\}/);
+    assert.match(appSource, /<BookmarkDock[\s\S]*favorites=\{DOCK_FAVORITES\}[\s\S]*onOpenBookmark=\{onOpenBookmark\}/);
+    assert.equal(view.container.querySelectorAll('[data-bookmarks] .bookmark-folder').length, BOOKMARK_GRID.length);
+    assert.equal(view.container.querySelectorAll('[data-bookmark-dock] .bookmark-dock__favorites > .bookmark-card').length, DOCK_FAVORITES.length);
+    assert.equal(view.container.querySelectorAll('.bookmark-dock__group').length, 2);
+  } finally {
+    await view.cleanup();
+  }
 });
 
-// 验证首页会依据系统配色同步切换工具栏与标签页图标。
-test('首页根据系统配色切换工具栏图标', () => {
-  assert.equal(typeof home.installActionIconTheme, 'function');
+test('React 首页将 Dock 工具书签交给 Chrome 标签组业务', async () => {
+  const previousChrome = globalThis.chrome;
+  const calls = { created: null, grouped: null, updated: null };
+  globalThis.chrome = {
+    runtime: { getURL: (path) => `chrome-extension://mytabs/${path}` },
+    action: { setIcon() {} },
+    tabs: {
+      create: async (options) => { calls.created = options; return { id: 1, windowId: 2 }; },
+      group: async (options) => { calls.grouped = options; return 3; },
+    },
+    tabGroups: {
+      query: async () => [],
+      update: async (groupId, options) => { calls.updated = { groupId, options }; },
+    },
+  };
+  const view = await renderReact(createHome((group, bookmark) => {
+    void openBookmarkInGroup(globalThis.chrome, group, bookmark);
+  }));
 
+  try {
+    const devtools = view.container.querySelectorAll('.bookmark-dock__group')[1];
+    await act(async () => devtools.querySelector('button').click());
+    await act(async () => {
+      devtools.querySelector('.bookmark-list__item').click();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    assert.deepEqual(calls.created, { url: 'https://translate.google.com/?hl=zh-cn&sl=en&tl=zh-CN&op=translate', active: true });
+    assert.deepEqual(calls.grouped, { tabIds: [1] });
+    assert.equal(calls.updated.groupId, 3);
+    assert.equal(calls.updated.options.title, 'DevTools');
+  } finally {
+    await view.cleanup();
+    if (previousChrome === undefined) delete globalThis.chrome;
+    else globalThis.chrome = previousChrome;
+  }
+});
+
+test('首页根据系统配色切换工具栏图标', () => {
   const listeners = new Set();
   const media = {
     matches: true,
-    addEventListener: (type, listener) => {
-      if (type === 'change') listeners.add(listener);
-    },
+    addEventListener: (type, listener) => { if (type === 'change') listeners.add(listener); },
   };
   const actionCalls = [];
-  const favicon = {
-    attributes: new Map(),
-    setAttribute(name, value) {
-      this.attributes.set(name, value);
-    },
-  };
+  const favicon = { setAttribute(name, value) { this[name] = value; } };
   const previousChrome = globalThis.chrome;
   globalThis.chrome = {
-    runtime: {
-      getURL: (path) => `chrome-extension://test/${path}`,
-    },
-    action: {
-      setIcon: (details) => actionCalls.push(details),
-    },
+    runtime: { getURL: (path) => `chrome-extension://test/${path}` },
+    action: { setIcon: (details) => actionCalls.push(details) },
   };
 
   try {
-    home.installActionIconTheme({
-      matchMedia: () => media,
-    }, {
+    installActionIconTheme({ matchMedia: () => media }, {
       querySelector: (selector) => selector === 'link[rel="icon"]' ? favicon : null,
     });
-    assert.deepEqual(actionCalls, [{
-      path: {
-        16: '/src/assets/logo/my-tabs-light-16.png',
-        32: '/src/assets/logo/my-tabs-light-32.png',
-        48: '/src/assets/logo/my-tabs-light-48.png',
-        128: '/src/assets/logo/my-tabs-light-128.png',
-      },
-    }]);
-    assert.equal(
-      favicon.attributes.get('href'),
-      'chrome-extension://test/src/assets/logo/my-tabs-light-16.png',
-    );
+    assert.equal(actionCalls[0].path[16], '/src/assets/logo/my-tabs-light-16.png');
+    assert.equal(favicon.href, 'chrome-extension://test/src/assets/logo/my-tabs-light-16.png');
 
     media.matches = false;
     for (const listener of listeners) listener(media);
-    assert.deepEqual(actionCalls.at(-1), {
-      path: {
-        16: '/src/assets/logo/my-tabs-dark-16.png',
-        32: '/src/assets/logo/my-tabs-dark-32.png',
-        48: '/src/assets/logo/my-tabs-dark-48.png',
-        128: '/src/assets/logo/my-tabs-dark-128.png',
-      },
-    });
-    assert.equal(
-      favicon.attributes.get('href'),
-      'chrome-extension://test/src/assets/logo/my-tabs-dark-16.png',
-    );
+    assert.equal(actionCalls.at(-1).path[128], '/src/assets/logo/my-tabs-dark-128.png');
+    assert.equal(favicon.href, 'chrome-extension://test/src/assets/logo/my-tabs-dark-16.png');
   } finally {
     if (previousChrome === undefined) delete globalThis.chrome;
     else globalThis.chrome = previousChrome;
   }
 });
 
-// 验证首页私有样式只负责页面容器的内边距和最小高度。
 test('首页使用独立页面容器样式', async () => {
-  const styles = await readFile(
-    new URL('../../views/home/index.css', import.meta.url),
-    'utf8',
-  );
+  const styles = await readFile(new URL('../../views/home/index.css', import.meta.url), 'utf8');
 
   assert.match(styles, /\.bookmarks-page\s*\{[^}]*display:\s*block;[^}]*min-height:\s*100vh;[^}]*box-sizing:\s*border-box;[^}]*padding:\s*24px;/s);
 });

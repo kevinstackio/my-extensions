@@ -1,4 +1,4 @@
-import test from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 
@@ -31,7 +31,6 @@ test('WXT 配置发布稳定目录并映射静态资源', async () => {
 // 验证首页声明书签入口、标签页图标回退资源与挂载节点。
 test('首页加载书签入口', async () => {
   const home = await readFile(new URL('../entrypoints/newtab/index.html', import.meta.url), 'utf8');
-  const legacyHome = await readFile(new URL('../views/home/index.js', import.meta.url), 'utf8');
 
   assert.match(home, /reset\.css/);
   assert.match(home, /styles\/index\.css/);
@@ -42,7 +41,6 @@ test('首页加载书签入口', async () => {
   assert.match(home, /<div id="app"><\/div>/);
   assert.match(home, /<script type="module" src="\.\/main\.tsx"><\/script>/);
   assert.doesNotMatch(home, /views\/home\/index\.js/);
-  assert.doesNotMatch(legacyHome, /typeof document/);
   assert.match(home, /<link rel="icon" href="..\/..\/assets\/logo\/my-tabs-dark-16\.png">/);
 });
 

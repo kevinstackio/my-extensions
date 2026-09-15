@@ -1,6 +1,6 @@
-import test from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import * as bookmarkConfig from '../../constants/bookmarks.js';
+import * as bookmarkConfig from '../../constants/bookmarks.ts';
 
 const { BOOKMARK_GRID, DOCK_COMPONENTS, DOCK_DEVTOOLS, DOCK_FAVORITES } = bookmarkConfig;
 
