@@ -1,3 +1,6 @@
+import { createElement, Fragment } from 'react';
+import { BookmarkCard } from '../../components/bookmark-card/index.js';
+import { BookmarkFolder } from '../../components/bookmark-folder/index.js';
 import { createBookmarkCard } from '../../components/bookmark-card/index.js';
 import { createBookmarkFolder } from '../../components/bookmark-folder/index.js';
 import { openBookmarkInGroup } from '../../utils/tab.js';
@@ -22,4 +25,27 @@ export function renderBookmarkGrid(document, container, bookmarks) {
       )
       : createBookmarkCard(document, item)
   )));
+}
+
+/**
+ * React 书签 Grid，只负责按配置顺序组合卡片和文件夹。
+ *
+ * @param {{bookmarks: Array<object>, onOpenBookmark?: (folder: object, bookmark: object) => void}} props Grid 配置和文件夹打开回调。
+ * @returns {import('react').ReactElement} Grid 子节点集合。
+ */
+export function BookmarkGrid({ bookmarks, onOpenBookmark }) {
+  return createElement(
+    Fragment,
+    null,
+    ...bookmarks.map((item) => item.type === 'folder'
+      ? createElement(BookmarkFolder, {
+        key: item.id,
+        folder: item,
+        onOpenBookmark,
+      })
+      : createElement(BookmarkCard, {
+        key: item.id,
+        bookmark: item,
+      })),
+  );
 }

@@ -1,6 +1,6 @@
 # My Tabs
 
-基于 WXT 的 Chromium 新标签页扩展，使用原生 JavaScript 和 CSS 提供书签网格、书签 Dock、Popover 以及标签组打开能力。
+基于 WXT 的 Chromium 新标签页扩展，使用 React 和 CSS 提供书签网格、书签 Dock、Popover 以及标签组打开能力。页面入口为 `src/entrypoints/newtab/main.tsx`，组件按现有 DOM、CSS 和无障碍语义迁移。
 
 ## 开发和验证
 
@@ -12,6 +12,8 @@ pnpm --filter @my-extensions/my-tabs typecheck
 pnpm --filter @my-extensions/my-tabs test
 pnpm tabs:build
 ```
+
+依赖版本固定为 React `19.3.0`、React DOM `19.3.0`、WXT React 模块 `1.2.2`；不引入 shadcn、Tailwind、Recharts 或 React Router。
 
 开发时浏览器必须加载稳定开发目录：
 
@@ -26,6 +28,8 @@ WXT 的临时开发目录会在构建过程中被重建，不能直接作为浏�
 ```text
 apps/extensions/my-tabs/dist/chrome-mv3/
 ```
+
+当前生产构建共 36 个文件、284.01 KiB（其中 React 页面 chunk 约 227.87 kB）；迁移前 Issue 基线约 70.2 KiB，体积差异主要来自 React 运行时与模块化组件代码。
 
 ## 浏览器加载
 
@@ -49,4 +53,4 @@ my-tabs/
 └─ src/test/            # node:test 行为测试
 ```
 
-本项目当前不引入 React，不迁移 TypeScript，也不更换现有 `node:test` 测试框架。
+React 组件测试与原有 `node:test` 行为测试并存，覆盖书签卡片、文件夹遮罩、Popover 语义和标签组打开逻辑。生产构建产物以 `dist/chrome-mv3/` 为准，开发构建必须加载 `dist/chrome-mv3-dev-stable/`。

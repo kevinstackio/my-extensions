@@ -1,3 +1,7 @@
+import { createElement, Fragment } from 'react';
+import { BookmarkCard } from '../../components/bookmark-card/index.js';
+import { BookmarkList } from '../../components/bookmark-list/index.js';
+import { Popover } from '../../components/popover/index.js';
 import { createBookmarkCard } from '../../components/bookmark-card/index.js';
 import { createBookmarkList } from '../../components/bookmark-list/index.js';
 import { createPopover } from '../../components/popover/index.js';
@@ -66,4 +70,67 @@ function createBookmarkToolGroup(document, group) {
   element.append(toolButton, popover.element);
 
   return element;
+}
+
+/** React Dock 内的工具分组入口。 */
+function BookmarkToolGroup({ group, onOpenBookmark }) {
+  const trigger = createElement(
+    'button',
+    {
+      type: 'button',
+      className: 'bookmark-card bookmark-dock__tool',
+      'aria-label': `打开 ${group.name} 工具列表`,
+    },
+    createElement(
+      'span',
+      { className: 'bookmark-card__icon' },
+      createElement('img', {
+        src: getExtensionAsset(group.icon),
+        alt: '',
+        'aria-hidden': 'true',
+      }),
+    ),
+  );
+
+  return createElement(
+    'div',
+    { className: 'bookmark-dock__group' },
+    createElement(
+      Popover,
+      { trigger },
+      createElement(BookmarkList, {
+        bookmarks: group.bookmarks,
+        onSelect: (bookmark) => onOpenBookmark?.(group, bookmark),
+      }),
+    ),
+  );
+}
+
+/**
+ * React Dock，保持原有收藏区、分隔线和工具区结构。
+ *
+ * @param {{favorites: Array<object>, components: object, devtools?: object, onOpenBookmark?: (group: object, bookmark: object) => void}} props Dock 配置和打开回调。
+ * @returns {import('react').ReactElement} Dock 节点。
+ */
+export function BookmarkDock({ favorites, components, devtools, onOpenBookmark }) {
+  const groups = devtools ? [components, devtools] : [components];
+  return createElement(
+    'nav',
+    { className: 'bookmark-dock', 'aria-label': '固定书签' },
+    createElement(
+      'div',
+      { className: 'bookmark-dock__favorites' },
+      ...favorites.map((bookmark) => createElement(BookmarkCard, { key: bookmark.id, bookmark })),
+    ),
+    createElement('span', { className: 'bookmark-dock__divider', 'aria-hidden': 'true' }),
+    createElement(
+      'div',
+      { className: 'bookmark-dock__tools' },
+      ...groups.map((group) => createElement(BookmarkToolGroup, {
+        key: group.id,
+        group,
+        onOpenBookmark,
+      })),
+    ),
+  );
 }

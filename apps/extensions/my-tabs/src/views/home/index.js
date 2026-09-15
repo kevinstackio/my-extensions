@@ -33,7 +33,6 @@ export function installBookmarks(document) {
     renderBookmarkDock(document, dock, DOCK_FAVORITES, DOCK_COMPONENTS, DOCK_DEVTOOLS);
   }
 }
-
 /**
  * 根据系统配色偏好更新浏览器工具栏与标签页图标。
  * 深色偏好使用 `light` 图标，浅色偏好使用 `dark` 图标。
@@ -68,9 +67,4 @@ export function installActionIconTheme(window, document) {
   } else if (typeof colorScheme.addListener === 'function') {
     colorScheme.addListener(updateActionIcon);
   }
-}
-
-if (typeof document !== 'undefined') {
-  installBookmarks(document);
-  installActionIconTheme(globalThis, document);
 }

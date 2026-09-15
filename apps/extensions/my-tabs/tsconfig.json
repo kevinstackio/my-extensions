@@ -1,6 +1,9 @@
 {
   "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "react-jsx",
     "noEmit": true,
     "strict": true
   }

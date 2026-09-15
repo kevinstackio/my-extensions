@@ -31,6 +31,7 @@ test('WXT 配置发布稳定目录并映射静态资源', async () => {
 // 验证首页声明书签入口、标签页图标回退资源与挂载节点。
 test('首页加载书签入口', async () => {
   const home = await readFile(new URL('../entrypoints/newtab/index.html', import.meta.url), 'utf8');
+  const legacyHome = await readFile(new URL('../views/home/index.js', import.meta.url), 'utf8');
 
   assert.match(home, /reset\.css/);
   assert.match(home, /styles\/index\.css/);
@@ -38,11 +39,35 @@ test('首页加载书签入口', async () => {
   assert.match(home, /bookmark-folder\/index\.css/);
   assert.match(home, /bookmarks\/bookmark-dock\.css/);
   assert.match(home, /bookmarks\/bookmark-grid\.css/);
-  assert.match(home, /<main/);
-  assert.match(home, /data-bookmarks/);
-  assert.match(home, /data-bookmark-dock/);
-  assert.match(home, /<script type="module" src="\.\.\/\.\.\/views\/home\/index\.js"><\/script>/);
+  assert.match(home, /<div id="app"><\/div>/);
+  assert.match(home, /<script type="module" src="\.\/main\.tsx"><\/script>/);
+  assert.doesNotMatch(home, /views\/home\/index\.js/);
+  assert.doesNotMatch(legacyHome, /typeof document/);
   assert.match(home, /<link rel="icon" href="..\/..\/assets\/logo\/my-tabs-dark-16\.png">/);
+});
+
+// 验证新标签页只通过 React 入口挂载，避免原生脚本与 React 双重渲染。
+test('新标签页接入 React 入口与 WXT 模块', async () => {
+  const packageJson = JSON.parse(await readFile(new URL('../../package.json', import.meta.url), 'utf8'));
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+  const home = await readFile(new URL('../entrypoints/newtab/index.html', import.meta.url), 'utf8');
+  const [mainStat, appStat] = await Promise.all([
+    stat(new URL('../entrypoints/newtab/main.tsx', import.meta.url)),
+    stat(new URL('../entrypoints/newtab/App.tsx', import.meta.url)),
+  ]);
+
+  assert.equal(packageJson.dependencies.react, '19.3.0');
+  assert.equal(packageJson.dependencies['react-dom'], '19.3.0');
+  assert.equal(packageJson.devDependencies['@types/react'], '19.3.0');
+  assert.equal(packageJson.devDependencies['@types/react-dom'], '19.3.0');
+  assert.equal(packageJson.devDependencies['@vitejs/plugin-react'], '6.1.1');
+  assert.equal(packageJson.devDependencies['@wxt-dev/module-react'], '1.2.2');
+  assert.match(config, /modules:\s*\[\s*'@wxt-dev\/module-react'\s*\]/);
+  assert.match(home, /<div id="app"><\/div>/);
+  assert.match(home, /<script type="module" src="\.\/main\.tsx"><\/script>/);
+  assert.doesNotMatch(home, /views\/home\/index\.js/);
+  assert.equal(mainStat.isFile(), true);
+  assert.equal(appStat.isFile(), true);
 });
 
 // 验证深浅色图标均以完整的 PNG 尺寸集交付，避免主题资源缺失。

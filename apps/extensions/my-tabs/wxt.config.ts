@@ -53,6 +53,7 @@ const actionIcons = {
 export default defineConfig({
   srcDir: 'src',
   outDir: 'dist',
+  modules: ['@wxt-dev/module-react'],
   hooks: {
     ...createStableDevelopmentHooks(),
     'prepare:publicPaths': (_, paths) => {
