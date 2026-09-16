@@ -108,7 +108,7 @@ apps/extensions/tg-download/dist/chrome-mv3/
 apps/extensions/my-tabs/dist/chrome-mv3/
 ```
 
-日常开发预览不需要每次手动运行生产构建。保持 `dev` 命令运行即可；准备发布、手动验证生产产物或检查最终体积时再执行 `build`。
+日常开发预览不需要每次手动运行生产构建。保持 `dev` 命令运行即可；每次开发构建完成后，接入扩展会自动输出包体积预警。准备发布、手动验证生产产物或执行严格体积校验时再运行 `build` 和 `check:bundle-size`。
 
 ### 稳定开发目录
 

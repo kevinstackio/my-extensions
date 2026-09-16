@@ -45,6 +45,8 @@ pnpm --filter @my-extensions/my-tabs check:bundle-size
 
 `check:bundle-size` 使用 `bundle-budget.json` 的生产基线，约束 JS gzip、CSS gzip 和 Geist 字体体积；字体只允许一个 WOFF2 产物。
 
+`pnpm tabs:dev` 启动的每次 WXT 开发构建完成后都会自动执行包体积预警。预警只记录超预算项目，不会阻断开发重建；生产构建仍使用 `check:bundle-size` 严格校验。
+
 开发时浏览器必须加载稳定开发目录：
 
 ```text
