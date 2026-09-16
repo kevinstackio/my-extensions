@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import { createStableDevelopmentHooks } from '@my-extensions/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
+import { createBundleSizeWarningHook } from './scripts/bundle-size.mjs';
+
 const assetFiles = [
   'brand/bilibili.svg',
   'brand/chatgpt.svg',
@@ -53,6 +55,9 @@ const actionIcons = {
   128: '/src/assets/logo/my-tabs-dark-128.png',
 };
 
+const stableDevelopmentHooks = createStableDevelopmentHooks();
+const bundleSizeWarningHook = createBundleSizeWarningHook();
+
 export default defineConfig({
   srcDir: 'src',
   outDir: 'dist',
@@ -65,7 +70,12 @@ export default defineConfig({
     },
   }),
   hooks: {
-    ...createStableDevelopmentHooks(),
+    ...stableDevelopmentHooks,
+    // 稳定目录发布成功后再测量开发产物，预警失败不能阻断 WXT dev 的持续重建。
+    'build:done': async (wxt, output) => {
+      await stableDevelopmentHooks['build:done'](wxt, output);
+      await bundleSizeWarningHook(wxt, output);
+    },
     'prepare:publicPaths': (_, paths) => {
       paths.push(...outputAssetPaths);
     },
