@@ -1,13 +1,127 @@
-/* 集中定义书签页的颜色与动效。各组件自行声明尺寸、间距和圆角。 */
-:root {
-  --page-background: #fff;
-  --text-color: #27272a;
-  --focus-color: #18181b;
-  --transition-duration: 160ms;
+@import "tailwindcss";
+@import "./reset.css";
+@import "../components/popover/index.css";
+
+/* Tailwind 工具类只引用语义 token，组件不直接绑定明暗主题的具体色值。 */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ring: var(--ring);
+  --color-surface-raised: var(--surface-raised);
+  --color-overlay: var(--overlay);
+  --font-sans: var(--font-geist-sans);
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* 提供新标签页一致的纯白画布。 */
+@font-face {
+  /* 字体作为扩展资源打包，避免依赖用户机器上不一致的系统字体。 */
+  font-family: "Geist Sans";
+  src: url("/src/assets/fonts/Geist-Variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+}
+
+:root {
+  /* 这里是 shadcn/ui 兼容的基础 token；全局额外 token 也集中在此处维护。 */
+  color-scheme: light dark;
+  --font-geist-sans: "Geist Sans", "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+  --border-strong: oklch(0.708 0 0);
+  --ring: oklch(0.205 0 0);
+  --surface-raised: oklch(1 0 0);
+  --overlay: oklch(1 0 0 / 42%);
+  --radius: 1rem;
+  --duration-fast: 160ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --shadow-hover: 0 8px 18px rgb(24 24 27 / 12%);
+  --shadow-floating: 0 12px 28px rgb(24 24 27 / 12%);
+  --size-icon-tile: 4rem;
+  --size-icon-glyph: 2rem;
+  --page-background: var(--background);
+  --text-color: var(--foreground);
+  --focus-color: var(--ring);
+  --transition-duration: var(--duration-fast);
+}
+
+@media (prefers-color-scheme: dark) {
+  /* 深色模式只覆盖语义 token，组件结构和间距保持不变。 */
+  :root {
+    --background: oklch(0.12 0 0);
+    --foreground: oklch(0.97 0 0);
+    --card: oklch(0.17 0 0);
+    --card-foreground: oklch(0.97 0 0);
+    --popover: oklch(0.2 0 0);
+    --popover-foreground: oklch(0.97 0 0);
+    --muted: oklch(0.22 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.25 0 0);
+    --accent-foreground: oklch(0.97 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --border: oklch(0.28 0 0);
+    --border-strong: oklch(0.42 0 0);
+    --ring: oklch(0.82 0 0);
+    --surface-raised: oklch(0.19 0 0);
+    --overlay: oklch(0.12 0 0 / 62%);
+    --shadow-hover: 0 8px 18px rgb(0 0 0 / 28%);
+    --shadow-floating: 0 16px 36px rgb(0 0 0 / 36%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* 集中定义书签页的颜色与动效。各组件自行声明尺寸、间距和圆角。 */
 html,
 body {
   background: var(--page-background);
+  color: var(--text-color);
+  font-family: var(--font-geist-sans);
+}
+
+/* 仅将明确标记为 adaptive 的单色图标转换为主题前景色，多色品牌图标保持原色。 */
+.bookmark-icon--adaptive {
+  filter: brightness(0);
+}
+
+@media (prefers-color-scheme: dark) {
+  .bookmark-icon--adaptive {
+    filter: brightness(0) invert(1);
+  }
 }

@@ -20,11 +20,12 @@ interface PopoverProps {
   showArrow?: boolean;
 }
 
-/** 渲染由外部触发器控制的通用浮层。 */
+/** 渲染由外部触发器控制的通用浮层，保留 Dock 所需的悬停离开延迟与焦点恢复行为。 */
 export function Popover({ trigger, children, placement = 'top', showArrow = true }: PopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const triggerRef = useRef<HTMLElement>(null);
+  const popoverRef = useRef<HTMLElement>(null);
   const isRestoringFocus = useRef(false);
 
   const cancelClose = useCallback(() => {
@@ -60,6 +61,21 @@ export function Popover({ trigger, children, placement = 'top', showArrow = true
     cancelClose();
   }, [cancelClose]);
 
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const ownerDocument = triggerRef.current?.ownerDocument;
+    if (!ownerDocument) return undefined;
+
+    const handleMouseDown = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target || triggerRef.current?.contains(target) || popoverRef.current?.contains(target)) return;
+      close();
+    };
+
+    ownerDocument.addEventListener('mousedown', handleMouseDown);
+    return () => ownerDocument.removeEventListener('mousedown', handleMouseDown);
+  }, [close, isOpen]);
+
   const triggerNode = cloneElement(trigger, {
     ref: triggerRef,
     'aria-expanded': isOpen,
@@ -89,6 +105,7 @@ export function Popover({ trigger, children, placement = 'top', showArrow = true
     <>
       {triggerNode}
       <section
+        ref={popoverRef}
         className="popover"
         data-placement={placement}
         data-arrow={String(showArrow)}

@@ -8,9 +8,9 @@ export const BOOKMARK_GRID: BookmarkGridItem[] = [
     id: 'social-media',
     name: 'Social Media',
     items: [
-      { id: 'x', name: 'X', url: 'https://x.com', icon: 'brand/x.svg' },
-      { id: 'bilibili', name: 'Bilibili', url: 'https://www.bilibili.com', icon: 'brand/bilibili.svg' },
-      { id: 'youtube', name: 'YouTube', url: 'https://www.youtube.com', icon: 'brand/youtube.svg' },
+      { id: 'x', name: 'X', url: 'https://x.com', icon: 'brand/x.svg', iconTone: 'adaptive' },
+      { id: 'bilibili', name: 'Bilibili', url: 'https://www.bilibili.com', icon: 'brand/bilibili.svg', iconTone: 'adaptive' },
+      { id: 'youtube', name: 'YouTube', url: 'https://www.youtube.com', icon: 'brand/youtube.svg', iconTone: 'adaptive' },
     ],
   },
   {
@@ -18,8 +18,8 @@ export const BOOKMARK_GRID: BookmarkGridItem[] = [
     id: 'devops',
     name: 'DevOps',
     items: [
-      { id: 'namecheap', name: 'Namecheap', url: 'https://www.namecheap.com', icon: 'brand/namecheap.svg' },
-      { id: 'vercel', name: 'Vercel', url: 'https://vercel.com', icon: 'brand/vercel.svg' },
+      { id: 'namecheap', name: 'Namecheap', url: 'https://www.namecheap.com', icon: 'brand/namecheap.svg', iconTone: 'adaptive' },
+      { id: 'vercel', name: 'Vercel', url: 'https://vercel.com', icon: 'brand/vercel.svg', iconTone: 'adaptive' },
     ],
   },
   {
@@ -27,8 +27,8 @@ export const BOOKMARK_GRID: BookmarkGridItem[] = [
     id: 'pm',
     name: 'PM',
     items: [
-      { id: 'linear', name: 'Linear', url: 'https://linear.app', icon: 'brand/linear.svg' },
-      { id: 'notion', name: 'Notion', url: 'https://www.notion.so', icon: 'brand/notion.svg' },
+      { id: 'linear', name: 'Linear', url: 'https://linear.app', icon: 'brand/linear.svg', iconTone: 'adaptive' },
+      { id: 'notion', name: 'Notion', url: 'https://www.notion.so', icon: 'brand/notion.svg', iconTone: 'adaptive' },
     ],
   },
   {
@@ -37,19 +37,19 @@ export const BOOKMARK_GRID: BookmarkGridItem[] = [
     name: 'EDU',
     blur: true,
     items: [
-      { id: 'pmi', name: 'PMI', url: 'https://www.pmi.org/', icon: 'brand/text-pmi.svg' },
-      { id: 'jlpt', name: 'JLPT', url: 'https://jlpt-main.neea.cn/', icon: 'brand/text-jlpt.svg' },
-      { id: 'ielts', name: 'IELTS', url: 'https://ielts.neea.cn/', icon: 'brand/text-ielts.svg' },
-      { id: 'chsi', name: '学信网', url: 'https://www.chsi.com.cn/', icon: 'brand/text-chsi.svg' },
+      { id: 'pmi', name: 'PMI', url: 'https://www.pmi.org/', icon: 'brand/text-pmi.svg', iconTone: 'adaptive' },
+      { id: 'jlpt', name: 'JLPT', url: 'https://jlpt-main.neea.cn/', icon: 'brand/text-jlpt.svg', iconTone: 'adaptive' },
+      { id: 'ielts', name: 'IELTS', url: 'https://ielts.neea.cn/', icon: 'brand/text-ielts.svg', iconTone: 'adaptive' },
+      { id: 'chsi', name: '学信网', url: 'https://www.chsi.com.cn/', icon: 'brand/text-chsi.svg', iconTone: 'adaptive' },
     ],
   },
 ];
 
 // Dock 收藏区只保存直接可点击的常用书签。
 export const DOCK_FAVORITES: Bookmark[] = [
-  { type: 'bookmark', id: 'chatgpt', name: 'ChatGPT', url: 'https://chatgpt.com', icon: 'brand/chatgpt.svg' },
-  { type: 'bookmark', id: 'github', name: 'GitHub', url: 'https://github.com', icon: 'brand/github.svg' },
-  { type: 'bookmark', id: 'gmail', name: 'Gmail', url: 'https://mail.google.com', icon: 'brand/gmail.svg' },
+  { type: 'bookmark', id: 'chatgpt', name: 'ChatGPT', url: 'https://chatgpt.com', icon: 'brand/chatgpt.svg', iconTone: 'adaptive' },
+  { type: 'bookmark', id: 'github', name: 'GitHub', url: 'https://github.com', icon: 'brand/github.svg', iconTone: 'adaptive' },
+  { type: 'bookmark', id: 'gmail', name: 'Gmail', url: 'https://mail.google.com', icon: 'brand/gmail.svg', iconTone: 'adaptive' },
 ];
 
 // Components 与 DevTools 都是 Dock 内的聚合入口，内部书签按各自名称加入标签组。
@@ -58,6 +58,7 @@ export const DOCK_COMPONENTS: BookmarkGroup = {
   id: 'components',
   name: 'Components',
   icon: 'icons/components.svg',
+  iconTone: 'adaptive',
   bookmarks: [
     { type: 'bookmark', id: 'lucide', name: 'Lucide', url: 'https://lucide.dev', icon: 'tools/lucide.svg' },
     { type: 'bookmark', id: 'iconfont', name: 'Iconfont', url: 'https://www.iconfont.cn', icon: 'tools/iconfont.svg' },
@@ -73,6 +74,7 @@ export const DOCK_DEVTOOLS: BookmarkGroup = {
   id: 'devtools',
   name: 'DevTools',
   icon: 'icons/devtools.svg',
+  iconTone: 'adaptive',
   bookmarks: [
     {
       type: 'bookmark',

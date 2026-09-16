@@ -1,8 +1,0 @@
-/* 以分类文件夹为单位从左上角自动换行排列。 */
-.bookmarks {
-  display: flex;
-  box-sizing: border-box;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 24px;
-}
