@@ -111,7 +111,7 @@ test('首页根据系统配色切换工具栏图标', () => {
 });
 
 test('首页使用独立页面容器样式', async () => {
-  const styles = await readFile(new URL('../../views/home/index.css', import.meta.url), 'utf8');
+  const app = await readFile(new URL('../../entrypoints/newtab/App.tsx', import.meta.url), 'utf8');
 
-  assert.match(styles, /\.bookmarks-page\s*\{[^}]*display:\s*block;[^}]*min-height:\s*100vh;[^}]*box-sizing:\s*border-box;[^}]*padding:\s*24px;/s);
+  assert.match(app, /className="bookmarks-page min-h-screen box-border p-6"/);
 });

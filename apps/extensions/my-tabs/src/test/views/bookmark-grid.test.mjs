@@ -22,8 +22,8 @@ test('独立 Grid View 按配置顺序渲染首页书签文件夹', async () => 
 });
 
 test('独立 Grid View 使用文件夹自动换行布局', async () => {
-  const styles = await readFile(new URL('../../views/bookmarks/bookmark-grid.css', import.meta.url), 'utf8');
+  const app = await readFile(new URL('../../entrypoints/newtab/App.tsx', import.meta.url), 'utf8');
 
-  assert.match(styles, /\.bookmarks\s*\{[^}]*display:\s*flex;[^}]*box-sizing:\s*border-box;[^}]*flex-wrap:\s*wrap;[^}]*align-items:\s*flex-start;[^}]*gap:\s*24px;/s);
-  assert.doesNotMatch(styles, /grid-template-columns|grid-auto-rows|grid-auto-flow/);
+  assert.match(app, /className="bookmarks flex flex-wrap items-start gap-6"/);
+  assert.doesNotMatch(app, /grid-template-columns|grid-auto-rows|grid-auto-flow/);
 });

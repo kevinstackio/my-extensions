@@ -70,3 +70,24 @@ test('React 运行时不存在原生 DOM 双轨实现和弱类型入口', async 
   assert.match(app, /import type \{ Bookmark, BookmarkCollection \}/);
   assert.doesNotMatch(app, /\bobject\b|\bas Bookmark(?:Folder)?\b/);
 });
+
+test('组件迁移后不存在旧 CSS 双轨和第二套 Popover 运行时', async () => {
+  const styles = await readFile(new URL('../styles/index.css', import.meta.url), 'utf8');
+  const dock = await readFile(new URL('../views/bookmarks/bookmark-dock.tsx', import.meta.url), 'utf8');
+  const legacyImports = [
+    'bookmark-card/index.css',
+    'bookmark-folder/index.css',
+    'bookmark-list/index.css',
+    'bookmark-dock.css',
+    'bookmark-grid.css',
+    'views/home/index.css',
+  ];
+
+  for (const legacyImport of legacyImports) {
+    assert.doesNotMatch(styles, new RegExp(legacyImport.replaceAll('.', '\\.'), 'u'), legacyImport);
+  }
+  assert.match(styles, /components\/popover\/index\.css/);
+  assert.match(dock, /components\/ui\/separator/);
+  await access(new URL('../components/popover/index.tsx', import.meta.url));
+  await assert.rejects(access(new URL('../components/ui/popover.tsx', import.meta.url)));
+});

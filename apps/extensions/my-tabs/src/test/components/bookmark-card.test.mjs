@@ -1,6 +1,5 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import { createElement } from 'react';
 import { BookmarkCard } from '../../components/bookmark-card/index.tsx';
 import { renderReact } from '../helpers/react-dom.mjs';
@@ -37,17 +36,44 @@ test('通用书签卡片展示品牌图标与名称', async () => {
   }
 });
 
-// 验证通用书签卡片名称使用较高字重以提高辨识度。
+// 验证通用书签卡片名称使用语义字重类以提高辨识度。
 test('通用书签卡片名称使用加粗字重', async () => {
-  const styles = await readFile(new URL('../../components/bookmark-card/index.css', import.meta.url), 'utf8');
+  const view = await renderReact(createElement(BookmarkCard, { bookmark: github }));
 
-  assert.match(styles, /\.bookmark-card__name\s*\{[^}]*font-weight:\s*600/s);
+  try {
+    assert.match(view.container.querySelector('.bookmark-card__name').className, /font-semibold/);
+  } finally {
+    await view.cleanup();
+  }
 });
 
 // 验证通用书签卡片图标固定为 64 像素方形，SVG 保持居中的 32 像素尺寸。
 test('通用书签卡片图标使用固定尺寸与独立圆角', async () => {
-  const styles = await readFile(new URL('../../components/bookmark-card/index.css', import.meta.url), 'utf8');
+  const view = await renderReact(createElement(BookmarkCard, { bookmark: github }));
 
-  assert.match(styles, /\.bookmark-card__icon\s*\{[^}]*box-sizing:\s*border-box;[^}]*width:\s*64px;[^}]*height:\s*64px;[^}]*border-radius:\s*16px;/s);
-  assert.match(styles, /\.bookmark-card__icon img\s*\{[^}]*box-sizing:\s*border-box;[^}]*width:\s*32px;[^}]*height:\s*32px;/s);
+  try {
+    const container = view.container.querySelector('.bookmark-card__icon');
+    const icon = container.querySelector('img');
+    assert.match(container.className, /h-16/);
+    assert.match(container.className, /w-16/);
+    assert.match(container.className, /border-border/);
+    assert.match(icon.className, /h-8/);
+    assert.match(icon.className, /w-8/);
+  } finally {
+    await view.cleanup();
+  }
+});
+
+test('书签卡片声明 grid、dock 和 preview 三种视觉变体', async () => {
+  const variants = ['grid', 'dock', 'preview'];
+
+  for (const variant of variants) {
+    const view = await renderReact(createElement(BookmarkCard, { bookmark: github, variant }));
+
+    try {
+      assert.equal(view.container.querySelector('a.bookmark-card').dataset.variant, variant);
+    } finally {
+      await view.cleanup();
+    }
+  }
 });

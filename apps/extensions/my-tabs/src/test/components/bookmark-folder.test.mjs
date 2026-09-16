@@ -1,6 +1,5 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import { act, createElement } from 'react';
 import { BookmarkFolder } from '../../components/bookmark-folder/index.tsx';
 import { renderReact } from '../helpers/react-dom.mjs';
@@ -56,11 +55,12 @@ test('带 blur 配置的文件夹解除遮罩并聚焦首个书签', async () =>
     assert.match(folder.className, /bookmark-folder--blurred/);
     assert.equal(blurButton.getAttribute('aria-label'), '点击显示 EDU 书签');
     assert.equal(blurButton.querySelector('img').getAttribute('src'), 'src/assets/icons/brush-cleaning.svg');
+    assert.equal(blurButton.querySelector('img').dataset.tone, 'adaptive');
 
     blurButton.focus();
     await act(async () => blurButton.click());
 
-    assert.equal(folder.className, 'bookmark-folder');
+    assert.match(folder.className, /bookmark-folder grid/);
     assert.match(blurButton.className, /bookmark-folder__blur--hidden/);
     assert.equal(blurButton.hasAttribute('aria-hidden'), false);
     assert.equal(view.document.activeElement, firstBookmark);
@@ -69,17 +69,22 @@ test('带 blur 配置的文件夹解除遮罩并聚焦首个书签', async () =>
   }
 });
 
-// 验证文件夹由固定内边距和内部书签间距自然撑开。
+// 验证文件夹通过语义工具类保持固定内边距和内部书签间距。
 test('书签文件夹不设宽高并使用固定的内部间距', async () => {
-  const styles = await readFile(new URL('../../components/bookmark-folder/index.css', import.meta.url), 'utf8');
+  const view = await renderReact(createElement(BookmarkFolder, { folder: socialMedia }));
 
-  assert.match(styles, /\.bookmark-folder\s*\{[^}]*box-sizing:\s*border-box;[^}]*display:\s*grid;[^}]*justify-self:\s*start;/s);
-  assert.doesNotMatch(styles, /\.bookmark-folder\s*\{[^}]*grid-(column|row):/s);
-  assert.doesNotMatch(styles, /\.bookmark-folder\s*\{[^}]*\b(width|height):/s);
-  assert.match(styles, /\.bookmark-folder__preview\s*\{[^}]*box-sizing:\s*border-box;[^}]*grid-template-columns:\s*repeat\(2,\s*64px\);[^}]*gap:\s*16px;[^}]*padding:\s*16px;[^}]*border-radius:\s*16px;/s);
-  assert.doesNotMatch(styles, /\.bookmark-folder__blur:hover,\s*\.bookmark-folder__blur:focus-visible\s*\{/s);
-  assert.match(styles, /\.bookmark-folder__blur:hover img,\s*\.bookmark-folder__blur:focus-visible img\s*\{[^}]*transform:\s*translateY\(-2px\) scale\(1\.08\);/s);
-  assert.match(styles, /\.bookmark-folder \.bookmark-card\s*\{[^}]*box-sizing:\s*border-box;[^}]*width:\s*64px;[^}]*height:\s*64px;/s);
-  assert.match(styles, /\.bookmark-folder__placeholder\s*\{[^}]*box-sizing:\s*border-box;[^}]*width:\s*64px;[^}]*height:\s*64px;/s);
-  assert.match(styles, /\.bookmark-folder \.bookmark-card__name\s*\{[^}]*display:\s*none;/s);
+  try {
+    const folder = view.container.querySelector('.bookmark-folder');
+    const preview = folder.querySelector('.bookmark-folder__preview');
+    assert.match(folder.className, /grid/);
+    assert.match(folder.className, /justify-self-start/);
+    assert.match(folder.className, /gap-3/);
+    assert.match(preview.className, /grid-cols-\[repeat\(2,4rem\)\]/);
+    assert.match(preview.className, /gap-4/);
+    assert.match(preview.className, /p-4/);
+    assert.match(preview.className, /border-border/);
+    assert.match(preview.querySelector('.bookmark-folder__placeholder').className, /h-16/);
+  } finally {
+    await view.cleanup();
+  }
 });

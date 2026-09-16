@@ -87,6 +87,24 @@ test('通用 Popover 鼠标离开后延迟关闭，回到触发器或浮层会�
   }
 });
 
+test('通用 Popover 点击浮层外部会关闭并恢复触发器焦点', async () => {
+  const view = await renderPopover();
+
+  try {
+    const trigger = view.container.querySelector('.trigger');
+    const popover = view.container.querySelector('.popover');
+    await act(async () => trigger.click());
+    assert.equal(popover.hidden, false);
+
+    await act(async () => view.document.body.dispatchEvent(new view.window.MouseEvent('mousedown', { bubbles: true })));
+    assert.equal(popover.hidden, true);
+    assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+    assert.equal(view.document.activeElement, trigger);
+  } finally {
+    await view.cleanup();
+  }
+});
+
 test('通用 Popover 使用双层伪元素绘制可配置方位的箭头', async () => {
   const view = await renderPopover({ placement: 'bottom', showArrow: false });
   const styles = await readFile(new URL('../../components/popover/index.css', import.meta.url), 'utf8');
@@ -97,6 +115,10 @@ test('通用 Popover 使用双层伪元素绘制可配置方位的箭头', async
     assert.equal(popover.dataset.arrow, 'false');
     assert.match(styles, /\.popover::before,\s*\.popover::after\s*\{/s);
     assert.match(styles, /\.popover\[data-placement='bottom'\]::before\s*\{/s);
+    assert.match(styles, /background:\s*var\(--popover\)/);
+    assert.match(styles, /color:\s*var\(--popover-foreground\)/);
+    assert.match(styles, /border:\s*1px solid var\(--border\)/);
+    assert.match(styles, /box-shadow:\s*var\(--shadow-floating\)/);
   } finally {
     await view.cleanup();
   }

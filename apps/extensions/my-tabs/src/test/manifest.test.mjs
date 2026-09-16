@@ -35,16 +35,13 @@ test('Vite 依赖扫描排除 WXT 临时与稳定产物', async () => {
   assert.match(config, /optimizeDeps:\s*\{\s*entries:\s*\['src\/entrypoints\/newtab\/index\.html'\]/s);
 });
 
-// 验证首页声明书签入口、标签页图标回退资源与挂载节点。
+// 验证首页通过唯一 React 样式入口加载书签样式、标签页图标回退资源与挂载节点。
 test('首页加载书签入口', async () => {
   const home = await readFile(new URL('../entrypoints/newtab/index.html', import.meta.url), 'utf8');
+  const main = await readFile(new URL('../entrypoints/newtab/main.tsx', import.meta.url), 'utf8');
 
-  assert.match(home, /reset\.css/);
-  assert.match(home, /styles\/index\.css/);
-  assert.match(home, /bookmark-card\/index\.css/);
-  assert.match(home, /bookmark-folder\/index\.css/);
-  assert.match(home, /bookmarks\/bookmark-dock\.css/);
-  assert.match(home, /bookmarks\/bookmark-grid\.css/);
+  assert.doesNotMatch(home, /<link rel="stylesheet"/);
+  assert.match(main, /import ['"]\.\.\/\.\.\/styles\/index\.css['"]/);
   assert.match(home, /<div id="app"><\/div>/);
   assert.match(home, /<script type="module" src="\.\/main\.tsx"><\/script>/);
   assert.doesNotMatch(home, /views\/home\/index\.js/);
