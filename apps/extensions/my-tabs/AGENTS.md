@@ -9,3 +9,37 @@
 - 重绘 SVG 必须使用 `viewBox="0 0 24 24"`，不写 `width`、`height`；并包含 `role="img"`、可访问的 `<title>` 与一个或多个 `<path>`。
 - 书签 SVG 的统一色值为黑色 `#000000`：优先省略 `fill` 以使用 SVG 默认黑色；如需显式声明，必须使用 `fill="#000000"`。不得使用其他色值、渐变、阴影、纹理或透明度效果，并保留小尺寸下可辨识的核心特征。
 - 文字类书签 SVG 统一命名为 `text-<书签 id>.svg`（例如 `text-pmi.svg`），文字置于透明 `128×128` 画布中央；允许通过等比或非等比缩放让文字主体更饱满，但不得超出安全边距。
+
+## shadcn/ui 受控引入
+
+- My Tabs 以 shadcn/ui 与 Radix 原语作为通用 UI 基础，但只按已批准的真实交互需求引入组件；禁止执行 `shadcn add --all`，不得为了形式统一机械替换业务组件。
+- `src/components/ui/` 只维护项目持有的通用 shadcn/ui 原语源码，不得包含书签、Dock、Chrome API 或其他业务逻辑；业务差异应在 `src/features/` 或现有业务组件中通过组合、variant 和 `className` 实现。
+- 当前受控范围只包含 `Button`、`Tooltip`、`DropdownMenu` 和已有 `Separator`；`Card`、shadcn `Popover`、`Dialog` 与 `AlertDialog` 在没有独立需求和用户批准前不得引入。
+- 添加或更新 shadcn/ui 原语前必须检查生成差异，不得直接覆盖本地 Token、字体或已批准的可访问性定制；组件升级必须保留现有行为测试。
+- 全局只创建一个 `TooltipProvider`；不得为每个 Dock 项目重复创建 Provider。
+- Tooltip 只承担简短的 Hover 与键盘 Focus 提示，不得包含链接、按钮、书签列表或其他可交互内容；书签入口显示书签名，工具分组显示分组名，菜单打开时不得残留 Tooltip。
+- Tooltip、DropdownMenu、Button 与链接组合时必须通过 `asChild` 等方式共享唯一真实交互元素；禁止生成嵌套 `<button>`、`<button><a>` 或其他嵌套交互控件。
+
+## 图标职责
+
+- `UiIcon` 只适配 Lucide 通用 UI 图标，统一使用 `currentColor`、已批准的尺寸和线宽；只能显式静态导入实际使用的图标。
+- 禁止 `import * as Icons from 'lucide-react'`、完整图标注册表、根据任意字符串动态访问 Lucide 全量导出或其他可能将整套图标打入产物的方式。
+- `BookmarkIcon` 只管理品牌、网站书签、文字 Logo 和既有 SVG/PNG 资源，并继续遵守原色与自适应单色规则；不得使用 Lucide 重绘或替换品牌 Logo。
+- 被 Lucide 替代的通用功能 SVG 在完成迁移和验收后必须删除，不得长期保留两套等价资源或运行时实现。
+
+## Dock 交互
+
+- Dock 当前只允许两类入口：`link` 入口使用真实链接语义并直接打开网页；`menu` 入口使用真实按钮语义并在点击或键盘操作后打开 `DropdownMenu`。
+- Dock 入口 Hover 或键盘 Focus 时只显示 Tooltip；不得通过 Hover 直接展开 DropdownMenu，也不得让同一个弹层同时承担 Tooltip 和菜单职责。
+- DropdownMenu 中的网页入口优先使用真实 `<a>`；仅在需要调用 Chrome API、创建标签组或执行非导航操作时使用命令型菜单项。
+- Dock 位于视口底部，DropdownMenu 默认从上方弹出并支持碰撞调整；必须验证菜单在 `1280×720`、缩放后 CSS 视口 `640×360` 以及 100%、125%、150%、200% 缩放下不被裁剪或移出视口。
+- DropdownMenu 必须覆盖 Enter、Space 或 ArrowDown 打开、方向键移动、Enter 激活、Esc 关闭并恢复触发器焦点、外部点击关闭等行为；Portal 必须正确继承明暗主题 Token 和层级。
+- DropdownMenu 迁移和验收完成后必须删除旧自定义 Popover 运行时、样式及无剩余消费者的测试；允许迁移阶段短暂共存，但不得以兼容为由长期维护双轨实现。
+- 桌面应用、搜索、编辑、拖拽、设置、主题按钮、`Dialog`、`AlertDialog` 和新的全局状态管理均不属于当前 Dock 重构范围；新增时必须建立独立 Issue 并重新完成设计批准。
+
+## My Tabs 验收
+
+- 自动化测试至少覆盖 `link` 与 `menu` 配置、链接与按钮语义、无嵌套交互元素、Tooltip 文本、DropdownMenu 键盘导航、Esc 与外部点击关闭、焦点恢复、新标签页安全属性和 Reduced Motion。
+- 新增架构测试防止旧 Popover、Lucide 全量导入、业务逻辑进入 `src/components/ui/` 或未批准的 shadcn 原语被重新引入。
+- 每个阶段的类型检查、定向测试、全量测试、生产构建和现有包体积检查必须通过；包体积检查继续作为安全门禁，但未触发预算失败时不单独扩展体积治理范围。
+- 功能阶段完成后必须至少在 Chrome 或 Edge 实际加载稳定开发目录，验证明暗主题、Tooltip、菜单、键盘、焦点恢复和固定缩放矩阵；用户未明确验收通过前不得创建阶段 Commit。
