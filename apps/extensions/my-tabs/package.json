@@ -8,21 +8,28 @@
     "dev": "wxt",
     "postinstall": "wxt prepare",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:bundle-size": "node scripts/bundle-size.mjs --check"
   },
   "dependencies": {
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "radix-ui": "1.6.7",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "tailwind-merge": "3.7.0"
   },
   "devDependencies": {
     "@my-extensions/stable-extension-dev": "workspace:1.0.0",
-    "@types/react": "19.3.0",
-    "@types/react-dom": "19.3.0",
+    "@tailwindcss/vite": "4.3.3",
     "@types/chrome": "0.2.9",
     "@types/node": "24.13.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.1",
     "@wxt-dev/module-react": "1.2.2",
     "happy-dom": "20.14.5",
+    "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
     "vite": "8.3.0",
     "vitest": "5.0.0",

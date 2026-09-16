@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 
+import tailwindcss from '@tailwindcss/vite';
 import { createStableDevelopmentHooks } from '@my-extensions/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
@@ -18,6 +19,8 @@ const assetFiles = [
   'brand/vercel.svg',
   'brand/x.svg',
   'brand/youtube.svg',
+  'fonts/OFL.txt',
+  'fonts/SOURCE.md',
   'icons/brush-cleaning.svg',
   'icons/components.svg',
   'icons/devtools.svg',
@@ -55,6 +58,7 @@ export default defineConfig({
   outDir: 'dist',
   modules: ['@wxt-dev/module-react'],
   vite: () => ({
+    plugins: [tailwindcss()],
     // 只扫描源码入口，避免 WXT 重建临时目录时与 Vite 的 HTML 扫描发生竞态。
     optimizeDeps: {
       entries: ['src/entrypoints/newtab/index.html'],

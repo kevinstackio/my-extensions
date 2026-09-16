@@ -1,0 +1,21 @@
+{
+  "baseline": {
+    "jsGzip": 70367,
+    "cssGzip": 1366,
+    "fontBytes": 0,
+    "fontFiles": 0,
+    "totalBytes": 290686
+  },
+  "limits": {
+    "jsGzipDelta": 30720,
+    "cssGzipDelta": 10240,
+    "fontBytes": 71680
+  },
+  "measurement": {
+    "directory": "dist/chrome-mv3",
+    "excludes": [
+      "*.map"
+    ],
+    "gzip": "node:zlib.gzipSync(level=9, mtime=0)"
+  }
+}
