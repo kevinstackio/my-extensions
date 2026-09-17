@@ -3,7 +3,8 @@ import { useRef, useState, type MouseEvent } from 'react';
 import type { BookmarkFolder as BookmarkFolderData, OpenBookmark } from '../../types/bookmarks';
 import { cn } from '../../lib/utils';
 import { BookmarkCard } from '../bookmark-card';
-import { BookmarkIcon } from '../bookmark-icon';
+import { Button } from '../ui/button';
+import { UiIcon } from '../ui/ui-icon';
 
 interface BookmarkFolderProps {
   folder: BookmarkFolderData;
@@ -52,23 +53,21 @@ export function BookmarkFolder({ folder, onOpenBookmark }: BookmarkFolderProps) 
           />
         ))}
         {folder.blur === true ? (
-          <button
+          <Button
             type="button"
+            variant="ghost"
             className={cn(
-              'bookmark-folder__blur absolute inset-0 z-[1] grid place-items-center rounded-[var(--radius)] border-0 bg-overlay text-inherit backdrop-blur-sm transition-[transform,border-color,box-shadow] duration-[var(--duration-fast)] ease-[var(--ease-standard)] motion-safe:hover:shadow-[var(--shadow-hover)] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2',
+              'bookmark-folder__blur absolute inset-0 z-[1] grid h-auto w-auto place-items-center rounded-[var(--radius)] border-0 bg-overlay p-0 text-inherit backdrop-blur-sm transition-[transform,border-color,box-shadow] duration-[var(--duration-fast)] ease-[var(--ease-standard)] motion-safe:hover:shadow-[var(--shadow-hover)] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2',
               !isBlurred && 'bookmark-folder__blur--hidden hidden',
             )}
             aria-label={`点击显示 ${folder.name} 书签`}
             onClick={reveal}
           >
-            <BookmarkIcon
-              icon="icons/brush-cleaning.svg"
-              name={`${folder.name} 遮罩`}
-              tone="adaptive"
-              size="md"
+            <UiIcon
+              name="brush-cleaning"
               className="h-7 w-7 motion-safe:hover:-translate-y-0.5 motion-safe:hover:scale-[1.08] motion-safe:focus-visible:-translate-y-0.5 motion-safe:focus-visible:scale-[1.08]"
             />
-          </button>
+          </Button>
         ) : null}
       </div>
       <span className="bookmark-folder__name max-w-full justify-self-center overflow-hidden text-ellipsis whitespace-nowrap text-[13px] font-semibold leading-5">

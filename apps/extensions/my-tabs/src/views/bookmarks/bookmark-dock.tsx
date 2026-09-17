@@ -1,5 +1,6 @@
-import { BookmarkIcon } from '../../components/bookmark-icon';
+import { DockIconView } from '../../components/dock-icon';
 import { Separator } from '../../components/ui/separator';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../components/ui/tooltip';
 import type { Bookmark, BookmarkGroup, OpenBookmark } from '../../types/bookmarks';
 import { BookmarkCard } from '../../components/bookmark-card';
 import { BookmarkList } from '../../components/bookmark-list';
@@ -21,11 +22,9 @@ function BookmarkToolGroup({ group, onOpenBookmark }: BookmarkToolGroupProps) {
       aria-label={`打开 ${group.name} 工具列表`}
     >
       <span className="bookmark-card__icon grid h-16 w-16 place-items-center rounded-[var(--radius)] border border-border bg-transparent transition-colors duration-[var(--duration-fast)] group-hover:bg-accent group-focus-visible:bg-accent group-aria-expanded:bg-accent">
-        <BookmarkIcon
+        <DockIconView
           icon={group.icon}
           name={group.name}
-          tone={group.iconTone}
-          size={group.iconSize}
         />
       </span>
     </button>
@@ -58,7 +57,14 @@ export function BookmarkDock({ favorites, components, devtools, onOpenBookmark }
     <nav className="bookmark-dock fixed bottom-6 left-1/2 z-[1] flex w-max -translate-x-1/2 items-center rounded-[var(--radius)] border border-border bg-surface-raised p-2 shadow-[var(--shadow-hover)]" aria-label="固定书签">
       <div className="bookmark-dock__favorites flex flex-nowrap gap-2">
         {favorites.map((bookmark) => (
-          <BookmarkCard key={bookmark.id} bookmark={bookmark} variant="dock" />
+          <Tooltip key={bookmark.id}>
+            <BookmarkCard
+              bookmark={bookmark}
+              variant="dock"
+              renderAnchor={(anchor) => <TooltipTrigger asChild>{anchor}</TooltipTrigger>}
+            />
+            <TooltipContent side="top">{bookmark.name}</TooltipContent>
+          </Tooltip>
         ))}
       </div>
       <Separator orientation="vertical" className="mx-2 h-16" aria-hidden="true" />

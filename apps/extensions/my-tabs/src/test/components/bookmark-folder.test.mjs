@@ -43,8 +43,8 @@ test('书签文件夹点击单个图标后上报所属标签组', async () => {
   }
 });
 
-// 验证解除遮罩后焦点转移到第一个书签，遮罩自身不再成为 aria-hidden 焦点节点。
-test('带 blur 配置的文件夹解除遮罩并聚焦首个书签', async () => {
+// 验证受控 Button 解除遮罩后仍将焦点转移到第一个书签。
+test('文件夹遮罩使用 Button 但保留原有焦点行为', async () => {
   const view = await renderReact(createElement(BookmarkFolder, { folder: edu }));
 
   try {
@@ -53,9 +53,9 @@ test('带 blur 配置的文件夹解除遮罩并聚焦首个书签', async () =>
     const blurButton = folder.querySelector('button.bookmark-folder__blur');
 
     assert.match(folder.className, /bookmark-folder--blurred/);
+    assert.equal(blurButton.dataset.slot, 'button');
     assert.equal(blurButton.getAttribute('aria-label'), '点击显示 EDU 书签');
-    assert.equal(blurButton.querySelector('img').getAttribute('src'), 'src/assets/icons/brush-cleaning.svg');
-    assert.equal(blurButton.querySelector('img').dataset.tone, 'adaptive');
+    assert.equal(blurButton.querySelector('svg').getAttribute('aria-hidden'), 'true');
 
     blurButton.focus();
     await act(async () => blurButton.click());

@@ -9,6 +9,7 @@ const globalNames = [
   'HTMLElement',
   'Node',
   'Event',
+  'CustomEvent',
   'MouseEvent',
   'KeyboardEvent',
   'getComputedStyle',
@@ -40,6 +41,7 @@ export async function renderReact(element) {
   installGlobal('HTMLElement', dom.HTMLElement);
   installGlobal('Node', dom.Node);
   installGlobal('Event', dom.Event);
+  installGlobal('CustomEvent', dom.CustomEvent);
   installGlobal('MouseEvent', dom.MouseEvent);
   installGlobal('KeyboardEvent', dom.KeyboardEvent);
   installGlobal('getComputedStyle', dom.getComputedStyle.bind(dom));

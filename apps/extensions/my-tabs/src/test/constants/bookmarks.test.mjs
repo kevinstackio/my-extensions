@@ -63,8 +63,7 @@ test('Components 聚合入口保持当前组件工具顺序', () => {
     type: 'bookmark-group',
     id: 'components',
     name: 'Components',
-    icon: 'icons/components.svg',
-    iconTone: 'adaptive',
+    icon: { kind: 'ui', name: 'blocks' },
     bookmarks: [
       { type: 'bookmark', id: 'lucide', name: 'Lucide', url: 'https://lucide.dev', icon: 'tools/lucide.svg' },
       { type: 'bookmark', id: 'iconfont', name: 'Iconfont', url: 'https://www.iconfont.cn', icon: 'tools/iconfont.svg' },
@@ -80,8 +79,7 @@ test('DevTools 聚合入口提供翻译工具', () => {
     type: 'bookmark-group',
     id: 'devtools',
     name: 'DevTools',
-    icon: 'icons/devtools.svg',
-    iconTone: 'adaptive',
+    icon: { kind: 'ui', name: 'wrench' },
     bookmarks: [
       {
         type: 'bookmark',

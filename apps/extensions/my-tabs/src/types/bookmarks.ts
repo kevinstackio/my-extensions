@@ -1,8 +1,4 @@
-/** 图标颜色策略：品牌图标保留原色，单色 SVG 才允许跟随主题反转。 */
-export type IconTone = 'original' | 'adaptive';
-
-/** 书签图标的展示尺寸，尺寸由卡片所在区域决定。 */
-export type IconSize = 'sm' | 'md' | 'wide';
+import type { DockIcon, IconSize, IconTone } from './icons';
 
 /** 页面中可以直接打开的外链书签。 */
 export interface Bookmark {
@@ -29,9 +25,7 @@ export interface BookmarkGroup {
   type: 'bookmark-group';
   id: string;
   name: string;
-  icon: string;
-  iconTone?: IconTone;
-  iconSize?: IconSize;
+  icon: DockIcon;
   bookmarks: Bookmark[];
 }
 

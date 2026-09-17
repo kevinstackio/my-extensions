@@ -7,22 +7,27 @@ import { installActionIconTheme } from '../../utils/action-icon-theme.js';
 import { openBookmarkInGroup } from '../../utils/tab.js';
 import { BookmarkDock } from '../../views/bookmarks/bookmark-dock.tsx';
 import { BookmarkGrid } from '../../views/bookmarks/bookmark-grid.tsx';
+import { TooltipProvider } from '../../components/ui/tooltip.tsx';
 import { renderReact } from '../helpers/react-dom.mjs';
 
 function createHome(onOpenBookmark) {
   return createElement(
-    Fragment,
+    TooltipProvider,
     null,
-    createElement('main', { className: 'bookmarks-page' },
-      createElement('section', { className: 'bookmarks', 'data-bookmarks': true, 'aria-label': '常用书签' },
-        createElement(BookmarkGrid, { bookmarks: BOOKMARK_GRID, onOpenBookmark }))),
-    createElement('aside', { 'data-bookmark-dock': true, 'aria-label': '固定书签' },
-      createElement(BookmarkDock, {
-        favorites: DOCK_FAVORITES,
-        components: DOCK_COMPONENTS,
-        devtools: DOCK_DEVTOOLS,
-        onOpenBookmark,
-      })),
+    createElement(
+      Fragment,
+      null,
+      createElement('main', { className: 'bookmarks-page' },
+        createElement('section', { className: 'bookmarks', 'data-bookmarks': true, 'aria-label': '常用书签' },
+          createElement(BookmarkGrid, { bookmarks: BOOKMARK_GRID, onOpenBookmark }))),
+      createElement('aside', { 'data-bookmark-dock': true, 'aria-label': '固定书签' },
+        createElement(BookmarkDock, {
+          favorites: DOCK_FAVORITES,
+          components: DOCK_COMPONENTS,
+          devtools: DOCK_DEVTOOLS,
+          onOpenBookmark,
+        })),
+    ),
   );
 }
 
@@ -33,6 +38,7 @@ test('React 首页组合主书签 Grid 与固定 Dock', async () => {
   try {
     assert.match(appSource, /<BookmarkGrid bookmarks=\{BOOKMARK_GRID\} onOpenBookmark=\{onOpenBookmark\}/);
     assert.match(appSource, /<BookmarkDock[\s\S]*favorites=\{DOCK_FAVORITES\}[\s\S]*onOpenBookmark=\{onOpenBookmark\}/);
+    assert.equal((appSource.match(/<TooltipProvider>/g) ?? []).length, 1);
     assert.equal(view.container.querySelectorAll('[data-bookmarks] .bookmark-folder').length, BOOKMARK_GRID.length);
     assert.equal(view.container.querySelectorAll('[data-bookmark-dock] .bookmark-dock__favorites > .bookmark-card').length, DOCK_FAVORITES.length);
     assert.equal(view.container.querySelectorAll('.bookmark-dock__group').length, 2);

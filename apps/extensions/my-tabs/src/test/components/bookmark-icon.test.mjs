@@ -23,8 +23,8 @@ test('书签图标默认保留原始色调并使用 md 尺寸', async () => {
 
 test('自适应 SVG 图标声明主题色调并支持受控尺寸', async () => {
   const view = await renderReact(createElement(BookmarkIcon, {
-    icon: 'icons/devtools.svg',
-    name: 'DevTools',
+    icon: 'tools/lucide.svg',
+    name: 'Lucide',
     tone: 'adaptive',
     size: 'wide',
   }));

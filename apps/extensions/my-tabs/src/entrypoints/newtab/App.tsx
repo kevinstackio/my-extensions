@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { BOOKMARK_GRID, DOCK_COMPONENTS, DOCK_DEVTOOLS, DOCK_FAVORITES } from '../../constants/bookmarks';
 import { BookmarkDock } from '../../views/bookmarks/bookmark-dock';
 import { BookmarkGrid } from '../../views/bookmarks/bookmark-grid';
+import { TooltipProvider } from '../../components/ui/tooltip';
 import { openBookmarkInGroup } from '../../utils/tab.js';
 import { installActionIconTheme } from '../../utils/action-icon-theme.js';
 import type { Bookmark, BookmarkCollection } from '../../types/bookmarks';
@@ -19,7 +20,7 @@ export function App() {
   };
 
   return (
-    <>
+    <TooltipProvider>
       <main className="bookmarks-page min-h-screen box-border p-6">
         <section className="bookmarks flex flex-wrap items-start gap-6" data-bookmarks aria-label="常用书签">
           <BookmarkGrid bookmarks={BOOKMARK_GRID} onOpenBookmark={onOpenBookmark} />
@@ -33,6 +34,6 @@ export function App() {
           onOpenBookmark={onOpenBookmark}
         />
       </aside>
-    </>
+    </TooltipProvider>
   );
 }

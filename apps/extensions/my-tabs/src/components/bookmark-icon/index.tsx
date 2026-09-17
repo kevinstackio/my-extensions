@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import type { IconSize, IconTone } from '../../types/bookmarks';
+import type { IconSize, IconTone } from '../../types/icons';
 import { getExtensionAsset } from '../../utils/common.js';
 
 const bookmarkIconVariants = cva(

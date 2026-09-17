@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { readFile, stat } from 'node:fs/promises';
+import { access, readFile, stat } from 'node:fs/promises';
 
 const iconSizes = [16, 32, 48, 128];
 const darkIconPaths = iconSizes.map((size) => `/src/assets/logo/my-tabs-dark-${size}.png`);
@@ -87,15 +87,16 @@ test('深浅色图标提供完整且尺寸正确的 PNG 资源', async () => {
   }
 });
 
-// 验证未收录于 Simple Icons 的开发工具图标保持书签品牌 SVG 结构。
-test('开发工具书签图标遵循 Simple Icons 风格', async () => {
-  const icon = await readFile(new URL('../assets/icons/devtools.svg', import.meta.url), 'utf8');
+// 验证已替换的通用图标不会继续发布，也不会从源码资源目录加载。
+test('已替换的通用图标不再发布或存在', async () => {
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+  const removedAssets = ['icons/brush-cleaning.svg', 'icons/components.svg', 'icons/devtools.svg'];
 
-  assert.match(icon, /<svg role="img" viewBox="0 0 24 24"/);
-  assert.match(icon, /<title>DevTools<\/title>/);
-  assert.match(icon, /<path fill="#000000" transform="scale\(0\.0234375\)" d="M85\.333333 224/);
-  assert.equal((icon.match(/<path /g) ?? []).length, 1);
-  assert.doesNotMatch(icon, /<\?xml|<!DOCTYPE|class=|p-id=|width=|height=|stroke=|opacity|<line|<rect|<image/);
+  for (const asset of removedAssets) {
+    const assetPattern = asset.replaceAll('.', '[.]');
+    assert.doesNotMatch(config, new RegExp(`['"]${assetPattern}['"]`));
+    await assert.rejects(access(new URL(`../assets/${asset}`, import.meta.url)), { code: 'ENOENT' });
+  }
 });
 
 // 验证收藏品牌图标使用紧凑画布，避免在 Dock 中因原始留白显得过小。

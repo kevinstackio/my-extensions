@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import type { MouseEventHandler, Ref } from 'react';
+import type { MouseEventHandler, ReactElement, ReactNode, Ref } from 'react';
 
 import { BookmarkIcon } from '../bookmark-icon';
 import type { Bookmark } from '../../types/bookmarks';
@@ -26,11 +26,12 @@ interface BookmarkCardProps extends VariantProps<typeof bookmarkCardVariants> {
   bookmark: Bookmark;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
   linkRef?: Ref<HTMLAnchorElement>;
+  renderAnchor?: (anchor: ReactElement) => ReactNode;
 }
 
 /** 渲染一个安全地在新标签页打开目标网站的通用书签卡片。 */
-export function BookmarkCard({ bookmark, onClick, linkRef, variant = 'grid' }: BookmarkCardProps) {
-  return (
+export function BookmarkCard({ bookmark, onClick, linkRef, renderAnchor, variant = 'grid' }: BookmarkCardProps) {
+  const anchor = (
     <a
       ref={linkRef}
       className={bookmarkCardVariants({ variant })}
@@ -61,4 +62,6 @@ export function BookmarkCard({ bookmark, onClick, linkRef, variant = 'grid' }: B
       </span>
     </a>
   );
+
+  return renderAnchor?.(anchor) ?? anchor;
 }

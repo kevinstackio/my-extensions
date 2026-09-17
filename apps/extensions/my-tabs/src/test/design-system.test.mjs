@@ -33,6 +33,14 @@ test('Tailwind 与 shadcn 基础依赖使用精确版本', async () => {
   assert.equal(packageJson.dependencies['radix-ui'], '1.6.7');
 });
 
+test('Lucide 与受控 UI 原语使用批准的精确依赖', async () => {
+  const packageJson = JSON.parse(await readProjectFile('package.json'));
+
+  assert.equal(packageJson.dependencies['lucide-react'], '1.46.0');
+  assert.equal(packageJson.dependencies['radix-ui'], '1.6.7');
+  assert.equal(Object.keys(packageJson.dependencies).some((name) => name.startsWith('@radix-ui/react-')), false);
+});
+
 test('shadcn 配置和项目路径别名指向 src', async () => {
   const components = JSON.parse(await readProjectFile('components.json'));
   const tsconfig = JSON.parse(await readProjectFile('tsconfig.json'));
