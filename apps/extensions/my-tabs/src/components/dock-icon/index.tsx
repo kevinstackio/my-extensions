@@ -13,6 +13,7 @@ function assertNever(value: never): never {
 }
 
 export function DockIconView({ icon, name, className }: DockIconViewProps) {
+  // 联合类型穷举保证新增图标来源时必须显式补齐渲染分支。
   switch (icon.kind) {
     case 'ui':
       return <UiIcon name={icon.name} className={className} />;

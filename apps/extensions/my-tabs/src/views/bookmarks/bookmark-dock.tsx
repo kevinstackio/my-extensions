@@ -13,6 +13,7 @@ interface BookmarkDockProps {
 
 /** React Dock，保持直接收藏、分隔线与工具菜单的固定分区结构。 */
 export function BookmarkDock({ favorites, components, devtools, onOpenBookmark }: BookmarkDockProps) {
+  // 没有 DevTools 配置时不渲染空入口，保持 Dock 的固定分区结构。
   const groups = devtools ? [components, devtools] : [components];
 
   return (
@@ -25,7 +26,8 @@ export function BookmarkDock({ favorites, components, devtools, onOpenBookmark }
               variant="dock"
               renderAnchor={(anchor) => <TooltipTrigger asChild>{anchor}</TooltipTrigger>}
             />
-            <TooltipContent side="top" align="center">{bookmark.name}</TooltipContent>
+            {/* sideOffset 与箭头高度一致，让箭头尖端连接 Dock 顶边。 */}
+            <TooltipContent side="top" align="center" sideOffset={5}>{bookmark.name}</TooltipContent>
           </Tooltip>
         ))}
       </div>

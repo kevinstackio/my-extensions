@@ -28,6 +28,7 @@ function Button({
   asChild = false,
   ...props
 }: React.ComponentProps<'button'> & VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
+  // asChild 通过 Radix Slot 将 Button 的样式和属性合并到唯一的真实交互元素上。
   const Component = asChild ? Slot.Root : 'button';
   return <Component data-slot="button" className={cn(buttonVariants({ variant, size }), className)} {...props} />;
 }

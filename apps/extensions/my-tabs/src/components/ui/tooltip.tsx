@@ -7,6 +7,7 @@ function TooltipProvider({
   delayDuration = 400,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
+  // 统一延迟，避免 Dock 在指针快速经过时连续闪现多个提示。
   return <TooltipPrimitive.Provider delayDuration={delayDuration} {...props} />;
 }
 
@@ -20,6 +21,7 @@ function TooltipContent({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
+    // Tooltip 使用 Portal 脱离 Dock 的层叠和裁剪上下文，保证提示层可见。
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
         sideOffset={sideOffset}
@@ -30,6 +32,8 @@ function TooltipContent({
         {...props}
       >
         {children}
+        {/* 箭头使用与气泡相同的语义背景色，连接 Tooltip 与触发器。 */}
+        <TooltipPrimitive.Arrow width={10} height={5} className="fill-popover" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   );

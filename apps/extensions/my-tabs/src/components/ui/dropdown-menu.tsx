@@ -13,6 +13,7 @@ function DropdownMenuContent({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
   return (
+    // Portal 避免菜单受 Dock 的层级和溢出容器裁剪；碰撞内边距为窄视口保留安全距离。
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
         data-slot="dropdown-menu-content"
@@ -36,6 +37,7 @@ function DropdownMenuItem({
     <DropdownMenuPrimitive.Item
       data-slot="dropdown-menu-item"
       className={cn(
+        // highlighted 状态由 Radix 键盘导航和指针悬停共同驱动。
         'flex min-h-9 cursor-default select-none items-center gap-2 whitespace-nowrap rounded-sm px-2 text-sm font-medium outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,
       )}
