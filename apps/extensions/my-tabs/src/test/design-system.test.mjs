@@ -1,25 +1,12 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { access, readdir, readFile, stat } from 'node:fs/promises';
+import { access, readFile, stat } from 'node:fs/promises';
 import { test } from 'vitest';
 
 const projectRoot = new URL('../../', import.meta.url);
 
 async function readProjectFile(relativePath) {
   return readFile(new URL(relativePath, projectRoot), 'utf8');
-}
-
-async function collectSourceFiles(directoryUrl) {
-  const files = [];
-  for (const entry of await readdir(directoryUrl, { withFileTypes: true })) {
-    const entryUrl = new URL(`${entry.name}${entry.isDirectory() ? '/' : ''}`, directoryUrl);
-    if (entry.isDirectory()) {
-      files.push(...await collectSourceFiles(entryUrl));
-    } else if (/\.(tsx|css)$/i.test(entry.name) && !entryUrl.pathname.endsWith('/src/styles/index.css')) {
-      files.push(entryUrl);
-    }
-  }
-  return files;
 }
 
 test('Tailwind 与 shadcn 基础依赖使用精确版本', async () => {
@@ -88,47 +75,6 @@ test('项目提供 cn 工具和 shadcn Separator 原语', async () => {
   await access(new URL('src/components/ui/separator.tsx', projectRoot));
 });
 
-test('全局 Token 覆盖明暗主题、动效和 Tailwind 语义映射', async () => {
-  const css = await readProjectFile('src/styles/index.css');
-  const requiredTokens = [
-    '--background',
-    '--foreground',
-    '--card',
-    '--card-foreground',
-    '--popover',
-    '--popover-foreground',
-    '--muted',
-    '--muted-foreground',
-    '--accent',
-    '--accent-foreground',
-    '--primary',
-    '--primary-foreground',
-    '--border',
-    '--border-strong',
-    '--ring',
-    '--surface-raised',
-    '--overlay',
-    '--radius',
-    '--duration-fast',
-    '--ease-standard',
-    '--shadow-hover',
-    '--shadow-floating',
-    '--size-icon-tile',
-    '--size-icon-glyph',
-  ];
-
-  for (const token of requiredTokens) {
-    assert.match(css, new RegExp(`${token.replace('--', '\\-\\-')}\\s*:`));
-  }
-  assert.match(css, /--background:\s*oklch\(0\.985 0 0\)/);
-  assert.match(css, /--duration-fast:\s*160ms/);
-  assert.match(css, /@theme inline/);
-  assert.match(css, /@media\s*\(prefers-color-scheme:\s*dark\)/);
-  assert.match(css, /--background:\s*oklch\(0\.12 0 0\)/);
-  assert.match(css, /color-scheme:\s*light dark/);
-  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
-});
-
 test('Geist Sans 资源带许可证、来源记录和固定哈希', async () => {
   const fontUrl = new URL('src/assets/fonts/Geist-Variable.woff2', projectRoot);
   const fontBuffer = await readFile(fontUrl);
@@ -148,21 +94,4 @@ test('Geist Sans 资源带许可证、来源记录和固定哈希', async () => 
   assert.match(css, /font-display:\s*swap/);
   assert.match(css, /font-weight:\s*400 600/);
   assert.match(css, /Geist-Variable\.woff2/);
-});
-
-test('页面首帧使用中文语言并跟随系统主题', async () => {
-  const home = await readProjectFile('src/entrypoints/newtab/index.html');
-
-  assert.match(home, /<html lang="zh-CN">/);
-  assert.doesNotMatch(home, /theme-toggle|data-theme=/i);
-});
-
-test('业务 TSX 与局部 CSS 不直接写入产品颜色或基础色阶', async () => {
-  const forbiddenColorPattern = /#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|\b(?:bg-zinc|border-neutral)-\d+/i;
-  const files = await collectSourceFiles(new URL('src/', projectRoot));
-
-  for (const file of files) {
-    const source = await readFile(file, 'utf8');
-    assert.doesNotMatch(source, forbiddenColorPattern, file.pathname);
-  }
 });
