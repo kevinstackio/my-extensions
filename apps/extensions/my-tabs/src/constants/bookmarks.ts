@@ -67,7 +67,7 @@ export const DOCK_COMPONENTS: BookmarkGroup = {
   ],
 };
 
-// DevTools 卡片与其内部工具列表必须保持同一配置，供后续 Popover 直接消费。
+// DevTools 入口与菜单项共用同一配置，避免 Dock 维护第二套书签数据。
 export const DOCK_DEVTOOLS: BookmarkGroup = {
   type: 'bookmark-group',
   id: 'devtools',

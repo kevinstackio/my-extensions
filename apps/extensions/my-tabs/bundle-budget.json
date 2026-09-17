@@ -1,10 +1,10 @@
 {
   "baseline": {
-    "jsGzip": 70367,
-    "cssGzip": 1366,
-    "fontBytes": 0,
-    "fontFiles": 0,
-    "totalBytes": 290686
+    "jsGzip": 112363,
+    "cssGzip": 4813,
+    "fontBytes": 69652,
+    "fontFiles": 1,
+    "totalBytes": 506046
   },
   "limits": {
     "jsGzipDelta": 30720,

@@ -2,32 +2,11 @@ import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { access, readFile } from 'node:fs/promises';
 
-const reactBehaviorTests = [
-  'components/bookmark-card.test.mjs',
-  'components/bookmark-folder.test.mjs',
-  'components/bookmark-list.test.mjs',
-  'components/popover.test.mjs',
-  'views/bookmark-dock.test.mjs',
-  'views/bookmark-grid.test.mjs',
-  'views/home.test.mjs',
-];
-
-const legacyTestPatterns = [
-  /\bcreateBookmarkCard\b/,
-  /\bcreateBookmarkFolder\b/,
-  /\bcreateBookmarkList\b/,
-  /\bcreatePopover\b/,
-  /\brenderBookmarkDock\b/,
-  /\brenderBookmarkGrid\b/,
-  /\binstallBookmarks\b/,
-  /\bclass FakeElement\b/,
-];
-
 const reactRuntimeSources = [
   '../components/bookmark-card/index.tsx',
+  '../components/ui/dropdown-menu.tsx',
   '../components/bookmark-folder/index.tsx',
-  '../components/bookmark-list/index.tsx',
-  '../components/popover/index.tsx',
+  '../views/bookmarks/dock-tool-menu.tsx',
   '../views/bookmarks/bookmark-dock.tsx',
   '../views/bookmarks/bookmark-grid.tsx',
   '../constants/bookmarks.ts',
@@ -41,17 +20,6 @@ const legacyRuntimePatterns = [
   /\brenderBookmarkDock\b/,
   /\brenderBookmarkGrid\b/,
 ];
-
-// React 迁移后的行为测试必须验证真实组件，不能继续锁定待删除的原生 DOM 实现。
-test('组件与视图测试只依赖 React 渲染层', async () => {
-  for (const relativePath of reactBehaviorTests) {
-    const source = await readFile(new URL(relativePath, import.meta.url), 'utf8');
-
-    for (const pattern of legacyTestPatterns) {
-      assert.doesNotMatch(source, pattern, `${relativePath} 仍依赖 ${pattern}`);
-    }
-  }
-});
 
 // 页面运行时只保留 React 组件，并通过共享类型连接入口、书签数据与业务回调。
 test('React 运行时不存在原生 DOM 双轨实现和弱类型入口', async () => {
@@ -67,11 +35,10 @@ test('React 运行时不存在原生 DOM 双轨实现和弱类型入口', async 
   await access(new URL('../types/bookmarks.ts', import.meta.url));
   await assert.rejects(access(new URL('../constants/bookmarks.js', import.meta.url)));
   await assert.rejects(access(new URL('../views/home/index.js', import.meta.url)));
-  assert.match(app, /import type \{ Bookmark, BookmarkCollection \}/);
   assert.doesNotMatch(app, /\bobject\b|\bas Bookmark(?:Folder)?\b/);
 });
 
-test('组件迁移后不存在旧 CSS 双轨和第二套 Popover 运行时', async () => {
+test('组件迁移后删除旧 Popover 与 BookmarkList 运行时及样式入口', async () => {
   const styles = await readFile(new URL('../styles/index.css', import.meta.url), 'utf8');
   const dock = await readFile(new URL('../views/bookmarks/bookmark-dock.tsx', import.meta.url), 'utf8');
   const legacyImports = [
@@ -86,8 +53,16 @@ test('组件迁移后不存在旧 CSS 双轨和第二套 Popover 运行时', asy
   for (const legacyImport of legacyImports) {
     assert.doesNotMatch(styles, new RegExp(legacyImport.replaceAll('.', '\\.'), 'u'), legacyImport);
   }
-  assert.match(styles, /components\/popover\/index\.css/);
+  assert.doesNotMatch(styles, /components\/popover\/index\.css/);
   assert.match(dock, /components\/ui\/separator/);
-  await access(new URL('../components/popover/index.tsx', import.meta.url));
+  await assert.rejects(access(new URL('../components/popover/index.tsx', import.meta.url)));
+  await assert.rejects(access(new URL('../components/popover/index.css', import.meta.url)));
+  await assert.rejects(access(new URL('../components/bookmark-list/index.tsx', import.meta.url)));
   await assert.rejects(access(new URL('../components/ui/popover.tsx', import.meta.url)));
+});
+
+test('通用 DropdownMenu 不依赖书签、Dock 图标或浏览器业务', async () => {
+  const source = await readFile(new URL('../components/ui/dropdown-menu.tsx', import.meta.url), 'utf8');
+
+  assert.doesNotMatch(source, /types\/bookmarks|constants\/bookmarks|DockIconView|chrome\.|openBookmark/);
 });

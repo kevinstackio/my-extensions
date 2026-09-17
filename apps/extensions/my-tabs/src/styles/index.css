@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "./reset.css";
-@import "../components/popover/index.css";
 
 /* Tailwind 工具类只引用语义 token，组件不直接绑定明暗主题的具体色值。 */
 @theme inline {

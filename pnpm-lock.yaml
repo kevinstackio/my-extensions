@@ -6,9 +6,6 @@ importers:
   .:
     configDependencies: {}
     packageManagerDependencies:
-      '@pnpm/exe':
-        specifier: 12.4.1
-        version: 12.4.1
       pnpm:
         specifier: 12.4.1
         version: 12.4.1
@@ -92,11 +89,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@pnpm/exe@12.4.1':
-    resolution: {integrity: sha512-J3tgb70MBqAujwk+7CjD2a2kL7M6qfTkb2tsb97q8qfIQMlsbEqN+UCvf7GELw2SQPQ8KtFhXypgzMBp86zYKg==}
-    engines: {node: '>=18.*'}
-    hasBin: true
-
   pnpm@12.4.1:
     resolution: {integrity: sha512-LoHjmdc/6DkNqyXgaqeIq3pZCCSNL1o3D4K0gRR6ano2e/gEj5pv22Rg8hpm8FQt7bi5TKLIcjWWdBkgsWVtTA==}
     engines: {node: '>=18.*'}
@@ -145,23 +137,6 @@ snapshots:
 
   '@pnpm/exe.win32-x64@12.4.1':
     optional: true
-
-  '@pnpm/exe@12.4.1':
-    optionalDependencies:
-      '@pnpm/exe.android-arm64': 12.4.1
-      '@pnpm/exe.android-x64': 12.4.1
-      '@pnpm/exe.darwin-arm64': 12.4.1
-      '@pnpm/exe.darwin-x64': 12.4.1
-      '@pnpm/exe.freebsd-x64': 12.4.1
-      '@pnpm/exe.linux-arm64': 12.4.1
-      '@pnpm/exe.linux-arm64-musl': 12.4.1
-      '@pnpm/exe.linux-ppc64': 12.4.1
-      '@pnpm/exe.linux-riscv64': 12.4.1
-      '@pnpm/exe.linux-s390x': 12.4.1
-      '@pnpm/exe.linux-x64': 12.4.1
-      '@pnpm/exe.linux-x64-musl': 12.4.1
-      '@pnpm/exe.win32-arm64': 12.4.1
-      '@pnpm/exe.win32-x64': 12.4.1
 
   pnpm@12.4.1:
     optionalDependencies:
@@ -243,9 +218,6 @@ importers:
       '@wxt-dev/module-react':
         specifier: 1.2.2
         version: 1.2.2(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))(wxt@0.21.4(rolldown@1.2.8)(typescript@7.0.2)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0)))
-      happy-dom:
-        specifier: 20.14.5
-        version: 20.14.5
       tailwindcss:
         specifier: 4.3.3
         version: 4.3.3
@@ -257,7 +229,7 @@ importers:
         version: 8.3.0(@types/node@24.13.4)(jiti@2.7.0)
       vitest:
         specifier: 5.0.0
-        version: 5.0.0(@types/node@24.13.4)(happy-dom@20.14.5)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
+        version: 5.0.0(@types/node@24.13.4)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
       wxt:
         specifier: 0.21.4
         version: 0.21.4(rolldown@1.2.8)(typescript@7.0.2)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
@@ -281,7 +253,7 @@ importers:
         version: 8.3.0(@types/node@24.13.4)(jiti@2.7.0)
       vitest:
         specifier: 5.0.0
-        version: 5.0.0(@types/node@24.13.4)(happy-dom@20.14.5)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
+        version: 5.0.0(@types/node@24.13.4)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
       wxt:
         specifier: 0.21.4
         version: 0.21.4(rolldown@1.2.8)(typescript@7.0.2)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
@@ -290,7 +262,7 @@ importers:
     devDependencies:
       vitest:
         specifier: 5.0.0
-        version: 5.0.0(@types/node@24.13.4)(happy-dom@20.14.5)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
+        version: 5.0.0(@types/node@24.13.4)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
 
 packages:
 
@@ -1711,10 +1683,6 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
-  happy-dom@20.14.5:
-    resolution: {integrity: sha512-x/RzkpWO40bTjIoT30iQtt64FLLmH/iRcUCN2X//bLx7H3ifkdfPXyqsro/OYtqzIAhiLMMA7mmiOR9C3NOKjQ==}
-    engines: {node: '>=20.0.0'}
-
   hookable@6.1.1:
     resolution: {integrity: sha512-U9LYDy1CwhMCnprUfeAZWZGByVbhd54hwepegYTK7Pi5NvqEj63ifz5z+xukznehT7i6NIZRu89Ay1AZmRsLEQ==}
 
@@ -2282,7 +2250,6 @@ packages:
       '@vitest/coverage-istanbul': 5.0.0
       '@vitest/coverage-v8': 5.0.0
       '@vitest/ui': 5.0.0
-      happy-dom: '*'
       jsdom: '*'
       vite: ^6.4.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
@@ -2303,8 +2270,6 @@ packages:
       '@vitest/coverage-v8':
         optional: true
       '@vitest/ui':
-        optional: true
-      happy-dom:
         optional: true
       jsdom:
         optional: true
@@ -3645,19 +3610,6 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  happy-dom@20.14.5:
-    dependencies:
-      '@types/node': 24.13.4
-      '@types/whatwg-mimetype': 3.0.2
-      '@types/ws': 8.18.1
-      buffer-image-size: 0.6.4
-      entities: 7.0.1
-      whatwg-mimetype: 3.0.0
-      ws: 8.21.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
   hookable@6.1.1: {}
 
   html-escaper@3.0.3: {}
@@ -4171,7 +4123,7 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.7.0
 
-  vitest@5.0.0(@types/node@24.13.4)(happy-dom@20.14.5)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0)):
+  vitest@5.0.0(@types/node@24.13.4)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0)):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/mocker': 5.0.0(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
@@ -4189,7 +4141,6 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.13.4
-      happy-dom: 20.14.5
     transitivePeerDependencies:
       - msw
 
