@@ -114,21 +114,35 @@
 
 - 一个可独立验收的子 Issue 原则上对应一个开发阶段和一个 Git Commit；无需拆分子 Issue 的小型任务原则上对应一个 Issue、一个验收阶段和一个 Commit。
 - 开发阶段完成后，必须先运行该 Issue 约定的自动化验证，并在需要时提供 Chrome 或 Edge 实际加载、交互或视觉结果；自动化通过不等于用户验收通过。
-- 正式 Commit 只能在用户明确表示对应阶段验收通过后创建；“看起来可以”“测试通过”或代理自行判断均不能替代用户批准。
-- 用户阶段验收通过后，提交前必须重新检查 `git status`、暂存文件清单和最终 diff，只纳入该 Issue 已批准的文件；不得夹带用户原有修改、其他 Issue 变更或生成产物。
-- Commit 创建后，将完整 Commit SHA 和最终验证结果回写对应 Linear Issue，再勾选已完成清单并关闭子 Issue。依赖该阶段的后续子 Issue 在此之前不得开始。
 - 主 Issue 通常不对应额外代码提交；全部子 Issue 已完成并提交后，仍须等待用户最终验收通过，才能更新并关闭主 Issue。
 - 未经用户明确要求，不得执行 `git commit --amend`、交互式 rebase、squash、force push 或自动推送远端。
 
 ## Git Commit 规范
 
-- Commit 使用 Conventional Commits 格式：`<type>(<scope>): <中文动作与结果>`。
-- `type` 仅使用 `feat`、`fix`、`refactor`、`test`、`docs`、`chore`、`build`、`ci`、`perf`、`revert`；选择能够代表该阶段主要结果的单一类型。
-- `scope` 使用稳定的小写项目名，如 `my-tabs`、`tg-download`、`stable-extension-dev`；仅当变更确实作用于全仓且无法合理拆分时使用 `repo`。
-- 标题必须使用中文、以明确动作开头、只描述一个阶段性结果，不罗列文件名，不使用“更新若干文件”“进行优化”等无法独立验收的表述，末尾不加句号。
-- 同一阶段不可分割的实现、必要测试和同步文档可以进入一个 Commit；能够独立验收或独立回滚的变更必须拆分为不同 Issue 和 Commit。
-- Commit 正文使用中文项目符号概述主要变更，并包含 `验证：` 段落，逐行记录实际执行且通过的命令或浏览器验收结果；不得记录未运行的验证。
-- Commit footer 必须使用 `Refs: <Linear Issue ID>`，例如 `Refs: KEV-158`。一个 Commit 关联多个已批准 Issue 时可列出多个 ID，但不得引用未覆盖的 Issue。
+- 使用 Conventional Commits 格式：
+  `<type>(<scope>): <中文动作与结果>`。
+- `type` 只能使用：
+  `feat`、`fix`、`refactor`、`test`、`docs`、`chore`、`build`、`ci`、`perf`、`revert`。
+- 类型选择：
+  - `feat`：新增用户功能
+  - `fix`：修复用户可观察的问题
+  - `refactor`：不改变行为的代码重构
+  - `chore`：依赖、工具、配置或仓库维护
+  - `docs`：文档变更
+  - `test`：测试变更
+- `scope` 使用稳定的小写项目名，如 `my-tabs`、`repo`。
+- 一个 Commit 只对应一个可独立验收和回滚的结果。
+- 不同类型或不同用户结果必须拆分为多个 Commit。
+- 标题使用中文动作描述结果，不写文件名，不使用“更新若干文件”等模糊表述，末尾不加句号。
+- 正文控制在 1-3 条中文项目符号，只描述实际变更结果。
+
+### 推荐格式
+
+```text
+fix(my-tabs): 修复深色模式首屏白闪
+
+- 内联新标签页明暗模式背景
+- 消除页面首次加载时的白色闪烁
 
 ## 稳定开发产物
 
