@@ -6,6 +6,7 @@
 
 # 依赖目录
 node_modules/
+.pnpm-store/
 
 # 构建产物与工具缓存
 dist/
