@@ -26,8 +26,7 @@ export function BookmarkDock({ favorites, components, devtools, onOpenBookmark }
               variant="dock"
               renderAnchor={(anchor) => <TooltipTrigger asChild>{anchor}</TooltipTrigger>}
             />
-            {/* sideOffset 与箭头高度一致，让箭头尖端连接 Dock 顶边。 */}
-            <TooltipContent side="top" align="center" sideOffset={5}>{bookmark.name}</TooltipContent>
+            <TooltipContent side="top" align="center" sideOffset={12}>{bookmark.name}</TooltipContent>
           </Tooltip>
         ))}
       </div>

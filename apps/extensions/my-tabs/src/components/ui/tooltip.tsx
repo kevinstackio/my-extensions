@@ -16,7 +16,7 @@ const TooltipTrigger = TooltipPrimitive.Trigger;
 
 function TooltipContent({
   className,
-  sideOffset = 8,
+  sideOffset = 12,
   children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
@@ -32,8 +32,6 @@ function TooltipContent({
         {...props}
       >
         {children}
-        {/* 箭头使用与气泡相同的语义背景色，连接 Tooltip 与触发器。 */}
-        <TooltipPrimitive.Arrow width={10} height={5} className="fill-popover" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   );

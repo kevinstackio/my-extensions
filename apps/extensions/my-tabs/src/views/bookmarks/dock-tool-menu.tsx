@@ -65,10 +65,11 @@ export function DockToolMenu({ group, onOpenBookmark }: DockToolMenuProps) {
             </Button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
-        <TooltipContent side="top" align="center" sideOffset={5}>{group.name}</TooltipContent>
+        <TooltipContent side="top" align="center" sideOffset={12}>{group.name}</TooltipContent>
         <DropdownMenuContent
           side="top"
           align="center"
+          sideOffset={12}
           onPointerDownOutside={() => {
             pointerDownOutsideRef.current = true;
           }}
