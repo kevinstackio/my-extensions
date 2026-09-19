@@ -10,6 +10,7 @@ my-extensions/
 │  │  └─ tg-download/      # Telegram 资源下载插件
 │  ├─ helpers/             # 扩展配套程序
 │  └─ website/             # 扩展配套网站
+├─ docs/                   # 项目管理与技术文档
 ├─ .gitignore              # Git 忽略规则
 ├─ AGENTS.md               # 项目协作规范
 ├─ LICENSE                 # 开源许可证
@@ -27,6 +28,7 @@ my-extensions/
 
 ## 项目文档
 
+- [本地项目管理工作台](docs/changes/README.md)
 - [Monorepo 使用指南](docs/monorepo.md)
 - [WXT 使用指南](docs/wxt.md)
 - [扩展迁移到 WXT](docs/migrations/extension-to-wxt.md)

@@ -131,7 +131,8 @@ WXT 的开发构建会重建临时输出目录，因此浏览器不得直接加�
 React 适合 popup、options、新标签页等具有较多交互状态的扩展页面，但不是 WXT 的必选项。
 
 - 简单内容脚本优先保持原生 TypeScript，避免增加运行时和构建复杂度。
-- My Tabs 当前保持原生 JavaScript 和 CSS，不引入 React；未来如需引入，应作为独立变更评估并保留现有功能和测试基线。
+- My Tabs 使用 React、TypeScript、Tailwind CSS v4 和按需引入的 shadcn/ui/Radix 原语；其组件边界、测试和交互约束由子项目 README 与 `AGENTS.md` 维护。
+- TG Download 仍以原生 TypeScript 和内容脚本为主，不因为同仓库存在 React 项目而引入额外运行时。
 - React 目录、组件状态和测试规范不作为所有 WXT 项目的强制规范，由实际使用 React 的项目单独约定。
 
 ## 测试建议

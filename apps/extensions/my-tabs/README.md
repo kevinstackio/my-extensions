@@ -1,6 +1,6 @@
 # My Tabs
 
-基于 WXT 的 Chromium 新标签页扩展，使用 React、Tailwind CSS v4 和 shadcn/ui 原语提供书签网格、书签 Dock、Popover 以及标签组打开能力。页面入口为 `src/entrypoints/newtab/main.tsx`，组件按现有 DOM、CSS 和无障碍语义迁移。
+基于 WXT 的 Chromium 新标签页扩展，使用 React、TypeScript、Tailwind CSS v4 和按需引入的 shadcn/ui/Radix 原语提供书签网格、书签 Dock、DropdownMenu、Tooltip 以及标签组打开能力。页面入口为 `src/entrypoints/newtab/main.tsx`。
 
 ## 项目结构
 
@@ -8,7 +8,7 @@
 my-tabs/
 ├─ src/
 │  ├─ assets/          # 书签、工具和扩展图标资源
-│  ├─ components/      # 书签卡片、文件夹、列表和 Popover
+│  ├─ components/      # 通用 UI 原语与共享组件
 │  ├─ entrypoints/     # WXT 新标签页入口
 │  ├─ styles/          # Tailwind 入口、Design Tokens、主题与全局样式
 │  ├─ lib/             # shadcn/ui 共用工具
@@ -24,7 +24,7 @@ my-tabs/
 - 组件优先复用 shadcn/ui 原语与 Tailwind 语义类；只有图标色调、尺寸和业务布局等稳定差异才保留局部组件 API。
 - Geist Sans Variable 1.7.2 作为本地字体资源，来源、许可证和 SHA-256 记录在 `src/assets/fonts/`。
 - 图标默认保持原始 SVG；标记为 `adaptive` 的单色 SVG 使用系统明暗主题转换为黑/白，不复制第二套 SVG。
-- 主题跟随系统 `prefers-color-scheme`，Popover、Dock 和卡片使用同一组表面、边框、阴影和焦点 Token。
+- 主题跟随系统 `prefers-color-scheme`，DropdownMenu、Tooltip、Dock 和卡片使用同一组表面、边框、阴影和焦点 Token。
 
 ## 开发和验证
 

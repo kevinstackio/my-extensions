@@ -104,16 +104,16 @@ pnpm build
 pnpm turbo ls
 ```
 
-## My Tabs 迁移提示
+## My Tabs 迁移经验
 
-My Tabs 当前属于新标签页扩展，迁移时需要额外关注：
+My Tabs 已完成 WXT、React、TypeScript 和 Vitest 迁移，以下经验适用于其他新标签页扩展：
 
-- `chrome_url_overrides.newtab` 对应的 WXT newtab 页面入口。
-- `tabGroups` 权限以及相关浏览器 API 行为。
-- `src/assets/brand`、`icons`、`logo` 和 `tools` 已有分类，应尽量保留。
-- 现有 `node:test` 测试先作为迁移基线，不要因为采用 WXT 直接删除。
-- 是否转换 TypeScript、是否改用 Vitest、是否引入 React，应作为可独立验收的步骤。
-- 引入 React 后必须验证书签卡片、Popover、新标签页布局和标签组操作没有行为回归。
+- `chrome_url_overrides.newtab` 必须映射到 WXT newtab 页面入口。
+- 迁移后重新核对 `tabGroups` 权限和相关浏览器 API 行为。
+- 品牌、工具和扩展图标继续按职责分类，不因框架迁移重绘或混放资源。
+- 迁移前保留原有行为测试作为基线，再按新的测试运行器调整；不得因为采用 WXT 删除有效覆盖。
+- TypeScript、测试运行器和 UI 框架变更应按可独立验证的阶段推进，避免同时改变业务行为。
+- 引入 React 或 Radix 原语后，必须在 Chrome 或 Edge 中验证书签卡片、新标签页布局、DropdownMenu、Tooltip 和标签组操作没有行为回归。
 
 ## 完成标准
 
