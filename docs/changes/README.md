@@ -86,6 +86,8 @@ docs/
 
 ## 已完成
 
+- [完善 X Download Helper 任务列表与 Popover 收起](./issues/2026-09-20-x-download-helper-task-list-feedback-issue.md)
+  - [Commit 记录](./commits/2026-09-20-x-download-helper-task-list-feedback-commit.md)
 - [建立 X Download macOS 菜单栏 Helper](./issues/2026-09-19-x-download-helper-menu-bar-issue.md)
   - [Commit 记录](./commits/2026-09-19-x-download-helper-menu-bar-commit.md)
 - [建立本地项目管理体系](./issues/2026-09-19-repo-local-project-management-issue.md)

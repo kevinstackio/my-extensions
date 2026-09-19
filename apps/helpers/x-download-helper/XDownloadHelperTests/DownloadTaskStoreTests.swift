@@ -42,20 +42,6 @@ final class DownloadTaskStoreTests: XCTestCase {
         XCTAssertNil(store.tasks.first(where: { $0.id == taskID }))
     }
 
-    func testCompletedDownloadReportsTheFinishedTask() async throws {
-        var completedTasks: [DownloadTask] = []
-        let store = DownloadTaskStore(
-            delay: immediateDelay,
-            onDownloadCompleted: { completedTasks.append($0) }
-        )
-        let expectedTask = try XCTUnwrap(store.tasks.first)
-
-        let download = try XCTUnwrap(store.startDownload(id: expectedTask.id))
-        await download.value
-
-        XCTAssertEqual(completedTasks.map(\.fileName), [expectedTask.fileName])
-    }
-
     func testStartDownloadIgnoresRepeatedStart() throws {
         let store = DownloadTaskStore(delay: immediateDelay)
         let taskID = try XCTUnwrap(store.tasks.first?.id)

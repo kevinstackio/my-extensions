@@ -2,7 +2,6 @@ import Foundation
 import Observation
 
 typealias Delay = @Sendable (Duration) async throws -> Void
-typealias DownloadCompletionHandler = @MainActor (DownloadTask) -> Void
 
 private let liveDelay: Delay = { duration in
     try await Task.sleep(for: duration)
@@ -16,17 +15,12 @@ final class DownloadTaskStore {
     @ObservationIgnored
     private let delay: Delay
 
-    @ObservationIgnored
-    private let onDownloadCompleted: DownloadCompletionHandler
-
     init(
         tasks: [DownloadTask] = DownloadTask.samples,
-        delay: @escaping Delay = liveDelay,
-        onDownloadCompleted: @escaping DownloadCompletionHandler = { _ in }
+        delay: @escaping Delay = liveDelay
     ) {
         self.tasks = tasks
         self.delay = delay
-        self.onDownloadCompleted = onDownloadCompleted
     }
 
     func cancel(id: UUID) {
@@ -56,9 +50,8 @@ final class DownloadTaskStore {
                 tasks[currentIndex].progress = Double(step) / 50
             }
 
-            guard let completedTask = tasks.first(where: { $0.id == id }) else { return }
+            guard tasks.contains(where: { $0.id == id }) else { return }
             tasks.removeAll { $0.id == id }
-            onDownloadCompleted(completedTask)
         }
     }
 }

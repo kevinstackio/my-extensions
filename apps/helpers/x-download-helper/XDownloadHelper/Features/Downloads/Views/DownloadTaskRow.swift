@@ -12,7 +12,7 @@ struct DownloadTaskRow: View {
     var body: some View {
         if let task = store.tasks.first(where: { $0.id == taskID }) {
             VStack(alignment: .leading, spacing: 6) {
-                HStack(spacing: 8) {
+                HStack(alignment: .center, spacing: 8) {
                     Text(task.fileName)
                         .foregroundStyle(task.state == .downloading ? .secondary : .primary)
                         .lineLimit(1)

@@ -15,7 +15,6 @@
 		A10000000000000000000006 /* DownloadTaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000009 /* DownloadTaskStore.swift */; };
 		A10000000000000000000007 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000010 /* AppDelegate.swift */; };
 		A10000000000000000000008 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000011 /* MenuBarController.swift */; };
-		A10000000000000000000011 /* DownloadCompletionNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000014 /* DownloadCompletionNotifier.swift */; };
 		A10000000000000000000009 /* DownloadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000012 /* DownloadListView.swift */; };
 		A10000000000000000000010 /* DownloadTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000013 /* DownloadTaskRow.swift */; };
 /* End PBXBuildFile section */
@@ -42,7 +41,6 @@
 		B10000000000000000000009 /* DownloadTaskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTaskStore.swift; sourceTree = "<group>"; };
 		B10000000000000000000010 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B10000000000000000000011 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
-		B10000000000000000000014 /* DownloadCompletionNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadCompletionNotifier.swift; sourceTree = "<group>"; };
 		B10000000000000000000012 /* DownloadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListView.swift; sourceTree = "<group>"; };
 		B10000000000000000000013 /* DownloadTaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTaskRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -144,7 +142,6 @@
 				C10000000000000000000010 /* Models */,
 				C10000000000000000000011 /* State */,
 				C10000000000000000000013 /* Views */,
-				C10000000000000000000015 /* Notifications */,
 			);
 			path = Downloads;
 			sourceTree = "<group>";
@@ -171,14 +168,6 @@
 				B10000000000000000000007 /* DownloadTaskStoreTests.swift */,
 			);
 			path = XDownloadHelperTests;
-			sourceTree = "<group>";
-		};
-		C10000000000000000000015 /* Notifications */ = {
-			isa = PBXGroup;
-			children = (
-				B10000000000000000000014 /* DownloadCompletionNotifier.swift */,
-			);
-			path = Notifications;
 			sourceTree = "<group>";
 		};
 		C10000000000000000000013 /* Views */ = {
@@ -302,7 +291,6 @@
 				A10000000000000000000006 /* DownloadTaskStore.swift in Sources */,
 				A10000000000000000000007 /* AppDelegate.swift in Sources */,
 				A10000000000000000000008 /* MenuBarController.swift in Sources */,
-				A10000000000000000000011 /* DownloadCompletionNotifier.swift in Sources */,
 				A10000000000000000000009 /* DownloadListView.swift in Sources */,
 				A10000000000000000000010 /* DownloadTaskRow.swift in Sources */,
 			);
