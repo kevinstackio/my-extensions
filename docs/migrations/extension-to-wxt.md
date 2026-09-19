@@ -78,7 +78,7 @@ Workspace 包名：@my-extensions/<project-name>
 
 - [ ] 根据使用频率决定是否增加 `<简称>:dev` 和 `<简称>:build`。
 - [ ] 从根目录执行过滤命令，确认子项目可以独立运行。
-- [ ] 执行根 `pnpm test` 和 `pnpm build`，确认 Turbo 可以调度新项目。
+- [ ] 从根目录执行 `pnpm --filter <package-name> test` 和 `pnpm --filter <package-name> build`。
 - [ ] 检查 `turbo.json` 的输出目录与实际构建产物一致。
 
 ## 阶段八：浏览器验收
@@ -99,8 +99,6 @@ Workspace 包名：@my-extensions/<project-name>
 pnpm --filter <package-name> test
 pnpm --filter <package-name> typecheck
 pnpm --filter <package-name> build
-pnpm test
-pnpm build
 pnpm turbo ls
 ```
 

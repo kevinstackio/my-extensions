@@ -53,17 +53,15 @@ pnpm turbo ls
 - 两个及以上项目出现真实重复后，再考虑提取到 `packages`；不要提前创建抽象层。
 - 修改依赖后必须同步提交相关 `package.json` 和根 `pnpm-lock.yaml`。
 
-## 根命令
+## 项目命令
+
+根目录不提供含义模糊的 `dev`、`build`、`test` 命令。需要调度整个 workspace 时，必须明确使用带 `:all` 后缀的命令；日常开发优先使用带项目简称的单插件命令。不需要为单独运行的 WXT 项目配置固定端口。
+
+如果使用 `dev:all` 同时运行多个扩展，再为各项目显式配置不同端口；当前版本暂不增加固定端口配置。
 
 ```bash
-pnpm dev
-pnpm build
-pnpm test
-```
-
-这些命令通过 Turbo 调度所有具有对应脚本的 workspace 包。开发单个项目时优先使用短命令；没有短命令时使用过滤器：
-
-```bash
+pnpm dev:all
+pnpm build:all
 pnpm --filter @my-extensions/<项目名> dev
 pnpm --filter @my-extensions/<项目名> build
 pnpm --filter @my-extensions/<项目名> test
@@ -76,7 +74,15 @@ pnpm tg:dev
 pnpm tg:build
 pnpm tabs:dev
 pnpm tabs:build
+pnpm x:dev
+pnpm x:build
 ```
+
+- `dev:all`：通过 Turbo 同时启动所有提供 `dev` 脚本的 workspace 项目。
+- `build:all`：通过 Turbo 构建所有提供 `build` 脚本的 workspace 项目。
+- `*:dev`：启动对应扩展的 WXT 开发监听。
+- `*:build`：构建对应扩展的生产产物。
+- 测试和类型检查保留在各扩展的 `package.json`，通过 `pnpm --filter` 按需执行。
 
 ## 新增 Node 项目
 
@@ -86,7 +92,7 @@ pnpm tabs:build
 4. 至少提供实际需要的 `dev`、`build`、`test`、`typecheck` 脚本。
 5. 执行 `pnpm install` 更新根锁文件。
 6. 使用 `pnpm turbo ls` 确认项目已被发现。
-7. 从根目录执行构建和测试，确认 Turbo 可以正常调度。
+7. 从根目录使用 `pnpm --filter` 执行构建和测试，确认项目可以独立运行。
 
 ## 共享配置边界
 

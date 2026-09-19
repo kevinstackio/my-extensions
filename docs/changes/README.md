@@ -88,3 +88,5 @@ docs/
 
 - [建立本地项目管理体系](./issues/2026-09-19-repo-local-project-management-issue.md)
   - [Commit 记录](./commits/2026-09-19-repo-local-project-management-commit.md)
+- [建立 X 单帖链接识别插件](./issues/2026-09-19-x-download-post-url-issue.md)
+  - [Commit 记录](./commits/2026-09-19-x-download-post-url-commit.md)

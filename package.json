@@ -10,11 +10,12 @@
     "pnpm": "12.4.2"
   },
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "test": "turbo run test",
+    "dev:all": "turbo run dev",
+    "build:all": "turbo run build",
     "tg:dev": "pnpm --filter @my-extensions/tg-download dev",
     "tg:build": "pnpm --filter @my-extensions/tg-download build",
+    "x:dev": "pnpm --filter @my-extensions/x-download dev",
+    "x:build": "pnpm --filter @my-extensions/x-download build",
     "tabs:dev": "pnpm --filter @my-extensions/my-tabs dev",
     "tabs:build": "pnpm --filter @my-extensions/my-tabs build"
   },
