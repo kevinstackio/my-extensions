@@ -1,0 +1,26 @@
+:root {
+  color-scheme: light dark;
+  font: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+}
+
+body {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 240px;
+  max-width: 280px;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+p {
+  color: #888;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 8px 0 0;
+  white-space: pre-line;
+}
