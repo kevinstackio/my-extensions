@@ -4,74 +4,40 @@ import XCTest
 
 @MainActor
 final class DownloadTaskStoreTests: XCTestCase {
-    func testInitialTasksUseTheThreeExpectedDesktopFiles() {
+    func testStoreStartsEmpty() {
+        XCTAssertTrue(DownloadTaskStore().tasks.isEmpty)
+    }
+
+    func testEnqueueCreatesReceivedTask() throws {
         let store = DownloadTaskStore()
+        let result = store.enqueue(postId: "123", postURL: try XCTUnwrap(URL(string: "https://x.com/user/status/123")))
 
-        XCTAssertEqual(
-            store.tasks.map(\.fileName),
-            [
-                "X_VIDEO_20260919_142345_01.mp4",
-                "X_VIDEO_20260919_142345_02.mp4",
-                "X_VIDEO_20260919_142345_03.mp4"
-            ]
-        )
-        XCTAssertTrue(store.tasks.allSatisfy { $0.displayPath.hasPrefix("~/Desktop/") })
-        XCTAssertTrue(store.tasks.allSatisfy { $0.state == .ready && $0.progress == 0 })
+        guard case let .created(taskID) = result else { return XCTFail("首次入队应创建任务") }
+        XCTAssertEqual(store.tasks.map(\.id), [taskID])
+        XCTAssertEqual(store.tasks.first?.postId, "123")
+        XCTAssertEqual(store.tasks.first?.state, .received)
     }
 
-    func testCancelRemovesExistingTaskAndIgnoresUnknownID() {
+    func testEnqueueSamePostReturnsExistingTaskID() throws {
         let store = DownloadTaskStore()
-        let taskID = try! XCTUnwrap(store.tasks.first?.id)
+        let url = try XCTUnwrap(URL(string: "https://x.com/user/status/123"))
+        let first = store.enqueue(postId: "123", postURL: url)
+        let second = store.enqueue(postId: "123", postURL: url)
 
-        store.cancel(id: taskID)
-        XCTAssertEqual(store.tasks.count, 2)
-
-        store.cancel(id: UUID())
-        XCTAssertEqual(store.tasks.count, 2)
-    }
-
-    func testStartDownloadCompletesAllStepsAndRemovesTask() async throws {
-        let store = DownloadTaskStore(delay: immediateDelay)
-        let taskID = try XCTUnwrap(store.tasks.first?.id)
-
-        let download = try XCTUnwrap(store.startDownload(id: taskID))
-        XCTAssertEqual(store.tasks.first(where: { $0.id == taskID })?.state, .downloading)
-
-        await download.value
-
-        XCTAssertNil(store.tasks.first(where: { $0.id == taskID }))
-    }
-
-    func testStartDownloadIgnoresRepeatedStart() throws {
-        let store = DownloadTaskStore(delay: immediateDelay)
-        let taskID = try XCTUnwrap(store.tasks.first?.id)
-
-        let first = store.startDownload(id: taskID)
-        let second = store.startDownload(id: taskID)
-
-        XCTAssertNotNil(first)
-        XCTAssertNil(second)
-        first?.cancel()
-    }
-
-    func testMultipleDownloadsRunWithoutOverwritingEachOther() async throws {
-        let store = DownloadTaskStore(delay: immediateDelay)
-        let taskIDs = Array(store.tasks.prefix(2).map(\.id))
-
-        let downloads = taskIDs.compactMap { store.startDownload(id: $0) }
-        XCTAssertEqual(downloads.count, 2)
-        XCTAssertTrue(taskIDs.allSatisfy { id in store.tasks.first(where: { $0.id == id })?.state == .downloading })
-
-        for download in downloads {
-            await download.value
+        guard case let .created(firstID) = first, case let .existing(secondID) = second else {
+            return XCTFail("重复帖子应命中已有任务")
         }
-
-        XCTAssertTrue(taskIDs.allSatisfy { id in store.tasks.first(where: { $0.id == id }) == nil })
+        XCTAssertEqual(firstID, secondID)
+        XCTAssertEqual(store.tasks.count, 1)
     }
 
-    private var immediateDelay: Delay {
-        { _ in
-            await Task.yield()
-        }
+    func testDifferentPostsCreateIndependentTasksAndCancelRemovesOne() throws {
+        let store = DownloadTaskStore()
+        let first = store.enqueue(postId: "123", postURL: try XCTUnwrap(URL(string: "https://x.com/user/status/123")))
+        let second = store.enqueue(postId: "456", postURL: try XCTUnwrap(URL(string: "https://x.com/user/status/456")))
+        guard case let .created(firstID) = first, case .created = second else { return XCTFail("应创建两个任务") }
+
+        store.cancel(id: firstID)
+        XCTAssertEqual(store.tasks.map(\.postId), ["456"])
     }
 }

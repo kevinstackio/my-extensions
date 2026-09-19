@@ -1,0 +1,9 @@
+{
+  "name": "dev.kevinstack.xdownloadhelper.nativehost",
+  "description": "X Download macOS Helper Native Messaging Bridge",
+  "path": "__BRIDGE_PATH__",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://mdkcfihmaejbecgoinnnlkjmbpmnfekl/"
+  ]
+}

@@ -7,6 +7,7 @@ BUILD_SCRIPT="$HELPER_ROOT/scripts/build.sh"
 APP_BUNDLE="$HELPER_ROOT/.build/Build/Products/Debug/X Download Helper.app"
 INFO_PLIST="$APP_BUNDLE/Contents/Info.plist"
 EXECUTABLE="$APP_BUNDLE/Contents/MacOS/X Download Helper"
+NATIVE_HOST="$APP_BUNDLE/Contents/Helpers/x-download-native-host"
 ASSET_CATALOG="$APP_BUNDLE/Contents/Resources/Assets.car"
 
 fail() {
@@ -20,6 +21,7 @@ fail() {
 
 [[ -d "$APP_BUNDLE" ]] || fail "未生成 App Bundle"
 [[ -x "$EXECUTABLE" ]] || fail "未生成可执行文件"
+[[ -x "$NATIVE_HOST" ]] || fail "未生成 Native Messaging Bridge"
 [[ -f "$INFO_PLIST" ]] || fail "未生成 Info.plist"
 [[ -f "$ASSET_CATALOG" ]] || fail "未编译菜单栏图标资源"
 

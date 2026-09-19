@@ -62,6 +62,11 @@ final class MenuBarController: NSObject {
         }
     }
 
+    func showPopover() {
+        guard !popover.isShown, let button = statusItem?.button else { return }
+        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+    }
+
     private func installMouseMonitors() {
         let events: NSEvent.EventTypeMask = [.leftMouseDown, .rightMouseDown]
 

@@ -1,10 +1,9 @@
 import Foundation
 import Observation
 
-typealias Delay = @Sendable (Duration) async throws -> Void
-
-private let liveDelay: Delay = { duration in
-    try await Task.sleep(for: duration)
+enum EnqueueResult: Equatable {
+    case created(UUID)
+    case existing(UUID)
 }
 
 @MainActor
@@ -12,15 +11,8 @@ private let liveDelay: Delay = { duration in
 final class DownloadTaskStore {
     var tasks: [DownloadTask]
 
-    @ObservationIgnored
-    private let delay: Delay
-
-    init(
-        tasks: [DownloadTask] = DownloadTask.samples,
-        delay: @escaping Delay = liveDelay
-    ) {
+    init(tasks: [DownloadTask] = []) {
         self.tasks = tasks
-        self.delay = delay
     }
 
     func cancel(id: UUID) {
@@ -28,30 +20,12 @@ final class DownloadTaskStore {
     }
 
     @discardableResult
-    func startDownload(id: UUID) -> Task<Void, Never>? {
-        guard let taskIndex = tasks.firstIndex(where: { $0.id == id }), tasks[taskIndex].state == .ready else {
-            return nil
+    func enqueue(postId: String, postURL: URL) -> EnqueueResult {
+        if let existing = tasks.first(where: { $0.postId == postId }) {
+            return .existing(existing.id)
         }
-
-        tasks[taskIndex].state = .downloading
-
-        return Task { [weak self] in
-            guard let self else { return }
-
-            for step in 1...50 {
-                do {
-                    try await delay(.milliseconds(100))
-                } catch {
-                    return
-                }
-
-                guard !Task.isCancelled else { return }
-                guard let currentIndex = tasks.firstIndex(where: { $0.id == id }) else { return }
-                tasks[currentIndex].progress = Double(step) / 50
-            }
-
-            guard tasks.contains(where: { $0.id == id }) else { return }
-            tasks.removeAll { $0.id == id }
-        }
+        let task = DownloadTask(postId: postId, postURL: postURL)
+        tasks.append(task)
+        return .created(task.id)
     }
 }
