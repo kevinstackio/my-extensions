@@ -10,6 +10,10 @@ node_modules/
 
 # 构建产物与工具缓存
 dist/
+.build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
 .turbo/
 .wxt/
 .vite/

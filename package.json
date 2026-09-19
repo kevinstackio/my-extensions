@@ -16,6 +16,8 @@
     "tg:build": "pnpm --filter @my-extensions/tg-download build",
     "x:dev": "pnpm --filter @my-extensions/x-download dev",
     "x:build": "pnpm --filter @my-extensions/x-download build",
+    "x-helper:build": "zsh apps/helpers/x-download-helper/scripts/build.sh",
+    "x-helper:dev": "zsh apps/helpers/x-download-helper/scripts/run.sh",
     "tabs:dev": "pnpm --filter @my-extensions/my-tabs dev",
     "tabs:build": "pnpm --filter @my-extensions/my-tabs build"
   },
