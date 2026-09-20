@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { parseXPostUrl } from '../src/features/post-url';
+import type { MediaSource } from '../src/features/media-source/model';
 import {
   NATIVE_HOST_NAME,
   PROTOCOL_VERSION,
@@ -21,13 +22,24 @@ describe('Native Messaging 协议', () => {
       payload: {
         postId: '1960000000000000000',
         postUrl: 'https://x.com/OpenAI/status/1960000000000000000',
+        mediaSources: [],
       },
     });
   });
 
+  it('passes sanitized page media sources through the v2 request', () => {
+    const mediaSources: MediaSource[] = [{
+      mediaId: 'video-1',
+      type: 'dash',
+      url: 'https://video.twimg.com/video.mpd',
+    }];
+
+    expect(createEnqueueRequest(target, 'request-2', mediaSources).payload.mediaSources).toEqual(mediaSources);
+  });
+
   it.each(['created', 'existing'] as const)('accepts a %s response', (disposition) => {
     expect(parseNativeResponse({
-      protocolVersion: 1,
+      protocolVersion: 2,
       requestId: 'request-1',
       ok: true,
       result: { taskId: 'task-1', disposition },
@@ -48,7 +60,7 @@ describe('Native Messaging 协议', () => {
       'INTERNAL_ERROR',
     ] as const) {
       expect(parseNativeResponse({
-        protocolVersion: 1,
+        protocolVersion: 2,
         requestId: 'request-1',
         ok: false,
         error: { code, message: '失败' },
@@ -58,9 +70,9 @@ describe('Native Messaging 协议', () => {
 
   it.each([
     [{ protocolVersion: 2, requestId: 'request-1', ok: true }, '版本不符'],
-    [{ protocolVersion: 1, requestId: 'request-2', ok: true }, '请求 ID 不符'],
-    [{ protocolVersion: 1, requestId: 'request-1', ok: true, result: { disposition: 'created' } }, '未知成功响应'],
-    [{ protocolVersion: 1, requestId: 'request-1', ok: false, error: { code: 'NOPE', message: '失败' } }, '未知错误码'],
+      [{ protocolVersion: 2, requestId: 'request-2', ok: true }, '请求 ID 不符'],
+      [{ protocolVersion: 2, requestId: 'request-1', ok: true, result: { disposition: 'created' } }, '未知成功响应'],
+      [{ protocolVersion: 2, requestId: 'request-1', ok: false, error: { code: 'NOPE', message: '失败' } }, '未知错误码'],
   ])('rejects %s (%s)', (value, _description) => {
     expect(() => parseNativeResponse(value, 'request-1')).toThrow();
   });
@@ -69,7 +81,7 @@ describe('Native Messaging 协议', () => {
     const calls: Array<{ host: string; message: unknown }> = [];
     const result = await sendEnqueueRequest(target, 'request-1', async (host, message) => {
       calls.push({ host, message });
-      return { protocolVersion: 1, requestId: 'request-1', ok: true, result: { taskId: 'task-1', disposition: 'created' } };
+      return { protocolVersion: 2, requestId: 'request-1', ok: true, result: { taskId: 'task-1', disposition: 'created' } };
     });
 
     expect(calls).toHaveLength(1);

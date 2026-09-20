@@ -9,6 +9,11 @@ export default defineBackground(() => {
     if (message && typeof message === 'object' && 'type' in message && message.type === 'enqueue-current-tab') {
       return enqueueCurrentTab({
         getActiveTab: async () => (await browser.tabs.query({ active: true, currentWindow: true }))[0],
+        getMediaSources: (tabId, postId, timeoutMs) => browser.tabs.sendMessage(tabId, {
+          type: 'media-source.get-current',
+          postId,
+          timeoutMs,
+        }),
         sendNativeMessage: (host, request) => browser.runtime.sendNativeMessage(host, request as object),
       });
     }

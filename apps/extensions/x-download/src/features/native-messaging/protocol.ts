@@ -1,7 +1,8 @@
 import type { XPostTarget } from '../post-url';
+import type { MediaSource } from '../media-source/model';
 
 export const NATIVE_HOST_NAME = 'dev.kevinstack.xdownloadhelper.nativehost';
-export const PROTOCOL_VERSION = 1;
+export const PROTOCOL_VERSION = 2;
 
 export type EnqueueDisposition = 'created' | 'existing';
 export type NativeMessageErrorCode =
@@ -13,10 +14,10 @@ export type NativeMessageErrorCode =
   | 'INTERNAL_ERROR';
 
 export interface EnqueueRequest {
-  protocolVersion: 1;
+  protocolVersion: 2;
   requestId: string;
   type: 'task.enqueue';
-  payload: { postId: string; postUrl: string };
+  payload: { postId: string; postUrl: string; mediaSources: MediaSource[] };
 }
 
 export interface EnqueueResult {
@@ -31,12 +32,16 @@ export interface EnqueueError {
   message: string;
 }
 
-export function createEnqueueRequest(target: XPostTarget, requestId: string): EnqueueRequest {
+export function createEnqueueRequest(
+  target: XPostTarget,
+  requestId: string,
+  mediaSources: MediaSource[] = [],
+): EnqueueRequest {
   return {
     protocolVersion: PROTOCOL_VERSION,
     requestId,
     type: 'task.enqueue',
-    payload: { postId: target.postId, postUrl: target.url },
+    payload: { postId: target.postId, postUrl: target.url, mediaSources },
   };
 }
 

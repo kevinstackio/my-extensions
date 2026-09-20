@@ -1,4 +1,5 @@
 import type { XPostTarget } from '../post-url';
+import type { MediaSource } from '../media-source/model';
 import {
   NATIVE_HOST_NAME,
   createEnqueueRequest,
@@ -14,8 +15,9 @@ export async function sendEnqueueRequest(
   target: XPostTarget,
   requestId: string,
   send: NativeMessageSender,
+  mediaSources: MediaSource[] = [],
 ): Promise<EnqueueResult | EnqueueError> {
-  const response = await send(NATIVE_HOST_NAME, createEnqueueRequest(target, requestId));
+  const response = await send(NATIVE_HOST_NAME, createEnqueueRequest(target, requestId, mediaSources));
   return parseNativeResponse(response, requestId);
 }
 
