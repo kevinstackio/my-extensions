@@ -3,6 +3,12 @@
 set -euo pipefail
 
 HELPER_ROOT="${0:A:h:h}"
+VENDOR_TOOLS="$HELPER_ROOT/VendorTools"
+LICENSES="$HELPER_ROOT/Tools/THIRD_PARTY_NOTICES.md"
+
+[[ -x "$VENDOR_TOOLS/yt-dlp" ]] || { print -u2 "缺少 yt-dlp，请先运行 scripts/prepare-video-tools.sh"; exit 1; }
+[[ -x "$VENDOR_TOOLS/ffmpeg" ]] || { print -u2 "缺少 ffmpeg，请先运行 scripts/prepare-video-tools.sh"; exit 1; }
+[[ -f "$LICENSES" ]] || { print -u2 "缺少第三方许可文件：$LICENSES"; exit 1; }
 
 xcodebuild \
   -project "$HELPER_ROOT/XDownloadHelper.xcodeproj" \

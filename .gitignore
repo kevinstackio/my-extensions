@@ -18,6 +18,9 @@ xcuserdata/
 .wxt/
 .vite/
 .superpowers/
+apps/helpers/x-download-helper/VendorTools/yt-dlp
+apps/helpers/x-download-helper/VendorTools/ffmpeg
+apps/helpers/x-download-helper/Tools/downloads/
 
 # 测试与类型检查产物
 coverage/
