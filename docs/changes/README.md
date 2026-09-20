@@ -78,7 +78,11 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+[让 X Download 使用页面媒体源下载视频](./issues/2026-09-21-x-download-page-media-source-issue.md)
+
+- [Commit 记录](./commits/2026-09-21-x-download-page-media-source-commit.md)
+- [Spec](../superpowers/specs/2026-09-21-x-download-page-media-source-design.md)
+- [Plan](../superpowers/plans/2026-09-21-x-download-page-media-source.md)
 
 ## Issue 队列
 
