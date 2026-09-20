@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct DownloadTaskRow: View {
@@ -20,7 +21,7 @@ struct DownloadTaskRow: View {
 
                     Spacer()
 
-                    Text("已接收")
+                    Text(statusTitle(for: task.state))
                         .foregroundStyle(.secondary)
 
                     Button("移除") {
@@ -33,7 +34,49 @@ struct DownloadTaskRow: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .truncationMode(.middle)
+
+                if let failureMessage = task.state.failureMessage {
+                    HStack(alignment: .top, spacing: 8) {
+                        Text(verbatim: failureMessage)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                            .textSelection(.enabled)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        Spacer(minLength: 0)
+
+                        Button {
+                            copyFailureMessage(failureMessage)
+                        } label: {
+                            Label("复制", systemImage: "doc.on.doc")
+                        }
+                        .buttonStyle(.borderless)
+                        .controlSize(.small)
+                    }
+                }
             }
         }
+    }
+
+    private func statusTitle(for state: DownloadTaskState) -> String {
+        switch state {
+        case .queued:
+            return "等待中"
+        case .parsing:
+            return "解析中"
+        case let .downloading(index, total):
+            return total > 1 ? "下载中 \(index)/\(total)" : "下载中"
+        case let .merging(index, total):
+            return total > 1 ? "合并中 \(index)/\(total)" : "合并中"
+        case .completed:
+            return "已完成"
+        case .failed:
+            return "失败"
+        }
+    }
+
+    private func copyFailureMessage(_ message: String) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(message, forType: .string)
     }
 }

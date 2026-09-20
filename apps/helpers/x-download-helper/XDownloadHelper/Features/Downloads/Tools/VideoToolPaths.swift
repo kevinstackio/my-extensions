@@ -1,6 +1,6 @@
 import Foundation
 
-struct VideoToolPaths: Equatable {
+struct VideoToolPaths: Equatable, Sendable {
     let ytDLP: URL
     let ffmpeg: URL
 }

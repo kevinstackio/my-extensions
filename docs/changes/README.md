@@ -78,17 +78,19 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue；固定视频工具链已完成并归档。
+当前没有活动 Issue。
 
 ## Issue 队列
 
-1. [实现 X Download 公开视频自动下载](./issues/2026-09-20-x-download-public-video-download-issue.md)
-   - [Commit 记录](./commits/2026-09-20-x-download-public-video-download-commit.md)
-2. [完善 X Download 视频下载失败恢复](./issues/2026-09-20-x-download-download-recovery-issue.md)
+1. [完善 X Download 视频下载失败恢复](./issues/2026-09-20-x-download-download-recovery-issue.md)
    - [Commit 记录](./commits/2026-09-20-x-download-download-recovery-commit.md)
 
 ## 已完成
 
+- [建立 X Download Helper 视频下载执行链路](./issues/2026-09-20-x-download-public-video-download-issue.md)
+  - [Commit 记录](./commits/2026-09-20-x-download-public-video-download-commit.md)
+  - [Spec](../superpowers/specs/2026-09-20-x-download-public-video-download-design.md)
+  - [Plan](../superpowers/plans/2026-09-20-x-download-public-video-download.md)
 - [打包 X Download Helper 固定视频工具链](./issues/2026-09-20-x-download-helper-toolchain-issue.md)
   - [Commit 记录](./commits/2026-09-20-x-download-helper-toolchain-commit.md)
 - [打通 X Download 扩展与 macOS Helper 通信](./issues/2026-09-20-x-download-native-messaging-issue.md)
