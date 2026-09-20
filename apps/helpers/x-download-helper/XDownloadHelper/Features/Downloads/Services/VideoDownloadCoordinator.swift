@@ -14,6 +14,10 @@ final class VideoDownloadCoordinator {
     private var activeAddress: String?
     private var worker: Task<Void, Never>?
 
+    private enum DirectSourceError: Error {
+        case failed(index: Int, total: Int, type: VideoMediaSourceType, message: String)
+    }
+
     init(
         runner: VideoProcessRunner,
         fileStore: VideoDownloadFileStore,
@@ -53,29 +57,53 @@ final class VideoDownloadCoordinator {
     private func run(_ task: DownloadTask) async {
         var workspace: VideoDownloadWorkspace?
         do {
-            updateState(task.id, .parsing)
+            if task.mediaSources.isEmpty {
+                updateState(task.id, .parsing)
+            }
             let fileStore = self.fileStore
             let runner = self.runner
             let createdWorkspace = try await runOffMain {
                 try fileStore.makeWorkspace(taskID: task.id, receivedAt: task.receivedAt)
             }
             workspace = createdWorkspace
-            let post = try await runOffMain {
-                try runner.parse(postURL: task.postURL)
+            let entries: [VideoPostEntry]
+            if task.mediaSources.isEmpty {
+                let post = try await runOffMain {
+                    try runner.parse(postURL: task.postURL)
+                }
+                entries = post.entries
+            } else {
+                // 扩展已从 X 页面响应提取到真实媒体地址时，直接交给 yt-dlp，跳过帖子解析。
+                entries = task.mediaSources.map { source in
+                    VideoPostEntry(url: source.url, sourceType: source.type)
+                }
             }
             var outputFiles: [URL] = []
-            for (index, entry) in post.entries.enumerated() {
+            for (index, entry) in entries.enumerated() {
                 let number = index + 1
-                updateState(task.id, .downloading(index: number, total: post.entries.count))
-                let fileStem = post.entries.count == 1 ? "video" : String(format: "video_%02d", number)
-                let output = try await runOffMain {
-                    try runner.download(
-                        entry: entry,
-                        outputDirectory: createdWorkspace.directory,
-                        fileStem: fileStem
-                    )
+                updateState(task.id, .downloading(index: number, total: entries.count))
+                let fileStem = entries.count == 1 ? "video" : String(format: "video_%02d", number)
+                let output: URL
+                do {
+                    output = try await runOffMain {
+                        try runner.download(
+                            entry: entry,
+                            outputDirectory: createdWorkspace.directory,
+                            fileStem: fileStem
+                        )
+                    }
+                } catch {
+                    if let sourceType = entry.sourceType {
+                        throw DirectSourceError.failed(
+                            index: number,
+                            total: entries.count,
+                            type: sourceType,
+                            message: directSourceFailureMessage(for: error)
+                        )
+                    }
+                    throw error
                 }
-                updateState(task.id, .merging(index: number, total: post.entries.count))
+                updateState(task.id, .merging(index: number, total: entries.count))
                 outputFiles.append(output)
             }
             let files = outputFiles
@@ -109,6 +137,8 @@ final class VideoDownloadCoordinator {
 
     private func failureMessage(for error: Error) -> String {
         switch error {
+        case let DirectSourceError.failed(index, total, type, message):
+            return "直链视频 \(index)/\(total)（\(type.rawValue)）下载失败\n\(message)"
         case let error as VideoProcessError:
             switch error {
             case let .launchFailed(tool):
@@ -136,6 +166,23 @@ final class VideoDownloadCoordinator {
             }
         default:
             return "下载失败"
+        }
+    }
+
+    private func directSourceFailureMessage(for error: Error) -> String {
+        switch error {
+        case let error as VideoProcessError:
+            switch error {
+            case let .launchFailed(tool):
+                return "无法启动 \(tool)"
+            case let .failed(status, message):
+                let detail = message.trimmingCharacters(in: .whitespacesAndNewlines)
+                return "exitCode=\(status)\n\(detail.isEmpty ? "视频进程失败" : detail)"
+            case let .missingOutput(url):
+                return "未生成 \(url.lastPathComponent)"
+            }
+        default:
+            return failureMessage(for: error)
         }
     }
 }

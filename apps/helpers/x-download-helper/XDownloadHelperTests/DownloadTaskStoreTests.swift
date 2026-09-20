@@ -59,6 +59,29 @@ final class DownloadTaskStoreTests: XCTestCase {
         XCTAssertTrue(store.tasks.isEmpty)
     }
 
+    func testFailedTaskCanBeRetriedWithFreshMediaSourcesWithoutCreatingDuplicate() throws {
+        let store = DownloadTaskStore()
+        var enqueued: [DownloadTask] = []
+        store.onTaskEnqueued = { enqueued.append($0) }
+        let postURL = try XCTUnwrap(URL(string: "https://x.com/user/status/123"))
+        let source = VideoMediaSource(
+            mediaID: "video-1",
+            type: .mp4,
+            url: URL(string: "https://video.twimg.com/video.mp4")!
+        )
+
+        let first = store.enqueue(postId: "123", postURL: postURL)
+        guard case let .created(taskID) = first else { return XCTFail("应创建任务") }
+        store.updateState(for: taskID, state: .failed("解析失败"))
+
+        let retry = store.enqueue(postId: "123", postURL: postURL, mediaSources: [source])
+
+        guard case .existing(taskID) = retry else { return XCTFail("重试应复用已有任务") }
+        XCTAssertEqual(store.tasks.first?.state, .queued)
+        XCTAssertEqual(store.tasks.first?.mediaSources, [source])
+        XCTAssertEqual(enqueued.count, 2)
+    }
+
     func testFailedStateExposesCompleteMessageForDisplayAndCopy() {
         let message = "ERROR: first line\nsecond line"
 

@@ -1,6 +1,7 @@
 import Foundation
 
-let nativeMessageProtocolVersion = 1
+let nativeMessageProtocolVersion = 2
+let supportedNativeMessageProtocolVersions: Set<Int> = [1, 2]
 let nativeMessageHostName = "dev.kevinstack.xdownloadhelper.nativehost"
 
 enum NativeMessageErrorCode: String, Codable {
@@ -15,6 +16,13 @@ enum NativeMessageErrorCode: String, Codable {
 struct NativeMessagePayload: Codable, Equatable {
     let postId: String
     let postUrl: String
+    let mediaSources: [VideoMediaSource]?
+
+    init(postId: String, postUrl: String, mediaSources: [VideoMediaSource]? = nil) {
+        self.postId = postId
+        self.postUrl = postUrl
+        self.mediaSources = mediaSources
+    }
 }
 
 struct NativeMessageRequest: Codable, Equatable {
@@ -46,11 +54,11 @@ struct NativeMessageResponse: Codable, Equatable {
     let result: NativeMessageResult?
     let error: NativeMessageError?
 
-    static func success(requestId: String, taskId: UUID, disposition: EnqueueDisposition) -> Self {
-        Self(protocolVersion: nativeMessageProtocolVersion, requestId: requestId, ok: true, result: NativeMessageResult(taskId: taskId, disposition: disposition), error: nil)
+    static func success(requestId: String, protocolVersion: Int, taskId: UUID, disposition: EnqueueDisposition) -> Self {
+        Self(protocolVersion: protocolVersion, requestId: requestId, ok: true, result: NativeMessageResult(taskId: taskId, disposition: disposition), error: nil)
     }
 
-    static func failure(requestId: String, code: NativeMessageErrorCode, message: String) -> Self {
-        Self(protocolVersion: nativeMessageProtocolVersion, requestId: requestId, ok: false, result: nil, error: NativeMessageError(code: code, message: message))
+    static func failure(requestId: String, protocolVersion: Int, code: NativeMessageErrorCode, message: String) -> Self {
+        Self(protocolVersion: protocolVersion, requestId: requestId, ok: false, result: nil, error: NativeMessageError(code: code, message: message))
     }
 }

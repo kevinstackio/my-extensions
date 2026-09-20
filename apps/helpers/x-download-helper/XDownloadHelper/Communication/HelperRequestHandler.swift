@@ -11,23 +11,29 @@ final class HelperRequestHandler {
     }
 
     func handle(_ request: NativeMessageRequest) -> NativeMessageResponse {
-        guard request.protocolVersion == nativeMessageProtocolVersion else {
-            return .failure(requestId: request.requestId, code: .unsupportedProtocol, message: "不支持的协议版本")
+        guard supportedNativeMessageProtocolVersions.contains(request.protocolVersion) else {
+            return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .unsupportedProtocol, message: "不支持的协议版本")
         }
         guard request.type == "task.enqueue" else {
-            return .failure(requestId: request.requestId, code: .unsupportedMessage, message: "不支持的消息类型")
+            return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .unsupportedMessage, message: "不支持的消息类型")
         }
         guard isValidPost(request.payload.postId, urlString: request.payload.postUrl) else {
-            return .failure(requestId: request.requestId, code: .invalidRequest, message: "帖子请求无效")
+            return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .invalidRequest, message: "帖子请求无效")
+        }
+        let mediaSources: [VideoMediaSource]
+        do {
+            mediaSources = try VideoMediaSourceValidator.validate(request.payload.mediaSources ?? [])
+        } catch {
+            return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .invalidRequest, message: "视频来源无效")
         }
 
-        let result = store.enqueue(postId: request.payload.postId, postURL: URL(string: request.payload.postUrl)!)
+        let result = store.enqueue(postId: request.payload.postId, postURL: URL(string: request.payload.postUrl)!, mediaSources: mediaSources)
         showPopover()
         switch result {
         case let .created(taskID):
-            return .success(requestId: request.requestId, taskId: taskID, disposition: .created)
+            return .success(requestId: request.requestId, protocolVersion: request.protocolVersion, taskId: taskID, disposition: .created)
         case let .existing(taskID):
-            return .success(requestId: request.requestId, taskId: taskID, disposition: .existing)
+            return .success(requestId: request.requestId, protocolVersion: request.protocolVersion, taskId: taskID, disposition: .existing)
         }
     }
 

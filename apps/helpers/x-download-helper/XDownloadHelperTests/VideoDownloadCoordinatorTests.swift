@@ -85,6 +85,74 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         ])
     }
 
+    func testMediaSourcesDownloadDirectlyWithoutParsingPost() async throws {
+        let root = try temporaryDirectory()
+        let desktop = root.appendingPathComponent("Desktop", isDirectory: true)
+        let sourceURL = URL(string: "https://video.twimg.com/ext_tw_video/1/pu/vid/1280x720/video.mp4")!
+        let executor = CoordinatorProcessExecutor()
+        let tools = VideoToolPaths(
+            ytDLP: URL(fileURLWithPath: "/bundle/Contents/Resources/Tools/yt-dlp"),
+            ffmpeg: URL(fileURLWithPath: "/bundle/Contents/Resources/Tools/ffmpeg")
+        )
+        let fileStore = VideoDownloadFileStore(
+            temporaryRoot: root,
+            desktopDirectory: desktop,
+            timeZone: TimeZone(secondsFromGMT: 0)!
+        )
+        let store = DownloadTaskStore(now: { Date(timeIntervalSince1970: 1_767_225_600) })
+        let coordinator = VideoDownloadCoordinator(
+            runner: VideoProcessRunner(tools: tools, executor: executor),
+            fileStore: fileStore,
+            updateState: { taskID, state in store.updateState(for: taskID, state: state) },
+            removeTask: { taskID in store.remove(id: taskID) }
+        )
+        store.onTaskEnqueued = { task in coordinator.enqueue(task) }
+
+        _ = store.enqueue(
+            postId: "123",
+            postURL: URL(string: "https://x.com/user/status/123")!,
+            mediaSources: [VideoMediaSource(mediaID: "video-1", type: .mp4, url: sourceURL)]
+        )
+        await coordinator.waitForIdle()
+
+        XCTAssertTrue(store.tasks.isEmpty)
+        XCTAssertEqual(executor.downloadedURLs, [sourceURL.absoluteString])
+        let desktopFiles = try FileManager.default.contentsOfDirectory(atPath: desktop.path)
+        XCTAssertEqual(desktopFiles, ["X_VIDEO_20260101_000000.mp4"])
+    }
+
+    func testDirectSourceFailureIncludesSourceContext() async throws {
+        let root = try temporaryDirectory()
+        let desktop = root.appendingPathComponent("Desktop", isDirectory: true)
+        let sourceURL = URL(string: "https://video.twimg.com/ext_tw_video/1/pu/vid/1280x720/video.mp4")!
+        let executor = CoordinatorProcessExecutor(failDownloadFor: sourceURL.absoluteString)
+        let tools = VideoToolPaths(
+            ytDLP: URL(fileURLWithPath: "/bundle/Contents/Resources/Tools/yt-dlp"),
+            ffmpeg: URL(fileURLWithPath: "/bundle/Contents/Resources/Tools/ffmpeg")
+        )
+        let store = DownloadTaskStore()
+        let coordinator = VideoDownloadCoordinator(
+            runner: VideoProcessRunner(tools: tools, executor: executor),
+            fileStore: VideoDownloadFileStore(temporaryRoot: root, desktopDirectory: desktop),
+            updateState: { taskID, state in store.updateState(for: taskID, state: state) },
+            removeTask: { taskID in store.remove(id: taskID) }
+        )
+        store.onTaskEnqueued = { task in coordinator.enqueue(task) }
+
+        _ = store.enqueue(
+            postId: "123",
+            postURL: URL(string: "https://x.com/user/status/123")!,
+            mediaSources: [VideoMediaSource(mediaID: "video-1", type: .mp4, url: sourceURL)]
+        )
+        await coordinator.waitForIdle()
+
+        guard case let .failed(message) = store.tasks.first?.state else { return XCTFail("直链失败任务应保留") }
+        XCTAssertTrue(message.contains("1/1"))
+        XCTAssertTrue(message.contains("mp4"))
+        XCTAssertTrue(message.contains("exitCode=1"))
+        XCTAssertTrue(message.contains("network failed"))
+    }
+
     private func temporaryDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("x-download-coordinator-\(UUID().uuidString)", isDirectory: true)

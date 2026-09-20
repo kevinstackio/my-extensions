@@ -37,9 +37,15 @@ final class DownloadTaskStore {
     }
 
     @discardableResult
-    func enqueue(postId: String, postURL: URL) -> EnqueueResult {
+    func enqueue(postId: String, postURL: URL, mediaSources: [VideoMediaSource] = []) -> EnqueueResult {
         let normalizedAddress = Self.normalize(postURL)
-        if let existing = tasks.first(where: { $0.normalizedAddress == normalizedAddress }) {
+        if let index = tasks.firstIndex(where: { $0.normalizedAddress == normalizedAddress }) {
+            let existing = tasks[index]
+            if case .failed = existing.state, !mediaSources.isEmpty {
+                tasks[index].mediaSources = mediaSources
+                tasks[index].state = .queued
+                onTaskEnqueued?(tasks[index])
+            }
             return .existing(existing.id)
         }
         let normalizedURL = URL(string: normalizedAddress) ?? postURL
@@ -47,7 +53,8 @@ final class DownloadTaskStore {
             postId: postId,
             postURL: normalizedURL,
             normalizedAddress: normalizedAddress,
-            receivedAt: now()
+            receivedAt: now(),
+            mediaSources: mediaSources
         )
         tasks.append(task)
         onTaskEnqueued?(task)

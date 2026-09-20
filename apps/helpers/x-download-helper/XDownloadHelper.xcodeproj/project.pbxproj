@@ -39,6 +39,8 @@
 		A10000000000000000000042 /* VideoProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000045 /* VideoProcessRunnerTests.swift */; };
 		A10000000000000000000043 /* VideoDownloadFileStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000046 /* VideoDownloadFileStoreTests.swift */; };
 		A10000000000000000000044 /* VideoDownloadCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000047 /* VideoDownloadCoordinatorTests.swift */; };
+		A10000000000000000000048 /* VideoMediaSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000048 /* VideoMediaSource.swift */; };
+		A10000000000000000000049 /* VideoMediaSourceValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000049 /* VideoMediaSourceValidator.swift */; };
 		A10000000000000000000027 /* HelperRequestHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000030 /* HelperRequestHandlerTests.swift */; };
 		A10000000000000000000017 /* Native Host main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000020 /* Native Host main.swift */; };
 		A10000000000000000000018 /* Native Host FrameIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000021 /* Native Host FrameIO.swift */; };
@@ -118,6 +120,8 @@
 		B10000000000000000000045 /* VideoProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProcessRunnerTests.swift; sourceTree = "<group>"; };
 		B10000000000000000000046 /* VideoDownloadFileStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadFileStoreTests.swift; sourceTree = "<group>"; };
 		B10000000000000000000047 /* VideoDownloadCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadCoordinatorTests.swift; sourceTree = "<group>"; };
+		B10000000000000000000048 /* VideoMediaSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMediaSource.swift; sourceTree = "<group>"; };
+		B10000000000000000000049 /* VideoMediaSourceValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMediaSourceValidator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,6 +313,7 @@
 				B10000000000000000000041 /* VideoProcessRunner.swift */,
 				B10000000000000000000042 /* VideoDownloadFileStore.swift */,
 				B10000000000000000000043 /* VideoDownloadCoordinator.swift */,
+				B10000000000000000000049 /* VideoMediaSourceValidator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -318,6 +323,7 @@
 			children = (
 				B10000000000000000000008 /* DownloadTask.swift */,
 				B10000000000000000000039 /* VideoPost.swift */,
+				B10000000000000000000048 /* VideoMediaSource.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -500,6 +506,7 @@
 			files = (
 				A10000000000000000000001 /* XDownloadHelperApp.swift in Sources */,
 				A10000000000000000000005 /* DownloadTask.swift in Sources */,
+				A10000000000000000000048 /* VideoMediaSource.swift in Sources */,
 				A10000000000000000000006 /* DownloadTaskStore.swift in Sources */,
 				A10000000000000000000007 /* AppDelegate.swift in Sources */,
 				A10000000000000000000008 /* MenuBarController.swift in Sources */,
@@ -519,6 +526,7 @@
 				A10000000000000000000038 /* VideoProcessRunner.swift in Sources */,
 				A10000000000000000000039 /* VideoDownloadFileStore.swift in Sources */,
 				A10000000000000000000040 /* VideoDownloadCoordinator.swift in Sources */,
+				A10000000000000000000049 /* VideoMediaSourceValidator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

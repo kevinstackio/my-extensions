@@ -81,7 +81,7 @@ final class HelperSocketServer {
             let response = handler.handle(request)
             try NativeMessagingFrameWriter.writeMessage(JSONEncoder().encode(response), to: input)
         } catch {
-            let response = NativeMessageResponse.failure(requestId: "unknown", code: .invalidRequest, message: "请求内容无效")
+            let response = NativeMessageResponse.failure(requestId: "unknown", protocolVersion: nativeMessageProtocolVersion, code: .invalidRequest, message: "请求内容无效")
             try? NativeMessagingFrameWriter.writeMessage(JSONEncoder().encode(response), to: input)
         }
     }

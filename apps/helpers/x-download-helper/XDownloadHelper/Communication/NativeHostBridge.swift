@@ -7,4 +7,8 @@ enum NativeHostBridge {
     static func isAllowedOrigin(_ origin: String) -> Bool {
         origin == allowedDevelopmentOrigin
     }
+
+    static func isSupportedProtocol(_ version: Int) -> Bool {
+        supportedNativeMessageProtocolVersions.contains(version)
+    }
 }

@@ -22,6 +22,7 @@ struct DownloadTask: Identifiable, Equatable, Sendable {
     let postURL: URL
     let normalizedAddress: String
     let receivedAt: Date
+    var mediaSources: [VideoMediaSource]
     var state: DownloadTaskState
 
     init(
@@ -30,6 +31,7 @@ struct DownloadTask: Identifiable, Equatable, Sendable {
         postURL: URL,
         normalizedAddress: String? = nil,
         receivedAt: Date = Date(),
+        mediaSources: [VideoMediaSource] = [],
         state: DownloadTaskState = .queued
     ) {
         self.id = id
@@ -37,6 +39,7 @@ struct DownloadTask: Identifiable, Equatable, Sendable {
         self.postURL = postURL
         self.normalizedAddress = normalizedAddress ?? postURL.absoluteString
         self.receivedAt = receivedAt
+        self.mediaSources = mediaSources
         self.state = state
     }
 }

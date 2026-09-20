@@ -6,6 +6,12 @@ struct VideoPost: Equatable, Sendable {
 
 struct VideoPostEntry: Equatable, Sendable {
     let url: URL
+    let sourceType: VideoMediaSourceType?
+
+    init(url: URL, sourceType: VideoMediaSourceType? = nil) {
+        self.url = url
+        self.sourceType = sourceType
+    }
 }
 
 enum VideoPostParseError: Error, Equatable {
