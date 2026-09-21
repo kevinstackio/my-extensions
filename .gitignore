@@ -17,6 +17,7 @@ xcuserdata/
 .turbo/
 .wxt/
 .vite/
+apps/web/.vitepress/cache/
 .superpowers/
 apps/helpers/x-download-helper/VendorTools/yt-dlp
 apps/helpers/x-download-helper/VendorTools/ffmpeg

@@ -9,7 +9,7 @@ my-extensions/
 │  │  ├─ my-tabs/          # 我的标签页
 │  │  └─ tg-download/      # Telegram 资源下载插件
 │  ├─ helpers/             # 扩展配套程序
-│  └─ website/             # 扩展配套网站
+│  └─ web/                 # 扩展统一官网与文档
 ├─ docs/                   # 项目管理与技术文档
 ├─ .gitignore              # Git 忽略规则
 ├─ AGENTS.md               # 项目协作规范
