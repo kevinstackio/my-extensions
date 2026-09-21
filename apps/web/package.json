@@ -1,0 +1,13 @@
+{
+  "name": "@my-extensions/web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build"
+  },
+  "devDependencies": {
+    "vitepress": "2.0.0-alpha.20"
+  }
+}

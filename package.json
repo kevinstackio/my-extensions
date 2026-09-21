@@ -19,7 +19,9 @@
     "x-helper:build": "zsh apps/helpers/x-download-helper/scripts/build.sh",
     "x-helper:dev": "zsh apps/helpers/x-download-helper/scripts/run.sh",
     "tabs:dev": "pnpm --filter @my-extensions/my-tabs dev",
-    "tabs:build": "pnpm --filter @my-extensions/my-tabs build"
+    "tabs:build": "pnpm --filter @my-extensions/my-tabs build",
+    "vitepress:dev": "turbo run dev --filter=@my-extensions/web",
+    "vitepress:build": "turbo run build --filter=@my-extensions/web"
   },
   "devDependencies": {
     "turbo": "2.10.12"
