@@ -2,6 +2,8 @@
 
 ## 元信息
 
+后续工作项 `2026-09-21-x-download-media-source-only-download` 已废止本记录中关于 v1 地址请求和帖子 URL 解析降级的当前有效性；本记录仅保留历史交付事实。
+
 - 工作项：`2026-09-21-x-download-page-media-source`
 - 对应 Issue：[让 X Download 使用页面媒体源下载视频](../issues/2026-09-21-x-download-page-media-source-issue.md)
 - 状态：已完成

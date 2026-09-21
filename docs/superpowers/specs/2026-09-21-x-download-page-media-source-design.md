@@ -2,6 +2,8 @@
 
 ## 元信息
 
+本 Spec 中关于帖子 URL 解析降级和 v1 地址请求兼容的设计已由 `2026-09-21-x-download-media-source-only-download` Issue 废止；实现以当前 Issue 为准。
+
 - 工作项：`2026-09-21-x-download-page-media-source`
 - 对应 Issue：[`让 X Download 使用页面媒体源下载视频`](../../changes/issues/2026-09-21-x-download-page-media-source-issue.md)
 - 状态：已批准
