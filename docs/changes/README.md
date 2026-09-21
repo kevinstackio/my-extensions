@@ -78,11 +78,7 @@ docs/
 
 ## 当前 Issue
 
-[让 X Download 使用页面媒体源下载视频](./issues/2026-09-21-x-download-page-media-source-issue.md)
-
-- [Commit 记录](./commits/2026-09-21-x-download-page-media-source-commit.md)
-- [Spec](../superpowers/specs/2026-09-21-x-download-page-media-source-design.md)
-- [Plan](../superpowers/plans/2026-09-21-x-download-page-media-source.md)
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -91,6 +87,10 @@ docs/
 
 ## 已完成
 
+- [让 X Download 使用页面媒体源下载视频](./issues/2026-09-21-x-download-page-media-source-issue.md)
+  - [Commit 记录](./commits/2026-09-21-x-download-page-media-source-commit.md)
+  - [Spec](../superpowers/specs/2026-09-21-x-download-page-media-source-design.md)
+  - [Plan](../superpowers/plans/2026-09-21-x-download-page-media-source.md)
 - [建立 X Download Helper 视频下载执行链路](./issues/2026-09-20-x-download-public-video-download-issue.md)
   - [Commit 记录](./commits/2026-09-20-x-download-public-video-download-commit.md)
   - [Spec](../superpowers/specs/2026-09-20-x-download-public-video-download-design.md)
