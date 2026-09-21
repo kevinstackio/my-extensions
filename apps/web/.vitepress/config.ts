@@ -1,29 +1,28 @@
 import { defineConfig } from 'vitepress'
 
-// https://vitepress.dev/reference/site-config
+// VitePress 站点配置
 export default defineConfig({
   title: "My Extensions",
-  description: "浏览器扩展的统一官网与文档中心",
+  description: "将想法与能力延伸为实用工具，汇集浏览器扩展、应用、AI Skills 与开发工具。",
   outDir: 'dist',
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
+    // VitePress 默认主题配置
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: '首页', link: '/' },
+      { text: 'Apps', link: '/apps/' },
+      { text: 'Toolkits', link: '/toolkits/' },
+      { text: 'Docs', link: '/docs/' }
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: '内容入口',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Apps', link: '/apps/' },
+          { text: 'Toolkits', link: '/toolkits/' },
+          { text: 'Docs', link: '/docs/' }
         ]
       }
-    ],
-
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
     ]
   }
 })

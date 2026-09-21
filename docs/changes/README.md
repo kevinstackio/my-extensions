@@ -78,7 +78,9 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+[完善 My Extensions 品牌定位与内容入口](./issues/2026-09-22-web-content-architecture-issue.md)
+
+- [Commit 记录](./commits/2026-09-22-web-content-architecture-commit.md)
 
 ## Issue 队列
 

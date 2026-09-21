@@ -1,4 +1,6 @@
-# Browser Extensions
+# My Extensions
+
+将想法与能力延伸为实用工具，汇集浏览器扩展、应用、AI Skills 与开发工具。
 
 ## 项目结构
 
@@ -9,7 +11,9 @@ my-extensions/
 │  │  ├─ my-tabs/          # 我的标签页
 │  │  └─ tg-download/      # Telegram 资源下载插件
 │  ├─ helpers/             # 扩展配套程序
-│  └─ web/                 # 扩展统一官网与文档
+│  └─ web/                 # 统一官网与文档
+├─ packages/               # 可复用的 npm 包
+├─ skills/                 # 可复用的 AI Skills
 ├─ docs/                   # 项目管理与技术文档
 ├─ .gitignore              # Git 忽略规则
 ├─ AGENTS.md               # 项目协作规范
@@ -20,10 +24,12 @@ my-extensions/
 └─ turbo.json              # Turborepo 任务配置
 ```
 
-## My Tabs
+## Apps
+
+### My Tabs
 我的标签页，保存和组织我喜爱的网站。
 
-## TG Download
+### TG Download
 在 Telegram Web 中右键保存图片和视频。
 
 ## 项目文档
