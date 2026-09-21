@@ -78,8 +78,7 @@ docs/
 
 ## 当前 Issue
 
-- [改为仅使用页面媒体来源下载 X 视频](./issues/2026-09-21-x-download-media-source-only-download-issue.md)
-  - [Commit 记录](./commits/2026-09-21-x-download-media-source-only-download-commit.md)
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -87,6 +86,9 @@ docs/
    - [Commit 记录](./commits/2026-09-20-x-download-download-recovery-commit.md)
 
 ## 已完成
+
+- [改为仅使用页面媒体来源下载 X 视频](./issues/2026-09-21-x-download-media-source-only-download-issue.md)
+  - [Commit 记录](./commits/2026-09-21-x-download-media-source-only-download-commit.md)
 
 - [建立 VitePress 官网脚手架](./issues/2026-09-21-web-vitepress-bootstrap-issue.md)
   - [Commit 记录](./commits/2026-09-21-web-vitepress-bootstrap-commit.md)

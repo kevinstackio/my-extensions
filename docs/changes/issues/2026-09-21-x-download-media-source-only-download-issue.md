@@ -5,8 +5,8 @@
 - 工作项：`2026-09-21-x-download-media-source-only-download`
 - 项目：`x-download`
 - 类型：中型任务
-- 状态：待用户验收
-- 当前阶段：实现与自动化验证已完成，等待 Chrome、Edge 和 macOS Helper 实际验收
+- 状态：已完成
+- 当前阶段：实现、自动化验证、用户实际验收和终态文档提交均已完成
 - 创建日期：2026-09-21
 - 最近更新：2026-09-21
 
@@ -87,4 +87,4 @@
 
 ## 唯一下一步
 
-请在 Chrome、Edge 和 macOS Helper 中按验收标准实际走通一次页面媒体来源到 `~/Downloads/X Download/` 的完整流程，并反馈验收结果。
+无（Issue 已完成并提交）。

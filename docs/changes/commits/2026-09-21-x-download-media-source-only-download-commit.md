@@ -4,9 +4,9 @@
 
 - 工作项：`2026-09-21-x-download-media-source-only-download`
 - 对应 Issue：[改为仅使用页面媒体来源下载 X 视频](../issues/2026-09-21-x-download-media-source-only-download-issue.md)
-- 状态：待用户验收
-- 用户验收：待验收
-- 最终提交批准：待批准
+- 状态：已完成
+- 用户验收：已通过
+- 最终提交批准：已批准
 - 创建日期：2026-09-21
 - 最近更新：2026-09-21
 
@@ -38,17 +38,17 @@
 - `apps/extensions/x-download`：`wxt build` 通过，生成 Chrome MV3 构建产物。
 - `XDownloadNativeHost`：`xcodebuild` Debug 构建通过。
 - 变更后的核心 Swift 下载文件：`swiftc -typecheck` 通过；`git diff --check` 通过。
+- 用户已确认 Chrome、Edge 与 macOS Helper 的完整下载流程验收通过。
 
 ## 未验证事项与限制
 
 - `XDownloadHelper` 完整 XCTest/Xcode 构建仍受当前环境的 `ObservationMacros.ObservableMacro` `swift-plugin-server produced malformed response` 限制，未将该环境问题误改为业务代码。
-- Chrome、Edge 页面媒体解析、macOS Helper 实际下载、进度展示和文件落盘仍需用户实际验收。
 - 阶段式总进度按视频、音频、合并等阶段计算，不代表精确总字节百分比。
 
 ## 用户验收
 
-- 结果：待验收
-- 说明：自动化实现与验证已完成，等待用户在 Chrome、Edge 与 macOS Helper 中实际验收。
+- 结果：通过
+- 说明：用户已确认页面媒体解析、Helper 下载、进度展示和文件落盘符合当前验收要求。
 
 ## Commit messages
 
@@ -75,5 +75,5 @@ docs(x-download): 整理页面媒体下载交付记录
 
 ## 最终提交批准
 
-- 状态：已批准（按三提交拆分）
-- 说明：用户已明确批准按三个逻辑边界拆分提交；用户验收状态仍需按 Issue 记录单独维护。
+- 状态：已批准
+- 说明：用户已批准三个交付提交，并在功能验收通过后单独批准终态文档收口提交。
