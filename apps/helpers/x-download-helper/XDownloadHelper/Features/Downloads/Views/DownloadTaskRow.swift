@@ -21,7 +21,7 @@ struct DownloadTaskRow: View {
 
                     Spacer()
 
-                    Text(statusTitle(for: task.state))
+                    Text(task.state.displayTitle)
                         .foregroundStyle(.secondary)
 
                     Button("移除") {
@@ -34,6 +34,31 @@ struct DownloadTaskRow: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .truncationMode(.middle)
+
+                if case .preparing = task.state {
+                    ProgressView()
+                        .controlSize(.small)
+                }
+
+                if let stepProgress = task.state.stepProgress {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("当前步骤")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        ProgressView(value: stepProgress)
+                            .progressViewStyle(.linear)
+                    }
+                }
+
+                if let overallProgress = task.state.overallProgress {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("总进度")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        ProgressView(value: overallProgress)
+                            .progressViewStyle(.linear)
+                    }
+                }
 
                 if let failureMessage = task.state.failureMessage {
                     HStack(alignment: .top, spacing: 8) {
@@ -55,23 +80,6 @@ struct DownloadTaskRow: View {
                     }
                 }
             }
-        }
-    }
-
-    private func statusTitle(for state: DownloadTaskState) -> String {
-        switch state {
-        case .queued:
-            return "等待中"
-        case .parsing:
-            return "解析中"
-        case let .downloading(index, total):
-            return total > 1 ? "下载中 \(index)/\(total)" : "下载中"
-        case let .merging(index, total):
-            return total > 1 ? "合并中 \(index)/\(total)" : "合并中"
-        case .completed:
-            return "已完成"
-        case .failed:
-            return "失败"
         }
     }
 

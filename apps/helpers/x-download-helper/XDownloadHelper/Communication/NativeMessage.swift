@@ -1,7 +1,7 @@
 import Foundation
 
 let nativeMessageProtocolVersion = 2
-let supportedNativeMessageProtocolVersions: Set<Int> = [1, 2]
+let supportedNativeMessageProtocolVersions: Set<Int> = [2]
 let nativeMessageHostName = "dev.kevinstack.xdownloadhelper.nativehost"
 
 enum NativeMessageErrorCode: String, Codable {
@@ -16,6 +16,7 @@ enum NativeMessageErrorCode: String, Codable {
 struct NativeMessagePayload: Codable, Equatable {
     let postId: String
     let postUrl: String
+    // 保留可选仅为兼容 JSON 解码层的缺字段错误，Handler 会把 nil 和空数组统一拒绝。
     let mediaSources: [VideoMediaSource]?
 
     init(postId: String, postUrl: String, mediaSources: [VideoMediaSource]? = nil) {

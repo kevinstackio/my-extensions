@@ -30,12 +30,9 @@
 		A10000000000000000000033 /* VideoToolValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000036 /* VideoToolValidatorTests.swift */; };
 		A10000000000000000000034 /* VideoToolPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000037 /* VideoToolPaths.swift */; };
 		A10000000000000000000035 /* VideoToolValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000038 /* VideoToolValidator.swift */; };
-		A10000000000000000000036 /* VideoPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000039 /* VideoPost.swift */; };
-		A10000000000000000000037 /* VideoPostParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000040 /* VideoPostParser.swift */; };
 		A10000000000000000000038 /* VideoProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000041 /* VideoProcessRunner.swift */; };
 		A10000000000000000000039 /* VideoDownloadFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000042 /* VideoDownloadFileStore.swift */; };
 		A10000000000000000000040 /* VideoDownloadCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000043 /* VideoDownloadCoordinator.swift */; };
-		A10000000000000000000041 /* VideoPostParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000044 /* VideoPostParserTests.swift */; };
 		A10000000000000000000042 /* VideoProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000045 /* VideoProcessRunnerTests.swift */; };
 		A10000000000000000000043 /* VideoDownloadFileStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000046 /* VideoDownloadFileStoreTests.swift */; };
 		A10000000000000000000044 /* VideoDownloadCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000047 /* VideoDownloadCoordinatorTests.swift */; };
@@ -111,12 +108,9 @@
 		B10000000000000000000036 /* VideoToolValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoToolValidatorTests.swift; sourceTree = "<group>"; };
 		B10000000000000000000037 /* VideoToolPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoToolPaths.swift; sourceTree = "<group>"; };
 		B10000000000000000000038 /* VideoToolValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoToolValidator.swift; sourceTree = "<group>"; };
-		B10000000000000000000039 /* VideoPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPost.swift; sourceTree = "<group>"; };
-		B10000000000000000000040 /* VideoPostParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPostParser.swift; sourceTree = "<group>"; };
 		B10000000000000000000041 /* VideoProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProcessRunner.swift; sourceTree = "<group>"; };
 		B10000000000000000000042 /* VideoDownloadFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadFileStore.swift; sourceTree = "<group>"; };
 		B10000000000000000000043 /* VideoDownloadCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadCoordinator.swift; sourceTree = "<group>"; };
-		B10000000000000000000044 /* VideoPostParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPostParserTests.swift; sourceTree = "<group>"; };
 		B10000000000000000000045 /* VideoProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProcessRunnerTests.swift; sourceTree = "<group>"; };
 		B10000000000000000000046 /* VideoDownloadFileStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadFileStoreTests.swift; sourceTree = "<group>"; };
 		B10000000000000000000047 /* VideoDownloadCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadCoordinatorTests.swift; sourceTree = "<group>"; };
@@ -309,7 +303,6 @@
 		C10000000000000000000020 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				B10000000000000000000040 /* VideoPostParser.swift */,
 				B10000000000000000000041 /* VideoProcessRunner.swift */,
 				B10000000000000000000042 /* VideoDownloadFileStore.swift */,
 				B10000000000000000000043 /* VideoDownloadCoordinator.swift */,
@@ -322,7 +315,6 @@
 			isa = PBXGroup;
 			children = (
 				B10000000000000000000008 /* DownloadTask.swift */,
-				B10000000000000000000039 /* VideoPost.swift */,
 				B10000000000000000000048 /* VideoMediaSource.swift */,
 			);
 			path = Models;
@@ -345,7 +337,6 @@
 				B10000000000000000000030 /* HelperRequestHandlerTests.swift */,
 				B10000000000000000000032 /* NativeHostRegistrarTests.swift */,
 				B10000000000000000000036 /* VideoToolValidatorTests.swift */,
-				B10000000000000000000044 /* VideoPostParserTests.swift */,
 				B10000000000000000000045 /* VideoProcessRunnerTests.swift */,
 				B10000000000000000000046 /* VideoDownloadFileStoreTests.swift */,
 				B10000000000000000000047 /* VideoDownloadCoordinatorTests.swift */,
@@ -521,8 +512,6 @@
 				A10000000000000000000028 /* NativeHostRegistrar.swift in Sources */,
 				A10000000000000000000034 /* VideoToolPaths.swift in Sources */,
 				A10000000000000000000035 /* VideoToolValidator.swift in Sources */,
-				A10000000000000000000036 /* VideoPost.swift in Sources */,
-				A10000000000000000000037 /* VideoPostParser.swift in Sources */,
 				A10000000000000000000038 /* VideoProcessRunner.swift in Sources */,
 				A10000000000000000000039 /* VideoDownloadFileStore.swift in Sources */,
 				A10000000000000000000040 /* VideoDownloadCoordinator.swift in Sources */,
@@ -540,7 +529,6 @@
 				A10000000000000000000027 /* HelperRequestHandlerTests.swift in Sources */,
 				A10000000000000000000029 /* NativeHostRegistrarTests.swift in Sources */,
 				A10000000000000000000033 /* VideoToolValidatorTests.swift in Sources */,
-				A10000000000000000000041 /* VideoPostParserTests.swift in Sources */,
 				A10000000000000000000042 /* VideoProcessRunnerTests.swift in Sources */,
 				A10000000000000000000043 /* VideoDownloadFileStoreTests.swift in Sources */,
 				A10000000000000000000044 /* VideoDownloadCoordinatorTests.swift in Sources */,

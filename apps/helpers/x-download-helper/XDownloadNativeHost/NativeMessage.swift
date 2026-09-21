@@ -1,7 +1,7 @@
 import Foundation
 
 let nativeMessageProtocolVersion = 2
-let supportedNativeMessageProtocolVersions: Set<Int> = [1, 2]
+let supportedNativeMessageProtocolVersions: Set<Int> = [2]
 let nativeMessageHostName = "dev.kevinstack.xdownloadhelper.nativehost"
 
 enum NativeMessageErrorCode: String, Codable {
@@ -28,6 +28,7 @@ struct VideoMediaSource: Codable {
 struct NativeMessagePayload: Codable {
     let postId: String
     let postUrl: String
+    // Native Host 只转发消息，最终的非空来源校验仍由 Helper 再做一次。
     let mediaSources: [VideoMediaSource]?
 }
 struct NativeMessageRequest: Codable { let protocolVersion: Int; let requestId: String; let type: String; let payload: NativeMessagePayload }

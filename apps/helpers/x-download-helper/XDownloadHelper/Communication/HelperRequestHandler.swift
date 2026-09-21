@@ -11,6 +11,7 @@ final class HelperRequestHandler {
     }
 
     func handle(_ request: NativeMessageRequest) -> NativeMessageResponse {
+        // Helper 是 Native Messaging 的最终边界：即使扩展已经校验过，也必须在这里重新拒绝旧协议和空来源。
         guard supportedNativeMessageProtocolVersions.contains(request.protocolVersion) else {
             return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .unsupportedProtocol, message: "不支持的协议版本")
         }
@@ -20,9 +21,14 @@ final class HelperRequestHandler {
         guard isValidPost(request.payload.postId, urlString: request.payload.postUrl) else {
             return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .invalidRequest, message: "帖子请求无效")
         }
+        guard let rawMediaSources = request.payload.mediaSources, !rawMediaSources.isEmpty else {
+            return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .invalidRequest, message: "视频来源不能为空")
+        }
+
         let mediaSources: [VideoMediaSource]
         do {
-            mediaSources = try VideoMediaSourceValidator.validate(request.payload.mediaSources ?? [])
+            // 只把页面给出的完整 HLS、DASH 或 MP4 来源交给下载器，Helper 不再承担帖子解析职责。
+            mediaSources = try VideoMediaSourceValidator.validate(rawMediaSources)
         } catch {
             return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .invalidRequest, message: "视频来源无效")
         }

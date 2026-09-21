@@ -15,7 +15,7 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         let runner = VideoProcessRunner(tools: tools, executor: executor)
         let fileStore = VideoDownloadFileStore(
             temporaryRoot: root,
-            desktopDirectory: desktop,
+            downloadDirectory: desktop,
             timeZone: TimeZone(secondsFromGMT: 0)!
         )
         var nextDate = Date(timeIntervalSince1970: 1_767_225_600)
@@ -31,14 +31,14 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         )
         store.onTaskEnqueued = { task in coordinator.enqueue(task) }
 
-        _ = store.enqueue(postId: "123", postURL: URL(string: "https://x.com/user/status/123")!)
-        _ = store.enqueue(postId: "456", postURL: URL(string: "https://x.com/user/status/456")!)
+        _ = store.enqueue(postId: "123", postURL: URL(string: "https://x.com/user/status/123")!, mediaSources: [source("video-1")])
+        _ = store.enqueue(postId: "456", postURL: URL(string: "https://x.com/user/status/456")!, mediaSources: [source("video-2")])
         await coordinator.waitForIdle()
 
         XCTAssertTrue(store.tasks.isEmpty)
         XCTAssertEqual(executor.downloadedURLs, [
-            "https://x.com/user/status/123/1",
-            "https://x.com/user/status/456/1"
+            "https://video.twimg.com/video-video-1.mp4",
+            "https://video.twimg.com/video-video-2.mp4"
         ])
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: desktop.path).sorted(), [
             "X_VIDEO_20260101_000000.mp4",
@@ -49,14 +49,14 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
     func testFailedTaskRemainsAndNextTaskContinues() async throws {
         let root = try temporaryDirectory()
         let desktop = root.appendingPathComponent("Desktop", isDirectory: true)
-        let executor = CoordinatorProcessExecutor(failDownloadFor: "https://x.com/user/status/123/1")
+        let executor = CoordinatorProcessExecutor(failDownloadFor: "https://video.twimg.com/video-video-1.mp4")
         let tools = VideoToolPaths(
             ytDLP: URL(fileURLWithPath: "/bundle/Contents/Resources/Tools/yt-dlp"),
             ffmpeg: URL(fileURLWithPath: "/bundle/Contents/Resources/Tools/ffmpeg")
         )
         let fileStore = VideoDownloadFileStore(
             temporaryRoot: root,
-            desktopDirectory: desktop,
+            downloadDirectory: desktop,
             timeZone: TimeZone(secondsFromGMT: 0)!
         )
         var nextDate = Date(timeIntervalSince1970: 1_767_225_600)
@@ -72,16 +72,16 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         )
         store.onTaskEnqueued = { task in coordinator.enqueue(task) }
 
-        _ = store.enqueue(postId: "123", postURL: URL(string: "https://x.com/user/status/123")!)
-        _ = store.enqueue(postId: "456", postURL: URL(string: "https://x.com/user/status/456")!)
+        _ = store.enqueue(postId: "123", postURL: URL(string: "https://x.com/user/status/123")!, mediaSources: [source("video-1")])
+        _ = store.enqueue(postId: "456", postURL: URL(string: "https://x.com/user/status/456")!, mediaSources: [source("video-2")])
         await coordinator.waitForIdle()
 
         XCTAssertEqual(store.tasks.count, 1)
         XCTAssertEqual(store.tasks.first?.postId, "123")
         guard case .failed = store.tasks.first?.state else { return XCTFail("失败任务应保留失败状态") }
         XCTAssertEqual(executor.downloadedURLs, [
-            "https://x.com/user/status/123/1",
-            "https://x.com/user/status/456/1"
+            "https://video.twimg.com/video-video-1.mp4",
+            "https://video.twimg.com/video-video-2.mp4"
         ])
     }
 
@@ -96,7 +96,7 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         )
         let fileStore = VideoDownloadFileStore(
             temporaryRoot: root,
-            desktopDirectory: desktop,
+            downloadDirectory: desktop,
             timeZone: TimeZone(secondsFromGMT: 0)!
         )
         let store = DownloadTaskStore(now: { Date(timeIntervalSince1970: 1_767_225_600) })
@@ -121,6 +121,40 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         XCTAssertEqual(desktopFiles, ["X_VIDEO_20260101_000000.mp4"])
     }
 
+    func testPublishesPreparationDownloadMergeAndSaveStates() async throws {
+        let root = try temporaryDirectory()
+        let states = StateRecorder()
+        let tools = VideoToolPaths(
+            ytDLP: URL(fileURLWithPath: "/bundle/Contents/Resources/Tools/yt-dlp"),
+            ffmpeg: URL(fileURLWithPath: "/bundle/Contents/Resources/Tools/ffmpeg")
+        )
+        let store = DownloadTaskStore()
+        let coordinator = VideoDownloadCoordinator(
+            runner: VideoProcessRunner(tools: tools, executor: CoordinatorProcessExecutor()),
+            fileStore: VideoDownloadFileStore(temporaryRoot: root, downloadDirectory: root.appendingPathComponent("Downloads/X Download")),
+            updateState: { taskID, state in
+                states.values.append(state)
+                store.updateState(for: taskID, state: state)
+            },
+            removeTask: { taskID in store.remove(id: taskID) }
+        )
+        store.onTaskEnqueued = { task in coordinator.enqueue(task) }
+
+        _ = store.enqueue(
+            postId: "123",
+            postURL: URL(string: "https://x.com/user/status/123")!,
+            mediaSources: [source("video-1")]
+        )
+        await coordinator.waitForIdle()
+
+        XCTAssertTrue(states.values.contains { if case .preparing = $0 { return true }; return false })
+        XCTAssertTrue(states.values.contains { if case .downloadingVideo = $0 { return true }; return false })
+        XCTAssertTrue(states.values.contains { if case .merging = $0 { return true }; return false })
+        XCTAssertTrue(states.values.contains { if case .saving = $0 { return true }; return false })
+        let progress = states.values.compactMap(\.overallProgress)
+        XCTAssertEqual(progress, progress.sorted())
+    }
+
     func testDirectSourceFailureIncludesSourceContext() async throws {
         let root = try temporaryDirectory()
         let desktop = root.appendingPathComponent("Desktop", isDirectory: true)
@@ -133,7 +167,7 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         let store = DownloadTaskStore()
         let coordinator = VideoDownloadCoordinator(
             runner: VideoProcessRunner(tools: tools, executor: executor),
-            fileStore: VideoDownloadFileStore(temporaryRoot: root, desktopDirectory: desktop),
+            fileStore: VideoDownloadFileStore(temporaryRoot: root, downloadDirectory: desktop),
             updateState: { taskID, state in store.updateState(for: taskID, state: state) },
             removeTask: { taskID in store.remove(id: taskID) }
         )
@@ -153,6 +187,14 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         XCTAssertTrue(message.contains("network failed"))
     }
 
+    private func source(_ id: String) -> VideoMediaSource {
+        VideoMediaSource(
+            mediaID: id,
+            type: .mp4,
+            url: URL(string: "https://video.twimg.com/video-\(id).mp4")!
+        )
+    }
+
     private func temporaryDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("x-download-coordinator-\(UUID().uuidString)", isDirectory: true)
@@ -162,6 +204,11 @@ final class VideoDownloadCoordinatorTests: XCTestCase {
         }
         return directory
     }
+}
+
+@MainActor
+private final class StateRecorder {
+    var values: [DownloadTaskState] = []
 }
 
 private final class CoordinatorProcessExecutor: VideoProcessExecuting, @unchecked Sendable {
@@ -174,15 +221,6 @@ private final class CoordinatorProcessExecutor: VideoProcessExecuting, @unchecke
     }
 
     func run(executable: URL, arguments: [String]) throws -> VideoProcessResult {
-        if arguments.contains("--dump-single-json") {
-            let postURL = arguments.last!
-            return VideoProcessResult(
-                status: 0,
-                stdout: "{\"entries\":[{\"webpage_url\":\"\(postURL)/1\"}]}",
-                stderr: ""
-            )
-        }
-
         let url = arguments.last!
         downloadedURLs.append(url)
         if url == failDownloadFor {

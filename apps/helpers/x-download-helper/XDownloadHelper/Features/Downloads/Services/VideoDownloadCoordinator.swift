@@ -18,6 +18,12 @@ final class VideoDownloadCoordinator {
         case failed(index: Int, total: Int, type: VideoMediaSourceType, message: String)
     }
 
+    private enum ProgressPhase {
+        case video
+        case audio
+        case merging
+    }
+
     init(
         runner: VideoProcessRunner,
         fileStore: VideoDownloadFileStore,
@@ -57,59 +63,139 @@ final class VideoDownloadCoordinator {
     private func run(_ task: DownloadTask) async {
         var workspace: VideoDownloadWorkspace?
         do {
-            if task.mediaSources.isEmpty {
-                updateState(task.id, .parsing)
+            guard !task.mediaSources.isEmpty else {
+                throw VideoProcessError.failed(status: -1, message: "视频来源不能为空")
             }
+
+            // 任务先在临时工作区完成，只有全部媒体成功后才移动到用户下载目录。
+            updateState(task.id, .preparing)
             let fileStore = self.fileStore
-            let runner = self.runner
             let createdWorkspace = try await runOffMain {
                 try fileStore.makeWorkspace(taskID: task.id, receivedAt: task.receivedAt)
             }
             workspace = createdWorkspace
-            let entries: [VideoPostEntry]
-            if task.mediaSources.isEmpty {
-                let post = try await runOffMain {
-                    try runner.parse(postURL: task.postURL)
-                }
-                entries = post.entries
-            } else {
-                // 扩展已从 X 页面响应提取到真实媒体地址时，直接交给 yt-dlp，跳过帖子解析。
-                entries = task.mediaSources.map { source in
-                    VideoPostEntry(url: source.url, sourceType: source.type)
-                }
-            }
+
             var outputFiles: [URL] = []
-            for (index, entry) in entries.enumerated() {
+            for (index, source) in task.mediaSources.enumerated() {
                 let number = index + 1
-                updateState(task.id, .downloading(index: number, total: entries.count))
-                let fileStem = entries.count == 1 ? "video" : String(format: "video_%02d", number)
+                let fileStem = task.mediaSources.count == 1 ? "video" : String(format: "video_%02d", number)
+                var latestOverall = overallProgress(
+                    mediaIndex: index,
+                    total: task.mediaSources.count,
+                    phase: .video,
+                    fraction: 0
+                )
+                updateState(task.id, .downloadingVideo(
+                    index: number,
+                    total: task.mediaSources.count,
+                    progress: 0,
+                    overall: latestOverall
+                ))
+
+                let (progressStream, progressContinuation) = AsyncStream.makeStream(of: VideoProcessProgress.self)
+                let runner = self.runner
+                let createdWorkspace = createdWorkspace
+                // 多视频任务串行执行，避免同时争抢 yt-dlp/FFmpeg 和临时文件名。
+                let processTask = Task.detached(priority: nil) {
+                    defer { progressContinuation.finish() }
+                    return try runner.download(
+                        source: source,
+                        outputDirectory: createdWorkspace.directory,
+                        fileStem: fileStem,
+                        progress: { progressContinuation.yield($0) }
+                    )
+                }
+
+                for await event in progressStream {
+                    let phase: ProgressPhase
+                    switch event.kind {
+                    case .video:
+                        phase = .video
+                    case .audio:
+                        phase = .audio
+                    case .merging:
+                        phase = .merging
+                    }
+                    let stateProgress = min(max(event.fraction, 0), 1)
+                    latestOverall = max(
+                        latestOverall,
+                        overallProgress(
+                            mediaIndex: index,
+                            total: task.mediaSources.count,
+                            phase: phase,
+                            fraction: stateProgress
+                        )
+                    )
+                    switch event.kind {
+                    case .video:
+                        updateState(task.id, .downloadingVideo(
+                            index: number,
+                            total: task.mediaSources.count,
+                            progress: stateProgress,
+                            overall: latestOverall
+                        ))
+                    case .audio:
+                        updateState(task.id, .downloadingAudio(
+                            index: number,
+                            total: task.mediaSources.count,
+                            progress: stateProgress,
+                            overall: latestOverall
+                        ))
+                    case .merging:
+                        updateState(task.id, .merging(
+                            index: number,
+                            total: task.mediaSources.count,
+                            progress: stateProgress,
+                            overall: latestOverall
+                        ))
+                    }
+                }
+
                 let output: URL
                 do {
-                    output = try await runOffMain {
-                        try runner.download(
-                            entry: entry,
-                            outputDirectory: createdWorkspace.directory,
-                            fileStem: fileStem
-                        )
-                    }
+                    output = try await processTask.value
                 } catch {
-                    if let sourceType = entry.sourceType {
-                        throw DirectSourceError.failed(
-                            index: number,
-                            total: entries.count,
-                            type: sourceType,
-                            message: directSourceFailureMessage(for: error)
-                        )
-                    }
-                    throw error
+                    throw DirectSourceError.failed(
+                        index: number,
+                        total: task.mediaSources.count,
+                        type: source.type,
+                        message: directSourceFailureMessage(for: error)
+                    )
                 }
-                updateState(task.id, .merging(index: number, total: entries.count))
+
+                let mergeStart = max(latestOverall, overallProgress(
+                    mediaIndex: index,
+                    total: task.mediaSources.count,
+                    phase: .merging,
+                    fraction: 0
+                ))
+                updateState(task.id, .merging(
+                    index: number,
+                    total: task.mediaSources.count,
+                    progress: 0,
+                    overall: mergeStart
+                ))
+                updateState(task.id, .merging(
+                    index: number,
+                    total: task.mediaSources.count,
+                    progress: 1,
+                    overall: overallProgress(
+                        mediaIndex: index,
+                        total: task.mediaSources.count,
+                        phase: .merging,
+                        fraction: 1
+                    )
+                ))
                 outputFiles.append(output)
             }
+
+            // 保存是最后一步；最终目录不会出现下载中的 .part 或合并中间文件。
+            updateState(task.id, .saving(progress: 0, overall: 1))
             let files = outputFiles
             _ = try await runOffMain {
-                try fileStore.moveToDesktop(files: files, receivedAt: task.receivedAt)
+                try fileStore.moveToDownloadDirectory(files: files, receivedAt: task.receivedAt)
             }
+            updateState(task.id, .saving(progress: 1, overall: 1))
             updateState(task.id, .completed)
             removeTask(task.id)
         } catch {
@@ -126,6 +212,29 @@ final class VideoDownloadCoordinator {
         activeAddress = nil
         worker = nil
         startNextIfNeeded()
+    }
+
+    private func overallProgress(
+        mediaIndex: Int,
+        total: Int,
+        phase: ProgressPhase,
+        fraction: Double
+    ) -> Double {
+        let phaseStart: Double
+        let phaseWeight: Double
+        switch phase {
+        case .video:
+            phaseStart = 0
+            phaseWeight = 0.4
+        case .audio:
+            phaseStart = 0.4
+            phaseWeight = 0.4
+        case .merging:
+            phaseStart = 0.8
+            phaseWeight = 0.2
+        }
+        let itemProgress = phaseStart + min(max(fraction, 0), 1) * phaseWeight
+        return min(max((Double(mediaIndex) + itemProgress) / Double(max(total, 1)), 0), 1)
     }
 
     private func runOffMain<T: Sendable>(
@@ -148,21 +257,12 @@ final class VideoDownloadCoordinator {
             case let .missingOutput(url):
                 return "未生成 \(url.lastPathComponent)"
             }
-        case let error as VideoPostParseError:
-            switch error {
-            case .invalidJSON:
-                return "解析结果无效"
-            case .empty:
-                return "帖子中没有视频"
-            case .missingURL:
-                return "视频地址缺失"
-            }
         case let error as VideoFileStoreError:
             switch error {
             case let .missingOutput(name):
                 return "未找到 \(name)"
             case let .moveFailed(name):
-                return "无法移动 \(name) 到桌面"
+                return "无法移动 \(name) 到下载目录"
             }
         default:
             return "下载失败"

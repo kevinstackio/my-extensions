@@ -8,8 +8,8 @@ final class NativeHostBridgeTests: XCTestCase {
         XCTAssertFalse(NativeHostBridge.isAllowedOrigin("chrome-extension://other-extension/"))
     }
 
-    func testProtocolVersionsOneAndTwoAreSupported() {
-        XCTAssertTrue(NativeHostBridge.isSupportedProtocol(1))
+    func testOnlyProtocolVersionTwoIsSupported() {
+        XCTAssertFalse(NativeHostBridge.isSupportedProtocol(1))
         XCTAssertTrue(NativeHostBridge.isSupportedProtocol(2))
         XCTAssertFalse(NativeHostBridge.isSupportedProtocol(3))
     }

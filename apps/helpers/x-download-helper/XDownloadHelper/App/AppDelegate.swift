@@ -14,6 +14,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         if let tools = try? VideoToolValidator().validatedTools(in: Bundle.main.bundleURL) {
             let fileStore = VideoDownloadFileStore()
+            // 启动时清理上次异常退出留下的下载中间文件，避免临时资源长期堆积。
+            try? fileStore.cleanupOrphanedWorkspaces()
             let coordinator = VideoDownloadCoordinator(
                 runner: VideoProcessRunner(tools: tools),
                 fileStore: fileStore,

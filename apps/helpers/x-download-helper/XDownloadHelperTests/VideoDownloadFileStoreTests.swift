@@ -3,10 +3,10 @@ import XCTest
 @testable import XDownloadHelper
 
 final class VideoDownloadFileStoreTests: XCTestCase {
-    func testBuildsTimestampedNamesAndMovesAllVideosToDesktop() throws {
+    func testBuildsTimestampedNamesAndMovesAllVideosToDownloadDirectory() throws {
         let root = try temporaryDirectory()
-        let desktop = root.appendingPathComponent("Desktop", isDirectory: true)
-        let store = VideoDownloadFileStore(temporaryRoot: root, desktopDirectory: desktop, timeZone: TimeZone(secondsFromGMT: 0)!)
+        let downloadDirectory = root.appendingPathComponent("Downloads/X Download", isDirectory: true)
+        let store = VideoDownloadFileStore(temporaryRoot: root, downloadDirectory: downloadDirectory, timeZone: TimeZone(secondsFromGMT: 0)!)
         let receivedAt = Date(timeIntervalSince1970: 1_758_326_400)
         let workspace = try store.makeWorkspace(taskID: UUID(), receivedAt: receivedAt)
         let first = workspace.directory.appendingPathComponent("video-01.mp4")
@@ -14,7 +14,7 @@ final class VideoDownloadFileStoreTests: XCTestCase {
         try Data("one".utf8).write(to: first)
         try Data("two".utf8).write(to: second)
 
-        let moved = try store.moveToDesktop(
+        let moved = try store.moveToDownloadDirectory(
             files: [first, second],
             receivedAt: receivedAt
         )
@@ -27,22 +27,34 @@ final class VideoDownloadFileStoreTests: XCTestCase {
         XCTAssertEqual(try String(contentsOf: moved[1], encoding: .utf8), "two")
     }
 
-    func testExistingDesktopNameFailsWithoutOverwriting() throws {
+    func testExistingDownloadNameGetsSafeSuffixWithoutOverwriting() throws {
         let root = try temporaryDirectory()
-        let desktop = root.appendingPathComponent("Desktop", isDirectory: true)
-        let store = VideoDownloadFileStore(temporaryRoot: root, desktopDirectory: desktop, timeZone: TimeZone(secondsFromGMT: 0)!)
+        let downloadDirectory = root.appendingPathComponent("Downloads/X Download", isDirectory: true)
+        let store = VideoDownloadFileStore(temporaryRoot: root, downloadDirectory: downloadDirectory, timeZone: TimeZone(secondsFromGMT: 0)!)
         let receivedAt = Date(timeIntervalSince1970: 1_758_326_400)
         let workspace = try store.makeWorkspace(taskID: UUID(), receivedAt: receivedAt)
         let source = workspace.directory.appendingPathComponent("video.mp4")
         try Data("new".utf8).write(to: source)
-        let existing = desktop.appendingPathComponent("X_VIDEO_20250920_000000.mp4")
-        try FileManager.default.createDirectory(at: desktop, withIntermediateDirectories: true)
+        let existing = downloadDirectory.appendingPathComponent("X_VIDEO_20250920_000000.mp4")
+        try FileManager.default.createDirectory(at: downloadDirectory, withIntermediateDirectories: true)
         try Data("old".utf8).write(to: existing)
 
-        XCTAssertThrowsError(try store.moveToDesktop(files: [source], receivedAt: receivedAt)) { error in
-            XCTAssertEqual(error as? VideoFileStoreError, .moveFailed(existing.lastPathComponent))
-        }
+        let moved = try store.moveToDownloadDirectory(files: [source], receivedAt: receivedAt)
+        XCTAssertEqual(moved.map(\.lastPathComponent), ["X_VIDEO_20250920_000000-1.mp4"])
         XCTAssertEqual(try String(contentsOf: existing, encoding: .utf8), "old")
+        XCTAssertEqual(try String(contentsOf: moved[0], encoding: .utf8), "new")
+    }
+
+    func testStartupCleanupRemovesOnlyOrphanedTaskDirectories() throws {
+        let root = try temporaryDirectory()
+        let store = VideoDownloadFileStore(temporaryRoot: root, downloadDirectory: root.appendingPathComponent("Downloads/X Download"))
+        let orphan = root.appendingPathComponent("x-download", isDirectory: true)
+            .appendingPathComponent("orphan-task", isDirectory: true)
+        try FileManager.default.createDirectory(at: orphan, withIntermediateDirectories: true)
+
+        try store.cleanupOrphanedWorkspaces()
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: orphan.path))
     }
 
     private func temporaryDirectory() throws -> URL {

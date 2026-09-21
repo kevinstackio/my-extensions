@@ -4,22 +4,59 @@ import XCTest
 
 @MainActor
 final class HelperRequestHandlerTests: XCTestCase {
-    func testValidRequestCreatesTaskAndExpandsPopover() async throws {
+    func testValidRequestCreatesTaskAndExpandsPopover() throws {
         let store = DownloadTaskStore()
         var expanded = false
         let handler = HelperRequestHandler(store: store) { expanded = true }
+        let source = VideoMediaSource(
+            mediaID: "video-1",
+            type: .mp4,
+            url: try XCTUnwrap(URL(string: "https://video.twimg.com/video.mp4"))
+        )
+        let request = NativeMessageRequest(
+            protocolVersion: 2,
+            requestId: "request-1",
+            type: "task.enqueue",
+            payload: NativeMessagePayload(postId: "123", postUrl: "https://x.com/user/status/123", mediaSources: [source])
+        )
+
+        let response = handler.handle(request)
+        XCTAssertTrue(response.ok)
+        XCTAssertEqual(response.protocolVersion, 2)
+        XCTAssertEqual(response.result?.disposition, .created)
+        XCTAssertTrue(expanded)
+    }
+
+    func testVersionOneRequestIsRejected() {
+        let store = DownloadTaskStore()
+        let handler = HelperRequestHandler(store: store, showPopover: {})
         let request = NativeMessageRequest(
             protocolVersion: 1,
-            requestId: "request-1",
+            requestId: "request-v1",
             type: "task.enqueue",
             payload: NativeMessagePayload(postId: "123", postUrl: "https://x.com/user/status/123")
         )
 
         let response = handler.handle(request)
-        XCTAssertTrue(response.ok)
-        XCTAssertEqual(response.protocolVersion, 1)
-        XCTAssertEqual(response.result?.disposition, .created)
-        XCTAssertTrue(expanded)
+
+        XCTAssertEqual(response.error?.code, .unsupportedProtocol)
+        XCTAssertTrue(store.tasks.isEmpty)
+    }
+
+    func testVersionTwoRequestWithoutMediaSourcesIsRejected() {
+        let store = DownloadTaskStore()
+        let handler = HelperRequestHandler(store: store, showPopover: {})
+        let request = NativeMessageRequest(
+            protocolVersion: 2,
+            requestId: "request-empty",
+            type: "task.enqueue",
+            payload: NativeMessagePayload(postId: "123", postUrl: "https://x.com/user/status/123")
+        )
+
+        let response = handler.handle(request)
+
+        XCTAssertEqual(response.error?.code, .invalidRequest)
+        XCTAssertTrue(store.tasks.isEmpty)
     }
 
     func testVersionTwoRequestStoresValidatedMediaSourcesAndRespondsWithVersionTwo() {
@@ -79,7 +116,7 @@ final class HelperRequestHandlerTests: XCTestCase {
         let store = DownloadTaskStore()
         let handler = HelperRequestHandler(store: store, showPopover: {})
         let request = NativeMessageRequest(
-            protocolVersion: 1,
+            protocolVersion: 2,
             requestId: "request-1",
             type: "task.enqueue",
             payload: NativeMessagePayload(postId: "123", postUrl: "https://example.com/user/status/123")
@@ -94,7 +131,7 @@ final class HelperRequestHandlerTests: XCTestCase {
         let store = DownloadTaskStore()
         let handler = HelperRequestHandler(store: store, showPopover: {})
         let request = NativeMessageRequest(
-            protocolVersion: 1,
+            protocolVersion: 2,
             requestId: "request-1",
             type: "task.enqueue",
             payload: NativeMessagePayload(postId: "456", postUrl: "https://x.com/user/status/123")
