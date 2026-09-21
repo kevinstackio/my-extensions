@@ -87,6 +87,11 @@ docs/
 
 ## 已完成
 
+- [建立 VitePress 官网脚手架](./issues/2026-09-21-web-vitepress-bootstrap-issue.md)
+  - [Commit 记录](./commits/2026-09-21-web-vitepress-bootstrap-commit.md)
+  - [Spec](../superpowers/specs/2026-09-21-web-vitepress-bootstrap-design.md)
+  - [Plan](../superpowers/plans/2026-09-21-web-vitepress-bootstrap.md)
+
 - [让 X Download 使用页面媒体源下载视频](./issues/2026-09-21-x-download-page-media-source-issue.md)
   - [Commit 记录](./commits/2026-09-21-x-download-page-media-source-commit.md)
   - [Spec](../superpowers/specs/2026-09-21-x-download-page-media-source-design.md)
