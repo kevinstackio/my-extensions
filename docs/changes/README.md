@@ -1,6 +1,6 @@
 # 项目改造工作台
 
-本目录是仓库项目管理的统一入口。这里保存想法、当前唯一活动 Issue、后续队列和已完成索引；具体目标与状态以对应 Issue 为准。
+本目录是仓库项目管理的统一入口。这里保存想法、当前唯一活动 Issue、后续队列、待办和已完成索引；具体目标与状态以对应 Issue 为准。
 
 ## 目录结构
 
@@ -8,6 +8,7 @@
 docs/
 ├─ changes/
 │  ├─ README.md
+│  ├─ todo.md
 │  ├─ issues/
 │  │  └─ YYYY-MM-DD-<project>-<topic>-issue.md
 │  └─ commits/
@@ -78,16 +79,23 @@ docs/
 
 ## 当前 Issue
 
-[完善 My Extensions 品牌定位与内容入口](./issues/2026-09-22-web-content-architecture-issue.md)
-
-- [Commit 记录](./commits/2026-09-22-web-content-architecture-commit.md)
+当前没有活动 Issue。
 
 ## Issue 队列
 
-1. [完善 X Download 视频下载失败恢复](./issues/2026-09-20-x-download-download-recovery-issue.md)
-   - [Commit 记录](./commits/2026-09-20-x-download-download-recovery-commit.md)
+当前没有排队 Issue。
+
+## 待办
+
+- [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [完善 My Extensions 品牌定位与内容入口](./issues/2026-09-22-web-content-architecture-issue.md)
+  - [Commit 记录](./commits/2026-09-22-web-content-architecture-commit.md)
+
+- [完善 X Download 视频下载失败恢复（已归档，未实施内容见待办）](./issues/2026-09-20-x-download-download-recovery-issue.md)
+  - [Commit 记录](./commits/2026-09-20-x-download-download-recovery-commit.md)
 
 - [撰写 X Download 开发复盘与技术文章](./issues/2026-09-21-x-download-development-retrospective-issue.md)
   - [Commit 记录](./commits/2026-09-21-x-download-development-retrospective-commit.md)
