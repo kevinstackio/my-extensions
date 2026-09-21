@@ -87,6 +87,9 @@ docs/
 
 ## 已完成
 
+- [撰写 X Download 开发复盘与技术文章](./issues/2026-09-21-x-download-development-retrospective-issue.md)
+  - [Commit 记录](./commits/2026-09-21-x-download-development-retrospective-commit.md)
+
 - [改为仅使用页面媒体来源下载 X 视频](./issues/2026-09-21-x-download-media-source-only-download-issue.md)
   - [Commit 记录](./commits/2026-09-21-x-download-media-source-only-download-commit.md)
 
