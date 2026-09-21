@@ -1,7 +1,11 @@
-export type PopupState = 'checking' | 'invalidPage' | 'helperMissing' | 'connectionFailed' | 'accepted';
+export type PopupState = 'checking' | 'mediaUnavailable' | 'invalidPage' | 'helperMissing' | 'connectionFailed' | 'accepted';
 
 export const popupText: Record<PopupState, { title: string; body: string }> = {
-  checking: { title: '正在连接 X Download Helper…', body: '' },
+  checking: { title: '正在获取视频来源…', body: '' },
+  mediaUnavailable: {
+    title: '未获取到可下载的视频来源',
+    body: '请稍后重试，或确认当前帖子的视频已加载。',
+  },
   invalidPage: {
     title: '当前页面不是 X 单篇帖子',
     body: '请打开需要处理的帖子后重试。',

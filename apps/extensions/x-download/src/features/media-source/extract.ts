@@ -21,6 +21,7 @@ const sourcePriority: Record<MediaSourceType, number> = {
 };
 
 export function extractMediaSources(value: unknown, postId: string): MediaSource[] {
+  // 接口响应可能嵌套在不同 GraphQL 结构中，因此按 rest_id 搜索；最终仍只返回当前帖子来源。
   const tweet = findTweetByRestId(value, postId);
   if (!tweet) return [];
 
@@ -73,6 +74,7 @@ function selectCompleteSource(videoInfo: unknown): Omit<MediaSource, 'mediaId'> 
     .map(toCandidate)
     .filter((candidate): candidate is SourceCandidate => candidate !== null);
   const unique = [...new Map(candidates.map(candidate => [candidate.url, candidate])).values()];
+  // 优先选择可独立交给 yt-dlp 的清单，其次按码率选同类来源；孤立 .m4s 已在 URL 校验时排除。
   unique.sort((left, right) => {
     const priorityDifference = sourcePriority[right.type] - sourcePriority[left.type];
     if (priorityDifference !== 0) return priorityDifference;

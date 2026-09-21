@@ -15,16 +15,28 @@ describe('Native Messaging 协议', () => {
   if (!target) throw new Error('测试目标 URL 无效');
 
   it('creates the versioned task enqueue request', () => {
-    expect(createEnqueueRequest(target, 'request-1')).toEqual({
+    expect(createEnqueueRequest(target, 'request-1', [{
+      mediaId: 'video-1',
+      type: 'mp4',
+      url: 'https://video.twimg.com/video.mp4',
+    }])).toEqual({
       protocolVersion: PROTOCOL_VERSION,
       requestId: 'request-1',
       type: 'task.enqueue',
       payload: {
         postId: '1960000000000000000',
         postUrl: 'https://x.com/OpenAI/status/1960000000000000000',
-        mediaSources: [],
+        mediaSources: [{
+          mediaId: 'video-1',
+          type: 'mp4',
+          url: 'https://video.twimg.com/video.mp4',
+        }],
       },
     });
+  });
+
+  it('rejects an enqueue request without complete media sources', () => {
+    expect(() => createEnqueueRequest(target, 'request-empty', [])).toThrow('媒体来源不能为空');
   });
 
   it('passes sanitized page media sources through the v2 request', () => {
@@ -82,7 +94,11 @@ describe('Native Messaging 协议', () => {
     const result = await sendEnqueueRequest(target, 'request-1', async (host, message) => {
       calls.push({ host, message });
       return { protocolVersion: 2, requestId: 'request-1', ok: true, result: { taskId: 'task-1', disposition: 'created' } };
-    });
+    }, [{
+      mediaId: 'video-1',
+      type: 'mp4',
+      url: 'https://video.twimg.com/video.mp4',
+    }]);
 
     expect(calls).toHaveLength(1);
     expect(calls[0]?.host).toBe(NATIVE_HOST_NAME);

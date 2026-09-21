@@ -58,6 +58,7 @@ export function installPageMediaObserver(scope: Window): void {
   if (markedScope[marker]) return;
   markedScope[marker] = true;
 
+  // 只观察 X 的接口地址并读取 clone，原始 Response 仍原样返回给 X 页面，降低页面回归风险。
   const originalFetch = scope.fetch.bind(scope);
   scope.fetch = wrapFetch(originalFetch, getCurrentPostId, emit);
   installXHRObserver(scope, getCurrentPostId, emit);

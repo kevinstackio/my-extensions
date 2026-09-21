@@ -37,15 +37,31 @@ describe('扩展到 Native Messaging 的后台流程', () => {
   });
 
   it('maps a missing host and a closed connection', async () => {
+    const mediaSources = [{ mediaId: 'video-1', type: 'mp4' as const, url: 'https://video.twimg.com/video.mp4' }];
     await expect(enqueueCurrentTab({
       getActiveTab: async () => validTab,
-      getMediaSources: async () => [],
+      getMediaSources: async () => mediaSources,
       sendNativeMessage: async () => { throw new Error('Specified native messaging host not found.'); },
     })).resolves.toBe('helperMissing');
     await expect(enqueueCurrentTab({
       getActiveTab: async () => validTab,
-      getMediaSources: async () => [],
+      getMediaSources: async () => mediaSources,
       sendNativeMessage: async () => { throw new Error('The message port closed'); },
     })).resolves.toBe('connectionFailed');
+  });
+
+  it('does not contact Native Messaging when the page has no complete media source', async () => {
+    let sent = false;
+    const state = await enqueueCurrentTab({
+      getActiveTab: async () => validTab,
+      getMediaSources: async () => [],
+      sendNativeMessage: async () => {
+        sent = true;
+        return undefined;
+      },
+    });
+
+    expect(state).toBe('mediaUnavailable');
+    expect(sent).toBe(false);
   });
 });

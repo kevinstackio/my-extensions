@@ -35,8 +35,10 @@ export interface EnqueueError {
 export function createEnqueueRequest(
   target: XPostTarget,
   requestId: string,
-  mediaSources: MediaSource[] = [],
+  mediaSources: MediaSource[],
 ): EnqueueRequest {
+  // 协议 v2 的任务必须携带完整来源；空数组不能让 Helper 猜测帖子地址或创建无效任务。
+  if (mediaSources.length === 0) throw new Error('媒体来源不能为空');
   return {
     protocolVersion: PROTOCOL_VERSION,
     requestId,

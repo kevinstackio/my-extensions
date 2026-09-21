@@ -4,7 +4,8 @@ import { popupStateForFailure, popupText } from '../src/features/native-messagin
 
 describe('Popup 状态', () => {
   it.each([
-    ['checking', '正在连接 X Download Helper…'],
+    ['checking', '正在获取视频来源…'],
+    ['mediaUnavailable', '未获取到可下载的视频来源'],
     ['invalidPage', '当前页面不是 X 单篇帖子'],
     ['helperMissing', '未检测到 X Download Helper'],
     ['connectionFailed', '无法连接 X Download Helper'],
