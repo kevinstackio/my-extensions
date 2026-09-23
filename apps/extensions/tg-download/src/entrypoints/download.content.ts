@@ -10,25 +10,98 @@ import {
   canOpenDownloadMenu,
   findMediaAt,
 } from '../features/download/media-target';
+import {
+  TASK_CLEAR_FAILED_EVENT,
+  TASK_REQUEST_SNAPSHOT_EVENT,
+  TASK_SNAPSHOT_EVENT,
+  type TaskSnapshot,
+} from '../features/download/task-protocol';
+import {
+  createVideoTaskStore,
+  type VideoTaskStore,
+} from '../features/download/task-store';
+import type { DownloadableMedia } from '../features/download/download-media';
+
+export interface VideoDownloadControllerDependencies {
+  menu: DownloadMenu;
+  store: VideoTaskStore;
+  saveMedia?: typeof saveMedia;
+  publishSnapshot?: (snapshot: TaskSnapshot) => void;
+}
+
+export function createVideoDownloadController({
+  menu,
+  store,
+  saveMedia: save = saveMedia,
+  publishSnapshot = () => {},
+}: VideoDownloadControllerDependencies) {
+  let activeMedia: DownloadableMedia | undefined;
+
+  return {
+    selectMedia(media: DownloadableMedia) {
+      activeMedia = media;
+    },
+    saveActiveMedia() {
+      if (!activeMedia) return;
+      void save(activeMedia, menu, undefined, store);
+    },
+    handleSnapshotRequest() {
+      publishSnapshot(store.snapshot());
+    },
+    clearFailed() {
+      store.clearFailed();
+    },
+  };
+}
+
+export function registerTaskEventHandlers(
+  target: EventTarget,
+  controller: Pick<ReturnType<typeof createVideoDownloadController>, 'handleSnapshotRequest' | 'clearFailed'>,
+): void {
+  target.addEventListener(TASK_REQUEST_SNAPSHOT_EVENT, () => {
+    controller.handleSnapshotRequest();
+  });
+  target.addEventListener(TASK_CLEAR_FAILED_EVENT, () => {
+    controller.clearFailed();
+  });
+}
 
 export default defineContentScript({
   matches: ['https://web.telegram.org/*'],
   runAt: 'document_idle',
   world: 'MAIN',
   main() {
-    let activeMedia: HTMLImageElement | HTMLVideoElement | undefined;
-    let menu: DownloadMenu;
+    const store = createVideoTaskStore();
+    let controller: ReturnType<typeof createVideoDownloadController> | undefined;
 
-    menu = createDownloadMenu(document, () => {
-      if (activeMedia) void saveMedia(activeMedia, menu);
+    const menu = createDownloadMenu(document, () => controller?.saveActiveMedia());
+    controller = createVideoDownloadController({
+      menu,
+      store,
+      publishSnapshot: snapshot => {
+        globalThis.dispatchEvent(new CustomEvent<TaskSnapshot>(TASK_SNAPSHOT_EVENT, {
+          detail: snapshot,
+        }));
+      },
+    });
+
+    store.subscribe(snapshot => {
+      globalThis.dispatchEvent(new CustomEvent<TaskSnapshot>(TASK_SNAPSHOT_EVENT, {
+        detail: snapshot,
+      }));
+    });
+
+    registerTaskEventHandlers(globalThis, {
+      handleSnapshotRequest: () => controller?.handleSnapshotRequest(),
+      clearFailed: () => controller?.clearFailed(),
     });
 
     document.addEventListener('contextmenu', (event) => {
       const media = findMediaAt(document, event.target, event.clientX, event.clientY);
-      if (!canOpenDownloadMenu(menu.busy(), media)) return;
+      if (!media || !canOpenDownloadMenu(menu.busy(), media)) return;
 
       event.preventDefault();
-      activeMedia = media;
+      controller?.selectMedia(media);
       menu.open({ x: event.clientX, y: event.clientY });
     }, true);
 
