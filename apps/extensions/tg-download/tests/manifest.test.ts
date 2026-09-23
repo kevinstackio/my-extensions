@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import config from '../wxt.config';
 import downloadEntrypoint from '../src/entrypoints/download.content';
 import themeEntrypoint from '../src/entrypoints/theme.content';
+import tasksEntrypoint from '../src/entrypoints/tasks.content';
 
 const sizes = [16, 32, 48, 128] as const;
 
@@ -14,6 +15,7 @@ describe('WXT 扩展清单', () => {
     const icons = manifest.icons as Record<number, string>;
     const action = manifest.action as Record<string, unknown>;
     const accessible = manifest.web_accessible_resources as Array<Record<string, unknown>>;
+    const permissions = manifest.permissions as string[];
 
     expect(icons).toEqual({
       16: '/icon/tg-download-16.png',
@@ -22,6 +24,7 @@ describe('WXT 扩展清单', () => {
       128: '/icon/tg-download-128.png',
     });
     expect(action.default_icon).toEqual(icons);
+    expect(permissions).toContain('downloads');
     expect(accessible).toEqual([{
       matches: ['https://web.telegram.org/*'],
       resources: ['/icon/*.svg'],
@@ -60,6 +63,11 @@ describe('WXT 扩展清单', () => {
       runAt: 'document_idle',
       world: 'MAIN',
     });
+    expect(tasksEntrypoint).toMatchObject({
+      matches: ['https://web.telegram.org/*'],
+      runAt: 'document_idle',
+    });
+    expect(tasksEntrypoint).not.toHaveProperty('world', 'MAIN');
   });
 
   it('固定品牌图标的 PNG 尺寸正确', async () => {
@@ -73,14 +81,24 @@ describe('WXT 扩展清单', () => {
     }
   });
 
-  it('按钮状态 SVG 位于源码资源目录', async () => {
-    for (const name of ['download', 'loader']) {
+  it('按钮状态和 Popup SVG 位于源码资源目录并映射到输出', async () => {
+    const hooks = config.hooks as Record<string, (wxt: unknown, value: unknown[]) => void>;
+    const files: unknown[] = [];
+    hooks['build:publicAssets']?.({}, files);
+
+    for (const name of ['download', 'loader', 'folder-down', 'trash']) {
       const svg = await readFile(
         new URL('../src/assets/icons/' + name + '.svg', import.meta.url),
         'utf8',
       );
 
       expect(svg).toContain('<svg');
+      expect(files).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          absoluteSrc: expect.stringContaining(`${name}.svg`),
+          relativeDest: `icon/${name}.svg`,
+        }),
+      ]));
     }
   });
 });

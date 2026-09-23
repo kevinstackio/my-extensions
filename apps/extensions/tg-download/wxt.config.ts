@@ -14,7 +14,7 @@ const logoFiles = [
   'tg-download-light-128.png',
 ] as const;
 
-const menuIconFiles = ['download.svg', 'loader.svg'] as const;
+const menuIconFiles = ['download.svg', 'loader.svg', 'folder-down.svg', 'trash.svg'] as const;
 
 const outputIconPaths = [
   ...logoFiles.map(filename => `/icon/${filename}`),
@@ -63,6 +63,7 @@ export default defineConfig({
       },
       default_title: 'TG Download',
     },
+    permissions: ['downloads'],
     web_accessible_resources: [
       {
         matches: ['https://web.telegram.org/*'],
