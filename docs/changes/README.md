@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [将 TG Download 默认保存目录改为下载文件夹](./issues/2026-09-23-tg-download-default-save-directory-issue.md)
+  - [Commit 记录](./commits/2026-09-23-tg-download-default-save-directory-commit.md)
+
 - [完善 My Extensions 品牌定位与内容入口](./issues/2026-09-22-web-content-architecture-issue.md)
   - [Commit 记录](./commits/2026-09-22-web-content-architecture-commit.md)
 

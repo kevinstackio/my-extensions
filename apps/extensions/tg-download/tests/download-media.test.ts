@@ -13,6 +13,38 @@ function createMenu() {
 }
 
 describe('媒体保存', () => {
+  it('保存窗口默认打开系统 Downloads 目录', async () => {
+    let pickerOptions: { id?: string; startIn?: string } | undefined;
+    const writable = {
+      write: async () => {},
+      close: vi.fn(),
+      abort: vi.fn(),
+    };
+
+    await saveMedia(
+      { tagName: 'IMG', currentSrc: '', src: 'blob:test' },
+      createMenu(),
+      {
+        fetch: async () => new Response(new Uint8Array([1]), {
+          status: 200,
+          headers: { 'Content-Length': '1' },
+        }),
+        now: () => 300,
+        setTimeout: callback => { callback(); return 0; },
+        showSaveFilePicker: async options => {
+          pickerOptions = options;
+          return { createWritable: async () => writable };
+        },
+        logger: { error: vi.fn() },
+      },
+    );
+
+    expect(pickerOptions).toMatchObject({
+      id: 'tg-download',
+      startIn: 'downloads',
+    });
+  });
+
   it('用户取消保存时不请求媒体', async () => {
     const fetchMedia = vi.fn();
     const menu = createMenu();

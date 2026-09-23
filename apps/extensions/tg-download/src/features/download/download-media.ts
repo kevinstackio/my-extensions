@@ -25,6 +25,7 @@ export interface SaveMediaDependencies {
   now(): number;
   setTimeout(callback: () => void, delay: number): unknown;
   showSaveFilePicker?(options: {
+    id: string;
     startIn: string;
     suggestedName: string;
   }): Promise<SaveFileHandle>;
@@ -72,7 +73,8 @@ export async function saveMedia(
 
   try {
     const handle = await dependencies.showSaveFilePicker({
-      startIn: 'desktop',
+      id: 'tg-download',
+      startIn: 'downloads',
       suggestedName: createDownloadFilename(media.tagName),
     });
     writable = await handle.createWritable();
