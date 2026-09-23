@@ -87,6 +87,35 @@ describe('下载菜单', () => {
     expect(button.children[1]!.textContent).toBe('下载资源');
   });
 
+  it('提示状态移除下载按钮并按时淡出', () => {
+    const { body, document } = fakeDocument();
+    const callbacks: Array<() => void> = [];
+    const delays: number[] = [];
+    const menu = createDownloadMenu(document, vi.fn(), {
+      setTimeout(callback, delay) {
+        callbacks.push(callback);
+        delays.push(delay);
+      },
+      viewport: () => ({ width: 1000, height: 800 }),
+    });
+
+    menu.open({ x: 10, y: 10 });
+    const card = body.children[0]!;
+    const button = card.children[0]!;
+    menu.notice('已开始下载，可在扩展中查看进度', 1200);
+
+    expect(button.removed).toBe(true);
+    expect(card.children[1]!.textContent).toBe('已开始下载，可在扩展中查看进度');
+    expect(delays).toEqual([1200]);
+
+    callbacks[0]!();
+    expect(card.classList.names).toEqual(['tg-download-menu--leaving']);
+    expect(delays).toEqual([1200, 300]);
+
+    callbacks[1]!();
+    expect(card.removed).toBe(true);
+  });
+
   it('淡出指定时长后关闭菜单', () => {
     const { body, document } = fakeDocument();
     const delays: number[] = [];

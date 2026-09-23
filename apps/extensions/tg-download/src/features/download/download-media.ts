@@ -5,6 +5,7 @@ export interface DownloadMenuController {
   loading(): void;
   close(): void;
   dismiss(duration: number): void;
+  notice(text: string, duration: number): void;
   ready(): void;
   result(text: string): void;
 }
@@ -112,7 +113,8 @@ export async function saveMedia(
     });
     if (isVideoTask && videoLifecycle) {
       taskId = videoLifecycle.start(handle.name || suggestedName);
-      menu.close();
+      // 确认路径后视频任务在内存中独立运行，页面只提示查看入口，不主动打断用户弹窗。
+      menu.notice('已开始下载，可在扩展中查看进度', 1200);
     }
     stage = 'create-writable';
     writable = await handle.createWritable();

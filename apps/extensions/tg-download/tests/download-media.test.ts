@@ -7,6 +7,7 @@ function createMenu() {
     loading: vi.fn(),
     close: vi.fn(),
     dismiss: vi.fn(),
+    notice: vi.fn(),
     ready: vi.fn(),
     result: vi.fn(),
   };
@@ -211,6 +212,36 @@ describe('媒体保存', () => {
     expect(lifecycle.progress).toHaveBeenCalledWith('video-task', 2, 2);
     expect(lifecycle.complete).toHaveBeenCalledWith('video-task');
     expect(writes).toEqual([[1, 2]]);
+  });
+
+  it('视频确认保存后用短暂提示替换下载按钮', async () => {
+    const menu = createMenu();
+    const lifecycle = createVideoLifecycle();
+
+    await saveMedia(
+      { tagName: 'VIDEO', currentSrc: '', src: 'blob:test' },
+      menu,
+      {
+        fetch: async () => new Response(new Uint8Array([1]), { status: 200 }),
+        now: () => 0,
+        setTimeout: vi.fn(),
+        showSaveFilePicker: async () => ({
+          name: 'video.mp4',
+          createWritable: async () => ({
+            write: async () => {},
+            close: async () => {},
+          }),
+        }),
+        logger: { error: vi.fn() },
+      },
+      lifecycle,
+    );
+
+    expect(menu.notice).toHaveBeenCalledWith(
+      '已开始下载，可在扩展中查看进度',
+      1200,
+    );
+    expect(menu.close).not.toHaveBeenCalled();
   });
 
   it('视频没有总大小时上报不确定进度并保留并发生命周期', async () => {

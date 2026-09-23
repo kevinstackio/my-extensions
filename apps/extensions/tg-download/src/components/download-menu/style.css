@@ -28,6 +28,15 @@
   opacity: .75;
 }
 
+.tg-download-menu__notice {
+  padding: 9px 14px;
+  border-radius: 7px;
+  background: #2481cc;
+  color: #fff;
+  font: 14px system-ui, sans-serif;
+  white-space: nowrap;
+}
+
 .tg-download-menu--leaving {
   pointer-events: none;
   opacity: 0;

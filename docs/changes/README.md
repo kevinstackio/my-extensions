@@ -91,6 +91,11 @@ docs/
 
 ## 已完成
 
+- [建立 TG Download 视频下载任务 Popup](./issues/2026-09-23-tg-download-video-task-popup-issue.md)
+  - [Commit 记录](./commits/2026-09-23-tg-download-video-task-popup-commit.md)
+  - [Spec](../superpowers/specs/2026-09-23-tg-download-video-task-popup-design.md)
+  - [Plan](../superpowers/plans/2026-09-23-tg-download-video-task-popup.md)
+
 - [将 TG Download 默认保存目录改为下载文件夹](./issues/2026-09-23-tg-download-default-save-directory-issue.md)
   - [Commit 记录](./commits/2026-09-23-tg-download-default-save-directory-commit.md)
 

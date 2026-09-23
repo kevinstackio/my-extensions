@@ -115,6 +115,19 @@ export function createDownloadMenu(
       button.disabled = true;
       setState('正在下载', 'loading');
     },
+    notice: (text, duration) => {
+      if (!card) return;
+
+      // 视频任务已经脱离页面菜单继续执行，改成不可交互提示可避免重复触发保存。
+      button?.remove();
+      button = undefined;
+      label = undefined;
+      const notice = document.createElement('div');
+      notice.className = 'tg-download-menu__notice';
+      notice.textContent = text;
+      card.append(notice);
+      dependencies.setTimeout(() => dismiss(300), duration);
+    },
     open,
     ready: () => {
       if (!button) return;
