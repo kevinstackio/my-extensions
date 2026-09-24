@@ -79,7 +79,8 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+- [为 X Download Popup Header 增加下载操作](./issues/2026-09-24-x-download-popup-header-actions-issue.md)
+  - [Commit 记录](./commits/2026-09-24-x-download-popup-header-actions-commit.md)
 
 ## Issue 队列
 

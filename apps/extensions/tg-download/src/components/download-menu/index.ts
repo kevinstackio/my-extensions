@@ -49,6 +49,7 @@ export function createDownloadMenu(
   let card: HTMLDivElement | undefined;
   let button: HTMLButtonElement | undefined;
   let label: HTMLSpanElement | undefined;
+  let toast: HTMLDivElement | undefined;
 
   const setState = (text: string, state: 'download' | 'loading') => {
     if (!button || !label) return;
@@ -63,6 +64,22 @@ export function createDownloadMenu(
     label = undefined;
   };
 
+  const clearToast = () => {
+    toast?.remove();
+    toast = undefined;
+  };
+
+  const dismissToast = () => {
+    if (!toast) return;
+    const activeToast = toast;
+    activeToast.classList.add('tg-download-toast--leaving');
+    dependencies.setTimeout(() => {
+      if (toast !== activeToast) return;
+      activeToast.remove();
+      toast = undefined;
+    }, 300);
+  };
+
   const dismiss = (duration: number) => {
     if (!card) return;
     card.classList.add('tg-download-menu--leaving');
@@ -71,6 +88,7 @@ export function createDownloadMenu(
 
   const open = (pointer: Point) => {
     close();
+    clearToast();
 
     card = document.createElement('div');
     button = document.createElement('button');
@@ -118,15 +136,26 @@ export function createDownloadMenu(
     notice: (text, duration) => {
       if (!card) return;
 
-      // 视频任务已经脱离页面菜单继续执行，改成不可交互提示可避免重复触发保存。
+      // 下载任务已经脱离页面菜单继续执行，保留原浮层提示，同时追加页面层 Toast。
       button?.remove();
       button = undefined;
       label = undefined;
-      const notice = document.createElement('div');
-      notice.className = 'tg-download-menu__notice';
-      notice.textContent = text;
-      card.append(notice);
-      dependencies.setTimeout(() => dismiss(300), duration);
+      const menuNotice = document.createElement('div');
+      menuNotice.className = 'tg-download-menu__notice';
+      menuNotice.textContent = text;
+      card.append(menuNotice);
+      clearToast();
+      const pageToast = document.createElement('div');
+      pageToast.className = 'tg-download-toast';
+      pageToast.setAttribute('role', 'status');
+      pageToast.setAttribute('aria-live', 'polite');
+      pageToast.textContent = text;
+      (document.body ?? document.documentElement).append(pageToast);
+      toast = pageToast;
+      dependencies.setTimeout(() => {
+        dismiss(300);
+        dismissToast();
+      }, duration);
     },
     open,
     ready: () => {

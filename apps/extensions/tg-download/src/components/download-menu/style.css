@@ -42,6 +42,27 @@
   opacity: 0;
 }
 
+.tg-download-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 2147483647;
+  max-width: min(360px, calc(100vw - 48px));
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #2481cc;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 22%);
+  color: #fff;
+  font: 14px/1.4 system-ui, sans-serif;
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+.tg-download-toast--leaving {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
 .tg-download-menu__icon {
   width: 16px;
   height: 16px;

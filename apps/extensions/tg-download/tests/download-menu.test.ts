@@ -87,7 +87,7 @@ describe('下载菜单', () => {
     expect(button.children[1]!.textContent).toBe('下载资源');
   });
 
-  it('提示状态移除下载按钮并按时淡出', () => {
+  it('提示状态保留按钮浮层并追加页面 Toast', () => {
     const { body, document } = fakeDocument();
     const callbacks: Array<() => void> = [];
     const delays: number[] = [];
@@ -105,15 +105,22 @@ describe('下载菜单', () => {
     menu.notice('已开始下载，可在扩展中查看进度', 1200);
 
     expect(button.removed).toBe(true);
+    expect(card.children[1]!.className).toBe('tg-download-menu__notice');
     expect(card.children[1]!.textContent).toBe('已开始下载，可在扩展中查看进度');
+    const toast = body.children[1]!;
+    expect(toast.className).toBe('tg-download-toast');
+    expect(toast.textContent).toBe('已开始下载，可在扩展中查看进度');
     expect(delays).toEqual([1200]);
 
     callbacks[0]!();
     expect(card.classList.names).toEqual(['tg-download-menu--leaving']);
-    expect(delays).toEqual([1200, 300]);
+    expect(toast.classList.names).toEqual(['tg-download-toast--leaving']);
+    expect(delays).toEqual([1200, 300, 300]);
 
     callbacks[1]!();
     expect(card.removed).toBe(true);
+    callbacks[2]!();
+    expect(toast.removed).toBe(true);
   });
 
   it('淡出指定时长后关闭菜单', () => {
