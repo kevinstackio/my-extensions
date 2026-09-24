@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [统一 WXT HTML 入口扫描保护](./issues/2026-09-24-repo-wxt-entry-scan-safety-issue.md)
+  - [Commit 记录](./commits/2026-09-24-repo-wxt-entry-scan-safety-commit.md)
+
 - [修复 TG Download Vite 依赖扫描竞态](./issues/2026-09-24-tg-download-vite-dependency-scan-issue.md)
   - [Commit 记录](./commits/2026-09-24-tg-download-vite-dependency-scan-commit.md)
 

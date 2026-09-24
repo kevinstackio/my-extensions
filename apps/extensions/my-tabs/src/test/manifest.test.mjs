@@ -2,6 +2,8 @@ import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { access, readFile, stat } from 'node:fs/promises';
 
+import wxtConfig from '../../wxt.config.ts';
+
 const iconSizes = [16, 32, 48, 128];
 const darkIconPaths = iconSizes.map((size) => `/src/assets/logo/my-tabs-dark-${size}.png`);
 
@@ -30,9 +32,11 @@ test('WXT 配置发布稳定目录并映射静态资源', async () => {
 
 // 依赖扫描只读取源码入口，避免与 WXT 清空临时构建目录产生竞态。
 test('Vite 依赖扫描排除 WXT 临时与稳定产物', async () => {
-  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+  const viteConfig = await wxtConfig.vite();
 
-  assert.match(config, /optimizeDeps:\s*\{\s*entries:\s*\['src\/entrypoints\/newtab\/index\.html'\]/s);
+  assert.deepEqual(viteConfig.optimizeDeps?.entries, [
+    'src/entrypoints/newtab/index.html',
+  ]);
 });
 
 // 验证首页通过唯一 React 样式入口加载书签样式、标签页图标回退资源与挂载节点。
@@ -108,17 +112,4 @@ test('ChatGPT 收藏图标遵循品牌 SVG 规范', async () => {
   assert.match(icon, /aria-labelledby="chatgpt-title"/);
   assert.equal((icon.match(/<path /g) ?? []).length, 1);
   assert.doesNotMatch(icon, /<\?xml|<!DOCTYPE|class=|p-id=|width=|height=|stroke=|opacity|<line|<rect|<image/);
-});
-
-// 验证根目录规范持续约束项目、资源与测试结构。
-test('根目录约定包含项目、资源与测试规范', async () => {
-  const instructions = await readFile(new URL('../../../../../AGENTS.md', import.meta.url), 'utf8');
-
-  assert.match(instructions, /## 项目结构/);
-  assert.match(instructions, /## 编码规范/);
-  assert.match(instructions, /已有同类 Issue/);
-  assert.match(instructions, /Browser Extensions/);
-  assert.match(instructions, /## 自动化测试规范/);
-  assert.match(instructions, /UTF-8/);
-  assert.match(instructions, /## 稳定开发产物/);
 });

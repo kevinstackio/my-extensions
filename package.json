@@ -12,16 +12,16 @@
   "scripts": {
     "dev:all": "turbo run dev",
     "build:all": "turbo run build",
+    "vitepress:dev": "turbo run dev --filter=@my-extensions/web",
+    "vitepress:build": "turbo run build --filter=@my-extensions/web",
+    "tabs:dev": "pnpm --filter @my-extensions/my-tabs dev",
+    "tabs:build": "pnpm --filter @my-extensions/my-tabs build",
     "tg:dev": "pnpm --filter @my-extensions/tg-download dev",
     "tg:build": "pnpm --filter @my-extensions/tg-download build",
     "x:dev": "pnpm --filter @my-extensions/x-download dev",
     "x:build": "pnpm --filter @my-extensions/x-download build",
-    "x-helper:build": "zsh apps/helpers/x-download-helper/scripts/build.sh",
     "x-helper:dev": "zsh apps/helpers/x-download-helper/scripts/run.sh",
-    "tabs:dev": "pnpm --filter @my-extensions/my-tabs dev",
-    "tabs:build": "pnpm --filter @my-extensions/my-tabs build",
-    "vitepress:dev": "turbo run dev --filter=@my-extensions/web",
-    "vitepress:build": "turbo run build --filter=@my-extensions/web"
+    "x-helper:build": "zsh apps/helpers/x-download-helper/scripts/build.sh"
   },
   "devDependencies": {
     "turbo": "2.10.12"
