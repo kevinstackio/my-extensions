@@ -10,6 +10,16 @@ import tasksEntrypoint from '../src/entrypoints/tasks.content';
 const sizes = [16, 32, 48, 128] as const;
 
 describe('WXT 扩展清单', () => {
+  it('只从 Popup 源码入口扫描 Vite 依赖', () => {
+    const viteFactory = (config as {
+      vite?: () => { optimizeDeps?: { entries?: string[] } };
+    }).vite;
+
+    expect(viteFactory?.().optimizeDeps?.entries).toEqual([
+      'src/entrypoints/popup/index.html',
+    ]);
+  });
+
   it('声明固定品牌图标和 Telegram Web 资源访问范围', () => {
     const manifest = config.manifest as Record<string, unknown>;
     const icons = manifest.icons as Record<number, string>;

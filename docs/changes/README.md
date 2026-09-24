@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [修复 TG Download Vite 依赖扫描竞态](./issues/2026-09-24-tg-download-vite-dependency-scan-issue.md)
+  - [Commit 记录](./commits/2026-09-24-tg-download-vite-dependency-scan-commit.md)
+
 - [制作本地 Issue 与 Commit 工作流 Skill](./issues/2026-09-24-repo-superpowers-internal-skill-issue.md)
   - [Commit 记录](./commits/2026-09-24-repo-superpowers-internal-skill-commit.md)
 

@@ -35,6 +35,12 @@ const assetCopies = [
 export default defineConfig({
   srcDir: 'src',
   outDir: 'dist',
+  vite: () => ({
+    // 只扫描源码入口，避免 WXT 重建时清空临时产物导致入口消失。
+    optimizeDeps: {
+      entries: ['src/entrypoints/popup/index.html'],
+    },
+  }),
   hooks: {
     ...createStableDevelopmentHooks(),
     'prepare:publicPaths': (_, paths) => {
