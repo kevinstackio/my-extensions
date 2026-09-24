@@ -59,6 +59,22 @@ final class DownloadTaskStoreTests: XCTestCase {
         XCTAssertTrue(store.tasks.isEmpty)
     }
 
+    func testClearFailedRemovesOnlyFailedTasksAndReturnsRemainingCount() throws {
+        let store = DownloadTaskStore()
+        let failed = store.enqueue(postId: "123", postURL: try XCTUnwrap(URL(string: "https://x.com/user/status/123")), mediaSources: [source])
+        let queued = store.enqueue(postId: "456", postURL: try XCTUnwrap(URL(string: "https://x.com/user/status/456")), mediaSources: [source])
+        guard case let .created(failedID) = failed, case let .created(queuedID) = queued else {
+            return XCTFail("应创建两个任务")
+        }
+
+        store.updateState(for: failedID, state: .failed("网络失败"))
+
+        XCTAssertEqual(store.failedTaskCount, 1)
+        XCTAssertEqual(store.clearFailed(), 1)
+        XCTAssertEqual(store.tasks.map(\.id), [queuedID])
+        XCTAssertEqual(store.failedTaskCount, 0)
+    }
+
     func testFailedTaskCanBeRetriedWithFreshMediaSourcesWithoutCreatingDuplicate() throws {
         let store = DownloadTaskStore()
         var enqueued: [DownloadTask] = []

@@ -26,14 +26,14 @@ struct VideoMediaSource: Codable {
     }
 }
 struct NativeMessagePayload: Codable {
-    let postId: String
-    let postUrl: String
+    let postId: String?
+    let postUrl: String?
     // Native Host 只转发消息，最终的非空来源校验仍由 Helper 再做一次。
     let mediaSources: [VideoMediaSource]?
 }
 struct NativeMessageRequest: Codable { let protocolVersion: Int; let requestId: String; let type: String; let payload: NativeMessagePayload }
 enum EnqueueDisposition: String, Codable { case created; case existing }
-struct NativeMessageResult: Codable { let taskId: UUID; let disposition: EnqueueDisposition }
+struct NativeMessageResult: Codable { let taskId: UUID?; let disposition: EnqueueDisposition?; let failedTaskCount: Int? }
 struct NativeMessageError: Codable { let code: NativeMessageErrorCode; let message: String }
 struct NativeMessageResponse: Codable {
     let protocolVersion: Int

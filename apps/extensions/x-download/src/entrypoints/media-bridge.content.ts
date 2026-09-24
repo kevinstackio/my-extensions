@@ -7,6 +7,12 @@ import {
   parseMediaSourceQuery,
 } from '../features/media-source/bridge-message';
 import { parseXPostUrl } from '../features/post-url';
+import {
+  showXPageToast,
+  X_PAGE_TOAST_MESSAGE,
+  X_PAGE_TOAST_TEXT,
+} from '../features/page-toast';
+import '../features/page-toast.css';
 
 export default defineContentScript({
   matches: ['https://x.com/*', 'https://www.x.com/*'],
@@ -29,6 +35,14 @@ export default defineContentScript({
     navigationObserver.observe(document, { childList: true, subtree: true });
 
     browser.runtime.onMessage.addListener(message => {
+      if (message && typeof message === 'object' && 'type' in message
+        && message.type === X_PAGE_TOAST_MESSAGE) {
+        const text = 'text' in message && typeof message.text === 'string'
+          ? message.text
+          : X_PAGE_TOAST_TEXT;
+        showXPageToast(document, text);
+        return undefined;
+      }
       const query = parseMediaSourceQuery(message);
       return query ? cache.get(query.postId, query.timeoutMs) : undefined;
     });

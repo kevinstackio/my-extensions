@@ -5,6 +5,7 @@ export const NATIVE_HOST_NAME = 'dev.kevinstack.xdownloadhelper.nativehost';
 export const PROTOCOL_VERSION = 2;
 
 export type EnqueueDisposition = 'created' | 'existing';
+export type PopupCommandType = 'popup.snapshot' | 'popup.open-downloads' | 'popup.clear-failed';
 export type NativeMessageErrorCode =
   | 'INVALID_REQUEST'
   | 'UNSUPPORTED_PROTOCOL'
@@ -30,6 +31,27 @@ export interface EnqueueError {
   ok: false;
   code: NativeMessageErrorCode;
   message: string;
+}
+
+export interface PopupRequest {
+  protocolVersion: 2;
+  requestId: string;
+  type: PopupCommandType;
+  payload: Record<string, never>;
+}
+
+export interface PopupResult {
+  ok: true;
+  failedTaskCount: number;
+}
+
+export function createPopupRequest(type: PopupCommandType, requestId: string): PopupRequest {
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    requestId,
+    type,
+    payload: {},
+  };
 }
 
 export function createEnqueueRequest(
@@ -64,6 +86,24 @@ export function parseNativeResponse(value: unknown, requestId: string): EnqueueR
   }
 
   throw new Error('Native Messaging 响应格式无效');
+}
+
+export function parsePopupResponse(value: unknown, requestId: string): PopupResult | EnqueueError {
+  if (!isRecord(value) || value.protocolVersion !== PROTOCOL_VERSION || value.requestId !== requestId) {
+    throw new Error('Native Messaging 响应版本或请求 ID 无效');
+  }
+
+  if (value.ok === true && isRecord(value.result)
+    && typeof value.result.failedTaskCount === 'number'
+    && Number.isInteger(value.result.failedTaskCount)) {
+    return { ok: true, failedTaskCount: value.result.failedTaskCount };
+  }
+
+  if (value.ok === false && isRecord(value.error) && isErrorCode(value.error.code) && typeof value.error.message === 'string') {
+    return { ok: false, code: value.error.code, message: value.error.message };
+  }
+
+  throw new Error('Native Messaging Popup 响应格式无效');
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

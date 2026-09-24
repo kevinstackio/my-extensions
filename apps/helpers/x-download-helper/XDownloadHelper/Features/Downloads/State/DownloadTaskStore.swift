@@ -13,6 +13,12 @@ final class DownloadTaskStore {
     var onTaskEnqueued: ((DownloadTask) -> Void)?
     private let now: () -> Date
 
+    var failedTaskCount: Int {
+        tasks.reduce(into: 0) { count, task in
+            if case .failed = task.state { count += 1 }
+        }
+    }
+
     init(
         tasks: [DownloadTask] = [],
         onTaskEnqueued: ((DownloadTask) -> Void)? = nil,
@@ -29,6 +35,16 @@ final class DownloadTaskStore {
 
     func remove(id: UUID) {
         tasks.removeAll { $0.id == id }
+    }
+
+    @discardableResult
+    func clearFailed() -> Int {
+        let removed = failedTaskCount
+        tasks.removeAll { task in
+            if case .failed = task.state { return true }
+            return false
+        }
+        return removed
     }
 
     func updateState(for id: UUID, state: DownloadTaskState) {

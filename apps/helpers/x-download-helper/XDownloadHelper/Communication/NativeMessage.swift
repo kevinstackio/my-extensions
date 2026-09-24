@@ -14,12 +14,12 @@ enum NativeMessageErrorCode: String, Codable {
 }
 
 struct NativeMessagePayload: Codable, Equatable {
-    let postId: String
-    let postUrl: String
+    let postId: String?
+    let postUrl: String?
     // 保留可选仅为兼容 JSON 解码层的缺字段错误，Handler 会把 nil 和空数组统一拒绝。
     let mediaSources: [VideoMediaSource]?
 
-    init(postId: String, postUrl: String, mediaSources: [VideoMediaSource]? = nil) {
+    init(postId: String? = nil, postUrl: String? = nil, mediaSources: [VideoMediaSource]? = nil) {
         self.postId = postId
         self.postUrl = postUrl
         self.mediaSources = mediaSources
@@ -39,8 +39,9 @@ enum EnqueueDisposition: String, Codable {
 }
 
 struct NativeMessageResult: Codable, Equatable {
-    let taskId: UUID
-    let disposition: EnqueueDisposition
+    let taskId: UUID?
+    let disposition: EnqueueDisposition?
+    let failedTaskCount: Int?
 }
 
 struct NativeMessageError: Codable, Equatable {
@@ -56,7 +57,23 @@ struct NativeMessageResponse: Codable, Equatable {
     let error: NativeMessageError?
 
     static func success(requestId: String, protocolVersion: Int, taskId: UUID, disposition: EnqueueDisposition) -> Self {
-        Self(protocolVersion: protocolVersion, requestId: requestId, ok: true, result: NativeMessageResult(taskId: taskId, disposition: disposition), error: nil)
+        Self(
+            protocolVersion: protocolVersion,
+            requestId: requestId,
+            ok: true,
+            result: NativeMessageResult(taskId: taskId, disposition: disposition, failedTaskCount: nil),
+            error: nil
+        )
+    }
+
+    static func popupSuccess(requestId: String, protocolVersion: Int, failedTaskCount: Int) -> Self {
+        Self(
+            protocolVersion: protocolVersion,
+            requestId: requestId,
+            ok: true,
+            result: NativeMessageResult(taskId: nil, disposition: nil, failedTaskCount: failedTaskCount),
+            error: nil
+        )
     }
 
     static func failure(requestId: String, protocolVersion: Int, code: NativeMessageErrorCode, message: String) -> Self {

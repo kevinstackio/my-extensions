@@ -6,9 +6,15 @@ import {
   NATIVE_HOST_NAME,
   PROTOCOL_VERSION,
   createEnqueueRequest,
+  createPopupRequest,
   parseNativeResponse,
+  parsePopupResponse,
 } from '../src/features/native-messaging/protocol';
-import { classifyNativeFailure, sendEnqueueRequest } from '../src/features/native-messaging/client';
+import {
+  classifyNativeFailure,
+  sendEnqueueRequest,
+  sendPopupRequest,
+} from '../src/features/native-messaging/client';
 
 describe('Native Messaging 协议', () => {
   const target = parseXPostUrl('https://x.com/OpenAI/status/1960000000000000000');
@@ -47,6 +53,19 @@ describe('Native Messaging 协议', () => {
     }];
 
     expect(createEnqueueRequest(target, 'request-2', mediaSources).payload.mediaSources).toEqual(mediaSources);
+  });
+
+  it.each([
+    'popup.snapshot',
+    'popup.open-downloads',
+    'popup.clear-failed',
+  ] as const)('creates the %s Popup command request', type => {
+    expect(createPopupRequest(type, 'popup-request-1')).toEqual({
+      protocolVersion: PROTOCOL_VERSION,
+      requestId: 'popup-request-1',
+      type,
+      payload: {},
+    });
   });
 
   it.each(['created', 'existing'] as const)('accepts a %s response', (disposition) => {
@@ -103,6 +122,40 @@ describe('Native Messaging 协议', () => {
     expect(calls).toHaveLength(1);
     expect(calls[0]?.host).toBe(NATIVE_HOST_NAME);
     expect(result).toEqual({ ok: true, taskId: 'task-1', disposition: 'created' });
+  });
+
+  it('sends a Popup command and reads the failed task count', async () => {
+    const calls: unknown[] = [];
+    const result = await sendPopupRequest(
+      'popup.snapshot',
+      'popup-request-1',
+      async (_host, message) => {
+        calls.push(message);
+        return {
+          protocolVersion: 2,
+          requestId: 'popup-request-1',
+          ok: true,
+          result: { failedTaskCount: 2 },
+        };
+      },
+    );
+
+    expect(calls).toEqual([{
+      protocolVersion: 2,
+      requestId: 'popup-request-1',
+      type: 'popup.snapshot',
+      payload: {},
+    }]);
+    expect(result).toEqual({ ok: true, failedTaskCount: 2 });
+  });
+
+  it('accepts an empty failed task count after clearing', () => {
+    expect(parsePopupResponse({
+      protocolVersion: 2,
+      requestId: 'popup-request-2',
+      ok: true,
+      result: { failedTaskCount: 0 },
+    }, 'popup-request-2')).toEqual({ ok: true, failedTaskCount: 0 });
   });
 
   it('maps a missing host separately from connection failures', () => {

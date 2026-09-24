@@ -12,4 +12,18 @@ describe('WXT 构建配置', () => {
       'src/entrypoints/popup/index.html',
     ]);
   });
+
+  it('把 Popup Header 图标发布到扩展 icon 目录', () => {
+    const files: Array<{ relativeDest?: string }> = [];
+    const hooks = (config as {
+      hooks?: { 'build:publicAssets'?: (entries: unknown, files: Array<{ relativeDest?: string }>) => void };
+    }).hooks;
+
+    hooks?.['build:publicAssets']?.({}, files);
+
+    expect(files).toEqual(expect.arrayContaining([
+      expect.objectContaining({ relativeDest: 'icon/folder-down.svg' }),
+      expect.objectContaining({ relativeDest: 'icon/trash.svg' }),
+    ]));
+  });
 });

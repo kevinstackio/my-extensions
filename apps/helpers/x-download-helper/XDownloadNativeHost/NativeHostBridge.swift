@@ -2,6 +2,12 @@ import Foundation
 
 enum NativeHostBridge {
     static let allowedDevelopmentOrigin = "chrome-extension://mdkcfihmaejbecgoinnnlkjmbpmnfekl/"
+    private static let supportedMessageTypes: Set<String> = [
+        "task.enqueue",
+        "popup.snapshot",
+        "popup.open-downloads",
+        "popup.clear-failed",
+    ]
 
     static func isAllowedOrigin(_ origin: String) -> Bool { origin == allowedDevelopmentOrigin }
 
@@ -15,7 +21,7 @@ enum NativeHostBridge {
         guard isSupportedProtocol(request.protocolVersion) else {
             return try JSONEncoder().encode(NativeMessageResponse.failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .unsupportedProtocol, message: "不支持的协议版本"))
         }
-        guard request.type == "task.enqueue" else {
+        guard supportedMessageTypes.contains(request.type) else {
             return try JSONEncoder().encode(NativeMessageResponse.failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .unsupportedMessage, message: "不支持的消息类型"))
         }
         let data = try JSONEncoder().encode(request)

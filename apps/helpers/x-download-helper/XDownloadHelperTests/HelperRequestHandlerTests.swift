@@ -139,4 +139,55 @@ final class HelperRequestHandlerTests: XCTestCase {
 
         XCTAssertEqual(handler.handle(request).error?.code, .invalidRequest)
     }
+
+    func testPopupSnapshotReportsFailedTaskCount() throws {
+        let store = DownloadTaskStore()
+        let task = store.enqueue(
+            postId: "123",
+            postURL: try XCTUnwrap(URL(string: "https://x.com/user/status/123")),
+            mediaSources: [source]
+        )
+        guard case let .created(taskID) = task else { return XCTFail("应创建任务") }
+        store.updateState(for: taskID, state: .failed("网络失败"))
+        let handler = HelperRequestHandler(store: store, showPopover: {})
+        let request = NativeMessageRequest(
+            protocolVersion: 2,
+            requestId: "popup-snapshot",
+            type: "popup.snapshot",
+            payload: NativeMessagePayload()
+        )
+
+        let response = handler.handle(request)
+
+        XCTAssertTrue(response.ok)
+        XCTAssertEqual(response.result?.failedTaskCount, 1)
+    }
+
+    func testPopupClearFailedRemovesFailedTasks() throws {
+        let store = DownloadTaskStore()
+        let task = store.enqueue(
+            postId: "123",
+            postURL: try XCTUnwrap(URL(string: "https://x.com/user/status/123")),
+            mediaSources: [source]
+        )
+        guard case let .created(taskID) = task else { return XCTFail("应创建任务") }
+        store.updateState(for: taskID, state: .failed("网络失败"))
+        let handler = HelperRequestHandler(store: store, showPopover: {})
+        let request = NativeMessageRequest(
+            protocolVersion: 2,
+            requestId: "popup-clear",
+            type: "popup.clear-failed",
+            payload: NativeMessagePayload()
+        )
+
+        let response = handler.handle(request)
+
+        XCTAssertTrue(response.ok)
+        XCTAssertEqual(response.result?.failedTaskCount, 0)
+        XCTAssertTrue(store.tasks.isEmpty)
+    }
+
+    private var source: VideoMediaSource {
+        VideoMediaSource(mediaID: "video-1", type: .mp4, url: URL(string: "https://video.twimg.com/video.mp4")!)
+    }
 }

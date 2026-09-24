@@ -14,6 +14,8 @@ const logoFiles = [
   'x-download-light-128.png',
 ] as const;
 
+const popupIconFiles = ['folder-down.svg', 'trash.svg'] as const;
+
 const actionIconPaths = {
   16: '/icon/x-download-16.png',
   32: '/icon/x-download-32.png',
@@ -33,13 +35,22 @@ export default defineConfig({
   hooks: {
     ...createStableDevelopmentHooks(),
     'prepare:publicPaths': (_, paths) => {
-      paths.push(...logoFiles.map(filename => `/icon/${filename}`));
+      paths.push(
+        ...logoFiles.map(filename => `/icon/${filename}`),
+        ...popupIconFiles.map(filename => `/icon/${filename}`),
+      );
     },
     'build:publicAssets': (_, files) => {
-      files.push(...logoFiles.map(filename => ({
-        absoluteSrc: resolve('src/assets/logo', filename),
-        relativeDest: `icon/${filename}`,
-      })));
+      files.push(
+        ...logoFiles.map(filename => ({
+          absoluteSrc: resolve('src/assets/logo', filename),
+          relativeDest: `icon/${filename}`,
+        })),
+        ...popupIconFiles.map(filename => ({
+          absoluteSrc: resolve('src/assets/icons', filename),
+          relativeDest: `icon/${filename}`,
+        })),
+      );
     },
   },
   manifest: {

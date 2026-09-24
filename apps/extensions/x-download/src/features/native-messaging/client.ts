@@ -3,9 +3,13 @@ import type { MediaSource } from '../media-source/model';
 import {
   NATIVE_HOST_NAME,
   createEnqueueRequest,
+  createPopupRequest,
   parseNativeResponse,
+  parsePopupResponse,
   type EnqueueError,
   type EnqueueResult,
+  type PopupCommandType,
+  type PopupResult,
 } from './protocol';
 
 export type NativeMessageSender = (hostName: string, message: unknown) => Promise<unknown>;
@@ -19,6 +23,15 @@ export async function sendEnqueueRequest(
 ): Promise<EnqueueResult | EnqueueError> {
   const response = await send(NATIVE_HOST_NAME, createEnqueueRequest(target, requestId, mediaSources));
   return parseNativeResponse(response, requestId);
+}
+
+export async function sendPopupRequest(
+  type: PopupCommandType,
+  requestId: string,
+  send: NativeMessageSender,
+): Promise<PopupResult | EnqueueError> {
+  const response = await send(NATIVE_HOST_NAME, createPopupRequest(type, requestId));
+  return parsePopupResponse(response, requestId);
 }
 
 export function classifyNativeFailure(error: unknown): NativeFailureState {

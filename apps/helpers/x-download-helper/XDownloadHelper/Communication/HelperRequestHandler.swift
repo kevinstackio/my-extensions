@@ -1,13 +1,24 @@
+import AppKit
 import Foundation
 
 @MainActor
 final class HelperRequestHandler {
     private let store: DownloadTaskStore
     private let showPopover: () -> Void
+    private let openDownloads: () -> Void
 
-    init(store: DownloadTaskStore, showPopover: @escaping () -> Void) {
+    init(
+        store: DownloadTaskStore,
+        showPopover: @escaping () -> Void,
+        openDownloads: @escaping () -> Void = {
+            if let directory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
+                NSWorkspace.shared.open(directory)
+            }
+        }
+    ) {
         self.store = store
         self.showPopover = showPopover
+        self.openDownloads = openDownloads
     }
 
     func handle(_ request: NativeMessageRequest) -> NativeMessageResponse {
@@ -15,10 +26,29 @@ final class HelperRequestHandler {
         guard supportedNativeMessageProtocolVersions.contains(request.protocolVersion) else {
             return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .unsupportedProtocol, message: "不支持的协议版本")
         }
-        guard request.type == "task.enqueue" else {
+
+        switch request.type {
+        case "task.enqueue":
+            return handleEnqueue(request)
+        case "popup.snapshot":
+            return .popupSuccess(requestId: request.requestId, protocolVersion: request.protocolVersion, failedTaskCount: store.failedTaskCount)
+        case "popup.open-downloads":
+            openDownloads()
+            return .popupSuccess(requestId: request.requestId, protocolVersion: request.protocolVersion, failedTaskCount: store.failedTaskCount)
+        case "popup.clear-failed":
+            store.clearFailed()
+            return .popupSuccess(requestId: request.requestId, protocolVersion: request.protocolVersion, failedTaskCount: store.failedTaskCount)
+        default:
             return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .unsupportedMessage, message: "不支持的消息类型")
         }
-        guard isValidPost(request.payload.postId, urlString: request.payload.postUrl) else {
+    }
+
+    private func handleEnqueue(_ request: NativeMessageRequest) -> NativeMessageResponse {
+        guard let postId = request.payload.postId,
+              let postUrl = request.payload.postUrl else {
+            return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .invalidRequest, message: "帖子请求无效")
+        }
+        guard isValidPost(postId, urlString: postUrl) else {
             return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .invalidRequest, message: "帖子请求无效")
         }
         guard let rawMediaSources = request.payload.mediaSources, !rawMediaSources.isEmpty else {
@@ -33,7 +63,7 @@ final class HelperRequestHandler {
             return .failure(requestId: request.requestId, protocolVersion: request.protocolVersion, code: .invalidRequest, message: "视频来源无效")
         }
 
-        let result = store.enqueue(postId: request.payload.postId, postURL: URL(string: request.payload.postUrl)!, mediaSources: mediaSources)
+        let result = store.enqueue(postId: postId, postURL: URL(string: postUrl)!, mediaSources: mediaSources)
         showPopover()
         switch result {
         case let .created(taskID):

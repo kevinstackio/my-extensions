@@ -1,26 +1,122 @@
 :root {
   color-scheme: light dark;
   font: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  color: #1f1f1f;
+  background: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 280px;
+  min-height: 170px;
+  margin: 0;
+  overflow: hidden;
 }
 
 body {
-  box-sizing: border-box;
+  background: Canvas;
+  color: CanvasText;
+}
+
+button {
+  font: inherit;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 170px;
+}
+
+.x-download-popup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 48px;
+  padding: 0 12px 0 16px;
+}
+
+.x-download-popup__title {
   margin: 0;
-  min-width: 240px;
-  max-width: 280px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.x-download-popup__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.x-download-popup__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.x-download-popup__action:hover:not(:disabled) {
+  background: color-mix(in srgb, CanvasText 10%, transparent);
+}
+
+.x-download-popup__action:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.x-download-popup__action img {
+  width: 17px;
+  height: 17px;
+}
+
+.x-download-popup__divider {
+  flex: 0 0 1px;
+  width: 100%;
+  background: color-mix(in srgb, CanvasText 14%, transparent);
+}
+
+.x-download-popup__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 120px;
   padding: 16px;
 }
 
-h1 {
+.x-download-popup__status-title {
+  margin: 0;
   font-size: 14px;
   line-height: 1.4;
-  margin: 0;
 }
 
-p {
-  color: #888;
+.x-download-popup__status-body {
+  margin: 8px 0 0;
+  color: color-mix(in srgb, CanvasText 55%, transparent);
   font-size: 12px;
   line-height: 1.5;
-  margin: 8px 0 0;
   white-space: pre-line;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f5f5f5;
+    background: #252525;
+  }
+
+  .x-download-popup__action img {
+    filter: invert(1);
+  }
 }
