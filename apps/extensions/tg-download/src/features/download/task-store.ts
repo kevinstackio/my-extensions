@@ -1,4 +1,4 @@
-export type VideoDownloadState = 'downloading' | 'failed';
+export type VideoDownloadState = 'downloading' | 'completed' | 'failed';
 
 export interface VideoDownloadTask {
   id: string;
@@ -18,7 +18,7 @@ export interface VideoTaskStore {
   progress(id: string, loadedBytes: number, totalBytes?: number): void;
   fail(id: string, errorCode: string): void;
   complete(id: string): void;
-  clearFailed(): void;
+  clearFinished(): void;
   snapshot(): TaskSnapshot;
   subscribe(listener: (snapshot: TaskSnapshot) => void): () => void;
 }
@@ -91,7 +91,7 @@ export function createVideoTaskStore(options: VideoTaskStoreOptions = {}): Video
 
     fail(id, errorCode) {
       const task = tasks.find(item => item.id === id);
-      if (!task || task.state === 'failed') return;
+      if (!task || task.state !== 'downloading') return;
 
       task.state = 'failed';
       task.errorCode = errorCode;
@@ -99,18 +99,18 @@ export function createVideoTaskStore(options: VideoTaskStoreOptions = {}): Video
     },
 
     complete(id) {
-      const index = tasks.findIndex(item => item.id === id);
-      if (index < 0) return;
+      const task = tasks.find(item => item.id === id);
+      if (!task || task.state !== 'downloading') return;
 
-      tasks.splice(index, 1);
+      task.state = 'completed';
       notify();
     },
 
-    clearFailed() {
-      const remaining = tasks.filter(task => task.state !== 'failed');
-      if (remaining.length === tasks.length) return;
-
-      tasks.splice(0, tasks.length, ...remaining);
+    // 只清理终态任务，正在下载的任务必须继续接收进度和完成/失败回调。
+    clearFinished() {
+      const retained = tasks.filter(task => task.state === 'downloading');
+      if (retained.length === tasks.length) return;
+      tasks.splice(0, tasks.length, ...retained);
       notify();
     },
 

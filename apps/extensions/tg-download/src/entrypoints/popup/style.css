@@ -145,6 +145,14 @@ button {
   background: #3478f6;
 }
 
+.tg-download-popup__task--completed .tg-download-popup__progress-bar {
+  background: #2d9a55;
+}
+
+.tg-download-popup__task--failed .tg-download-popup__progress-bar {
+  background: #c93434;
+}
+
 .tg-download-popup__progress--indeterminate .tg-download-popup__progress-bar {
   width: 45%;
 }
@@ -155,6 +163,14 @@ button {
   font-size: 11px;
   line-height: 1.2;
   text-align: right;
+}
+
+.tg-download-popup__task:not(.tg-download-popup__task--failed):not(.tg-download-popup__task--completed) .tg-download-popup__status {
+  color: #3478f6;
+}
+
+.tg-download-popup__task--completed .tg-download-popup__status {
+  color: #2d9a55;
 }
 
 .tg-download-popup__task--failed .tg-download-popup__status {

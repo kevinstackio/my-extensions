@@ -4,16 +4,16 @@ export type { TaskSnapshot, VideoDownloadTask } from './task-store';
 
 export const TASK_SNAPSHOT_EVENT = 'tg-download:task-snapshot';
 export const TASK_REQUEST_SNAPSHOT_EVENT = 'tg-download:task-request-snapshot';
-export const TASK_CLEAR_FAILED_EVENT = 'tg-download:task-clear-failed';
+export const TASK_CLEAR_FINISHED_EVENT = 'tg-download:task-clear-finished';
 
 export const TASK_MESSAGE_GET_SNAPSHOT = 'tg-download:tasks:get-snapshot';
-export const TASK_MESSAGE_CLEAR_FAILED = 'tg-download:tasks:clear-failed';
+export const TASK_MESSAGE_CLEAR_FINISHED = 'tg-download:tasks:clear-finished';
 export const TASK_MESSAGE_SNAPSHOT = 'tg-download:tasks:snapshot';
 export const TASK_MESSAGE_TAB_REMOVED = 'tg-download:tasks:tab-removed';
 
 export type TaskRuntimeCommand =
   | { type: typeof TASK_MESSAGE_GET_SNAPSHOT }
-  | { type: typeof TASK_MESSAGE_CLEAR_FAILED };
+  | { type: typeof TASK_MESSAGE_CLEAR_FINISHED };
 
 export interface TaskRuntimeSnapshotMessage {
   type: typeof TASK_MESSAGE_SNAPSHOT;
@@ -51,7 +51,11 @@ function isValidTask(value: unknown): value is VideoDownloadTask {
     || typeof value.filename !== 'string'
     || value.filename.length === 0
     || value.filename.length > MAX_FILENAME_LENGTH
-    || (value.state !== 'downloading' && value.state !== 'failed')
+    || (
+      value.state !== 'downloading'
+      && value.state !== 'completed'
+      && value.state !== 'failed'
+    )
     || typeof value.loadedBytes !== 'number'
     || !Number.isFinite(value.loadedBytes)
     || value.loadedBytes < 0

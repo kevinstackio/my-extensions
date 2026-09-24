@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser';
 
 import {
-  POPUP_CLEAR_FAILED_MESSAGE,
+  POPUP_CLEAR_FINISHED_MESSAGE,
   POPUP_GET_TASKS_MESSAGE,
   POPUP_OPEN_DOWNLOADS_MESSAGE,
   POPUP_TAB_REMOVED_MESSAGE,
@@ -11,7 +11,7 @@ import {
 import {
   getProgressPresentation,
   createPopupTaskProjection,
-  hasFailedTasks,
+  hasClearableTasks,
   type PopupTask,
 } from '../../features/download/popup-model';
 import { parseTaskSnapshot } from '../../features/download/task-protocol';
@@ -77,6 +77,7 @@ function createTaskRow(task: PopupTask): HTMLElement {
 
   row.className = 'tg-download-popup__task';
   if (task.state === 'failed') row.classList.add('tg-download-popup__task--failed');
+  if (task.state === 'completed') row.classList.add('tg-download-popup__task--completed');
   filename.className = 'tg-download-popup__filename';
   filename.textContent = task.filename;
   details.className = 'tg-download-popup__task-details';
@@ -104,9 +105,9 @@ function render(tasks = projection.getTasks()): void {
   );
   const clearButton = createIconButton(
     'tg-download-popup__action',
-    '清理失败任务',
+    '清除已完成和失败记录',
     'trash',
-    () => { void browser.runtime.sendMessage({ type: POPUP_CLEAR_FAILED_MESSAGE }); },
+    () => { void browser.runtime.sendMessage({ type: POPUP_CLEAR_FINISHED_MESSAGE }); },
   );
 
   header.className = 'tg-download-popup__header';
@@ -117,7 +118,8 @@ function render(tasks = projection.getTasks()): void {
   header.append(title, actions);
   divider.className = 'tg-download-popup__divider';
   content.className = 'tg-download-popup__content';
-  clearButton.disabled = !hasFailedTasks(tasks);
+  // 仅有下载中任务时禁用清理按钮，避免用户误以为会取消正在进行的下载。
+  clearButton.disabled = !hasClearableTasks(tasks);
 
   if (tasks.length === 0) {
     const empty = document.createElement('p');

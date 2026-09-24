@@ -42,12 +42,13 @@ describe('视频下载页面编排', () => {
     expect(saveMedia).toHaveBeenNthCalledWith(2, second, menu, undefined, store);
   });
 
-  it('快照请求只发布当前任务，清理事件只清除失败任务', () => {
+  it('快照请求只发布当前任务，清空事件只移除终态任务', () => {
     const menu = createMenu();
     const store = createVideoTaskStore({
       createId: vi.fn()
         .mockReturnValueOnce('active')
-        .mockReturnValueOnce('failed'),
+        .mockReturnValueOnce('failed')
+        .mockReturnValueOnce('downloading'),
     });
     const publishSnapshot = vi.fn();
     const controller = createVideoDownloadController({
@@ -59,9 +60,10 @@ describe('视频下载页面编排', () => {
 
     const activeId = store.start('active.mp4');
     const failedId = store.start('failed.mp4');
+    const downloadingId = store.start('downloading.mp4');
     store.fail(failedId, 'network');
     controller.handleSnapshotRequest();
-    controller.clearFailed();
+    controller.clearFinished();
 
     expect(publishSnapshot).toHaveBeenCalledWith({
       tasks: [{
@@ -75,24 +77,40 @@ describe('视频下载页面编排', () => {
         state: 'failed',
         loadedBytes: 0,
         errorCode: 'network',
+      }, {
+        id: downloadingId,
+        filename: 'downloading.mp4',
+        state: 'downloading',
+        loadedBytes: 0,
       }],
     });
-    expect(store.snapshot().tasks).toHaveLength(1);
-    expect(store.snapshot().tasks[0]!.id).toBe(activeId);
+    expect(store.snapshot()).toEqual({
+      tasks: [{
+        id: activeId,
+        filename: 'active.mp4',
+        state: 'downloading',
+        loadedBytes: 0,
+      }, {
+        id: downloadingId,
+        filename: 'downloading.mp4',
+        state: 'downloading',
+        loadedBytes: 0,
+      }],
+    });
   });
 
-  it('在同一个事件目标上接收 Popup 的快照请求和失败清理事件', () => {
+  it('在同一个事件目标上接收 Popup 的快照请求和清空终态事件', () => {
     const target = new EventTarget();
     const controller = {
       handleSnapshotRequest: vi.fn(),
-      clearFailed: vi.fn(),
+      clearFinished: vi.fn(),
     };
 
     registerTaskEventHandlers(target, controller);
     target.dispatchEvent(new Event('tg-download:task-request-snapshot'));
-    target.dispatchEvent(new Event('tg-download:task-clear-failed'));
+    target.dispatchEvent(new Event('tg-download:task-clear-finished'));
 
     expect(controller.handleSnapshotRequest).toHaveBeenCalledOnce();
-    expect(controller.clearFailed).toHaveBeenCalledOnce();
+    expect(controller.clearFinished).toHaveBeenCalledOnce();
   });
 });

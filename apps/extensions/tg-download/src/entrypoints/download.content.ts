@@ -11,7 +11,7 @@ import {
   findMediaAt,
 } from '../features/download/media-target';
 import {
-  TASK_CLEAR_FAILED_EVENT,
+  TASK_CLEAR_FINISHED_EVENT,
   TASK_REQUEST_SNAPSHOT_EVENT,
   TASK_SNAPSHOT_EVENT,
   type TaskSnapshot,
@@ -48,21 +48,22 @@ export function createVideoDownloadController({
     handleSnapshotRequest() {
       publishSnapshot(store.snapshot());
     },
-    clearFailed() {
-      store.clearFailed();
+    clearFinished() {
+      // 清理只影响历史展示，不取消底层 fetch 或文件写入。
+      store.clearFinished();
     },
   };
 }
 
 export function registerTaskEventHandlers(
   target: EventTarget,
-  controller: Pick<ReturnType<typeof createVideoDownloadController>, 'handleSnapshotRequest' | 'clearFailed'>,
+  controller: Pick<ReturnType<typeof createVideoDownloadController>, 'handleSnapshotRequest' | 'clearFinished'>,
 ): void {
   target.addEventListener(TASK_REQUEST_SNAPSHOT_EVENT, () => {
     controller.handleSnapshotRequest();
   });
-  target.addEventListener(TASK_CLEAR_FAILED_EVENT, () => {
-    controller.clearFailed();
+  target.addEventListener(TASK_CLEAR_FINISHED_EVENT, () => {
+    controller.clearFinished();
   });
 }
 
@@ -93,7 +94,7 @@ export default defineContentScript({
 
     registerTaskEventHandlers(globalThis, {
       handleSnapshotRequest: () => controller?.handleSnapshotRequest(),
-      clearFailed: () => controller?.clearFailed(),
+      clearFinished: () => controller?.clearFinished(),
     });
 
     document.addEventListener('contextmenu', (event) => {

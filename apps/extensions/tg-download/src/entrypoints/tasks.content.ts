@@ -3,8 +3,8 @@ import { defineContentScript } from 'wxt/utils/define-content-script';
 
 import {
   parseTaskSnapshot,
-  TASK_CLEAR_FAILED_EVENT,
-  TASK_MESSAGE_CLEAR_FAILED,
+  TASK_CLEAR_FINISHED_EVENT,
+  TASK_MESSAGE_CLEAR_FINISHED,
   TASK_MESSAGE_GET_SNAPSHOT,
   TASK_MESSAGE_SNAPSHOT,
   TASK_REQUEST_SNAPSHOT_EVENT,
@@ -75,8 +75,9 @@ export default defineContentScript({
           globalThis.dispatchEvent(new Event(TASK_REQUEST_SNAPSHOT_EVENT));
         });
       }
-      if (type === TASK_MESSAGE_CLEAR_FAILED) {
-        globalThis.dispatchEvent(new Event(TASK_CLEAR_FAILED_EVENT));
+      if (type === TASK_MESSAGE_CLEAR_FINISHED) {
+        // 通过页面事件通知 MAIN world，只清理终态任务，不中断下载流程。
+        globalThis.dispatchEvent(new Event(TASK_CLEAR_FINISHED_EVENT));
       }
       return undefined;
     });

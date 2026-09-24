@@ -30,6 +30,8 @@ function getFailureLabel(errorCode?: string): string {
       return '读取媒体失败';
     case 'file-close':
       return '保存文件失败';
+    case 'interrupted':
+      return '浏览器重启后中断';
     default:
       return '下载失败';
   }
@@ -44,10 +46,9 @@ export function createPopupTaskProjection(): PopupTaskProjection {
 
   return {
     applyTabSnapshot(tabId, snapshot) {
-      const incomingKeys = new Set(snapshot.tasks.map(task => `${tabId}:${task.id}`));
-
+      // 同一来源的快照整体替换，避免已被清理的终态任务残留在 Popup。
       for (const [key, task] of tasks) {
-        if (task.tabId === tabId && !incomingKeys.has(key)) tasks.delete(key);
+        if (task.tabId === tabId) tasks.delete(key);
       }
 
       for (const task of snapshot.tasks) {
@@ -73,6 +74,14 @@ export function createPopupTaskProjection(): PopupTaskProjection {
 }
 
 export function getProgressPresentation(task: VideoDownloadTask): ProgressPresentation {
+  if (task.state === 'completed') {
+    return {
+      mode: 'determinate',
+      percent: 100,
+      label: '下载完成',
+    };
+  }
+
   const failureLabel = task.state === 'failed' ? getFailureLabel(task.errorCode) : undefined;
   const labelForUnknownTotal = failureLabel ?? '下载中';
   if (!task.totalBytes || task.totalBytes <= 0) {
@@ -90,6 +99,7 @@ export function getProgressPresentation(task: VideoDownloadTask): ProgressPresen
   };
 }
 
-export function hasFailedTasks(tasks: readonly VideoDownloadTask[]): boolean {
-  return tasks.some(task => task.state === 'failed');
+export function hasClearableTasks(tasks: readonly VideoDownloadTask[]): boolean {
+  // 下载中的任务不可清理，按钮只在存在终态记录时启用。
+  return tasks.some(task => task.state !== 'downloading');
 }

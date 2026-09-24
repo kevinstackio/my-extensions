@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   createPopupTaskProjection,
   getProgressPresentation,
-  hasFailedTasks,
+  hasClearableTasks,
 } from '../src/features/download/popup-model';
 import type { TaskSnapshot, VideoDownloadTask } from '../src/features/download/task-protocol';
 
@@ -54,6 +54,20 @@ describe('下载 Popup 任务投影', () => {
     ]);
   });
 
+  it('按历史快照顺序展示最新任务在最上面', () => {
+    const projection = createPopupTaskProjection();
+    projection.applyTabSnapshot(1, snapshot(
+      task({ id: 'old', filename: 'old.mp4' }),
+      task({ id: 'new', filename: 'new.mp4' }),
+    ));
+    projection.applyTabSnapshot(1, snapshot(
+      task({ id: 'new', filename: 'new.mp4' }),
+      task({ id: 'old', filename: 'old.mp4' }),
+    ));
+
+    expect(projection.getTasks().map(item => item.id)).toEqual(['new', 'old']);
+  });
+
   it('标签页移除时清除该标签页任务', () => {
     const projection = createPopupTaskProjection();
     projection.applyTabSnapshot(1, snapshot(task({ id: 'one' })));
@@ -89,11 +103,28 @@ describe('下载 Popup 任务投影', () => {
       mode: 'indeterminate',
       label: '无法写入文件',
     });
+    expect(getProgressPresentation(task({ state: 'failed', errorCode: 'interrupted' }))).toEqual({
+      mode: 'indeterminate',
+      label: '浏览器重启后中断',
+    });
   });
 
-  it('只有失败任务时启用清理按钮', () => {
-    expect(hasFailedTasks([task({ state: 'failed', errorCode: 'network' })])).toBe(true);
-    expect(hasFailedTasks([task()])).toBe(false);
-    expect(hasFailedTasks([])).toBe(false);
+  it('已完成任务显示完成状态并使用 100% 进度', () => {
+    expect(getProgressPresentation(task({
+      state: 'completed',
+      loadedBytes: 12,
+      totalBytes: 12,
+    }))).toEqual({
+      mode: 'determinate',
+      percent: 100,
+      label: '下载完成',
+    });
+  });
+
+  it('只有完成或失败任务时启用清空按钮', () => {
+    expect(hasClearableTasks([task({ state: 'failed', errorCode: 'network' })])).toBe(true);
+    expect(hasClearableTasks([task({ state: 'completed' })])).toBe(true);
+    expect(hasClearableTasks([task()])).toBe(false);
+    expect(hasClearableTasks([])).toBe(false);
   });
 });

@@ -69,7 +69,7 @@ export default defineConfig({
       },
       default_title: 'TG Download',
     },
-    permissions: ['downloads'],
+    permissions: ['downloads', 'storage'],
     web_accessible_resources: [
       {
         matches: ['https://web.telegram.org/*'],

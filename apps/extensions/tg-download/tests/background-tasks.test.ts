@@ -1,13 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  POPUP_CLEAR_FAILED_MESSAGE,
+  POPUP_CLEAR_FINISHED_MESSAGE,
   POPUP_GET_TASKS_MESSAGE,
+  POPUP_HISTORY_TAB_ID,
   POPUP_OPEN_DOWNLOADS_MESSAGE,
   POPUP_TAB_REMOVED_MESSAGE,
   POPUP_TAB_SNAPSHOT_MESSAGE,
   createBackgroundTaskHandler,
 } from '../src/features/download/background-tasks';
+import { createTaskHistoryStore } from '../src/features/download/task-history';
 import {
   TASK_MESSAGE_SNAPSHOT,
   type TaskSnapshot,
@@ -39,6 +41,39 @@ function createDependencies() {
 }
 
 describe('后台视频任务聚合', () => {
+  it('Popup 打开时返回持久化历史而不依赖 Telegram 标签页', async () => {
+    const dependencies = createDependencies();
+    const history = createTaskHistoryStore({
+      get: async () => ({
+        tasks: [{
+          id: 'done',
+          filename: 'done.mp4',
+          state: 'completed',
+          loadedBytes: 10,
+          totalBytes: 10,
+        }],
+      }),
+      set: async () => {},
+    });
+    const handler = createBackgroundTaskHandler({ ...dependencies, history });
+
+    await expect(handler.handleMessage({ type: POPUP_GET_TASKS_MESSAGE })).resolves.toEqual([{
+      tabId: POPUP_HISTORY_TAB_ID,
+      snapshot: {
+        tasks: [
+          snapshot.tasks[0],
+          {
+            id: 'done',
+            filename: 'done.mp4',
+            state: 'completed',
+            loadedBytes: 10,
+            totalBytes: 10,
+          },
+        ],
+      },
+    }]);
+  });
+
   it('只查询 Telegram 标签页并隔离无响应标签页', async () => {
     const dependencies = createDependencies();
     const handler = createBackgroundTaskHandler(dependencies);
@@ -56,11 +91,35 @@ describe('后台视频任务聚合', () => {
     const dependencies = createDependencies();
     const handler = createBackgroundTaskHandler(dependencies);
 
-    await handler.handleMessage({ type: POPUP_CLEAR_FAILED_MESSAGE });
+    await handler.handleMessage({ type: POPUP_CLEAR_FINISHED_MESSAGE });
 
     expect(dependencies.tabsSendMessage).toHaveBeenCalledTimes(2);
     expect(dependencies.tabsSendMessage).toHaveBeenCalledWith(11, {
-      type: 'tg-download:tasks:clear-failed',
+      type: 'tg-download:tasks:clear-finished',
+    });
+  });
+
+  it('清理命令保留下载中的历史任务并向 Popup 广播结果', async () => {
+    const dependencies = createDependencies();
+    const history = createTaskHistoryStore({
+      get: async () => ({
+        tasks: [
+          { id: 'failed', filename: 'failed.mp4', state: 'failed', loadedBytes: 0, errorCode: 'network' },
+          { id: 'active', filename: 'active.mp4', state: 'downloading', loadedBytes: 3 },
+        ],
+      }),
+      set: async () => {},
+    });
+    const handler = createBackgroundTaskHandler({ ...dependencies, history });
+
+    await handler.handleMessage({ type: POPUP_CLEAR_FINISHED_MESSAGE });
+
+    expect(dependencies.runtimeSendMessage).toHaveBeenCalledWith({
+      type: POPUP_TAB_SNAPSHOT_MESSAGE,
+      tabId: POPUP_HISTORY_TAB_ID,
+      snapshot: {
+        tasks: [{ id: 'active', filename: 'active.mp4', state: 'downloading', loadedBytes: 3 }],
+      },
     });
   });
 
@@ -89,6 +148,26 @@ describe('后台视频任务聚合', () => {
       snapshot,
     });
     expect(dependencies.runtimeSendMessage).toHaveBeenCalledTimes(1);
+  });
+
+  it('接收内容脚本快照后更新历史并向 Popup 广播统一快照', async () => {
+    const dependencies = createDependencies();
+    const history = createTaskHistoryStore({
+      get: async () => ({ tasks: [] }),
+      set: async () => {},
+    });
+    const handler = createBackgroundTaskHandler({ ...dependencies, history });
+
+    await handler.handleMessage(
+      { type: TASK_MESSAGE_SNAPSHOT, snapshot },
+      { tab: { id: 11 } },
+    );
+
+    expect(dependencies.runtimeSendMessage).toHaveBeenCalledWith({
+      type: POPUP_TAB_SNAPSHOT_MESSAGE,
+      tabId: POPUP_HISTORY_TAB_ID,
+      snapshot,
+    });
   });
 
   it('标签页移除时通知 Popup 删除对应投影', async () => {

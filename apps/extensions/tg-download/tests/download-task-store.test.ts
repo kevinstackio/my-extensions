@@ -35,29 +35,52 @@ describe('视频下载任务存储', () => {
     });
   });
 
-  it('成功任务立即移除，失败任务保留到清理', () => {
+  it('清理完成和失败任务时保留下载中的任务', () => {
     const store = createVideoTaskStore({
       createId: vi.fn()
         .mockReturnValueOnce('task-success')
-        .mockReturnValueOnce('task-failed'),
+        .mockReturnValueOnce('task-failed')
+        .mockReturnValueOnce('task-active'),
     });
 
     const successId = store.start('success.mp4');
     const failedId = store.start('failed.mp4');
+    const activeId = store.start('active.mp4');
     store.complete(successId);
     store.fail(failedId, 'network');
 
-    expect(store.snapshot().tasks).toEqual([{
-      id: 'task-failed',
-      filename: 'failed.mp4',
-      state: 'failed',
-      loadedBytes: 0,
-      errorCode: 'network',
-    }]);
+    expect(store.snapshot().tasks).toEqual([
+      {
+        id: 'task-success',
+        filename: 'success.mp4',
+        state: 'completed',
+        loadedBytes: 0,
+      },
+      {
+        id: 'task-failed',
+        filename: 'failed.mp4',
+        state: 'failed',
+        loadedBytes: 0,
+        errorCode: 'network',
+      },
+      {
+        id: activeId,
+        filename: 'active.mp4',
+        state: 'downloading',
+        loadedBytes: 0,
+      },
+    ]);
 
-    store.clearFailed();
+    store.clearFinished();
 
-    expect(store.snapshot()).toEqual({ tasks: [] });
+    expect(store.snapshot()).toEqual({
+      tasks: [{
+        id: activeId,
+        filename: 'active.mp4',
+        state: 'downloading',
+        loadedBytes: 0,
+      }],
+    });
   });
 
   it('未知总大小保持不确定进度并拒绝倒退进度', () => {

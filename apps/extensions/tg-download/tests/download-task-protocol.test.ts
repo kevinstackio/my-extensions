@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  TASK_CLEAR_FAILED_EVENT,
+  TASK_CLEAR_FINISHED_EVENT,
   TASK_REQUEST_SNAPSHOT_EVENT,
   TASK_SNAPSHOT_EVENT,
   isTaskSnapshot,
@@ -24,7 +24,7 @@ describe('视频任务页面协议', () => {
   });
 
   it.each([
-    ['非法状态', { ...validSnapshot, tasks: [{ ...validSnapshot.tasks[0], state: 'completed' }] }],
+    ['非法状态', { ...validSnapshot, tasks: [{ ...validSnapshot.tasks[0], state: 'cancelled' }] }],
     ['空任务 ID', { ...validSnapshot, tasks: [{ ...validSnapshot.tasks[0], id: '' }] }],
     ['超长文件名', { ...validSnapshot, tasks: [{ ...validSnapshot.tasks[0], filename: 'x'.repeat(513) }] }],
     ['负数字节数', { ...validSnapshot, tasks: [{ ...validSnapshot.tasks[0], loadedBytes: -1 }] }],
@@ -41,7 +41,7 @@ describe('视频任务页面协议', () => {
     expect(new Set([
       TASK_SNAPSHOT_EVENT,
       TASK_REQUEST_SNAPSHOT_EVENT,
-      TASK_CLEAR_FAILED_EVENT,
+      TASK_CLEAR_FINISHED_EVENT,
     ]).size).toBe(3);
   });
 });

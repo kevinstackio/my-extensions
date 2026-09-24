@@ -35,6 +35,7 @@ describe('WXT 扩展清单', () => {
     });
     expect(action.default_icon).toEqual(icons);
     expect(permissions).toContain('downloads');
+    expect(permissions).toContain('storage');
     expect(accessible).toEqual([{
       matches: ['https://web.telegram.org/*'],
       resources: ['/icon/*.svg'],
