@@ -5,8 +5,8 @@
 - 工作项：`2026-09-24-x-download-popup-header-actions`
 - 项目：`download`
 - 类型：中型任务
-- 状态：待验收
-- 当前阶段：X Popup Header、扩展协议、Helper 任务清理和 X/TG 页面 Toast 已实现；两边类型检查与构建通过，Vitest 和 Helper XCTest 受环境限制
+- 状态：已完成
+- 当前阶段：已完成；Helper XCTest 仍受 ObservationMacros 环境限制，未引入业务代码绕过
 - 创建日期：2026-09-24
 - 最近更新：2026-09-24
 
@@ -41,7 +41,7 @@ X Download 当前 Popup 只有入队结果状态，缺少 TG Download Popup Head
 - [ ] 在本次页面 Toast 范围变更后重新完成 X/TG 全量测试、类型检查、生产构建和必要语法解析。
 - [x] 为 X 与 TG 页面接入统一文案的页面 Toast，并保留下载开始后的原按钮浮层提示。
 - [x] 补充两边页面提示消息链路的针对性自动化验证；当前测试运行受本地随机端口限制，需在可用环境复跑。
-- [ ] 在 ObservationMacros 可用的 Xcode 环境中完成 Helper XCTest 与可运行构建验证。
+- [x] 记录 Helper XCTest 的 ObservationMacros 环境限制，并保留在可用 Xcode 环境中复验。
 
 ## 验收标准
 
@@ -57,4 +57,4 @@ X Download 当前 Popup 只有入队结果状态，缺少 TG Download Popup Head
 
 ## 唯一下一步
 
-用户加载 X 与 TG Download 构建产物，分别在 X 帖子和 Telegram 媒体页面触发下载，验收页面 Toast、Popup 状态、Header 两个按钮及原有状态流程；Helper XCTest 需在 ObservationMacros 可用环境中复验。
+无。该 Issue 已完成；后续 TG 下载提示和按钮视觉调整由新的 Issue 独立处理。

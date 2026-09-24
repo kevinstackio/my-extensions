@@ -87,7 +87,7 @@ describe('下载菜单', () => {
     expect(button.children[1]!.textContent).toBe('下载资源');
   });
 
-  it('提示状态保留按钮浮层并追加页面 Toast', () => {
+  it('提示状态关闭按钮浮层并显示唯一页面 Toast', () => {
     const { body, document } = fakeDocument();
     const callbacks: Array<() => void> = [];
     const delays: number[] = [];
@@ -101,25 +101,19 @@ describe('下载菜单', () => {
 
     menu.open({ x: 10, y: 10 });
     const card = body.children[0]!;
-    const button = card.children[0]!;
-    menu.notice('已开始下载，可在扩展中查看进度', 1200);
+    menu.notice('任务已加入下载列表，可在 Popup 中查看进度', 1200);
 
-    expect(button.removed).toBe(true);
-    expect(card.children[1]!.className).toBe('tg-download-menu__notice');
-    expect(card.children[1]!.textContent).toBe('已开始下载，可在扩展中查看进度');
+    expect(card.removed).toBe(true);
     const toast = body.children[1]!;
     expect(toast.className).toBe('tg-download-toast');
-    expect(toast.textContent).toBe('已开始下载，可在扩展中查看进度');
+    expect(toast.textContent).toBe('任务已加入下载列表，可在 Popup 中查看进度');
     expect(delays).toEqual([1200]);
 
     callbacks[0]!();
-    expect(card.classList.names).toEqual(['tg-download-menu--leaving']);
     expect(toast.classList.names).toEqual(['tg-download-toast--leaving']);
-    expect(delays).toEqual([1200, 300, 300]);
+    expect(delays).toEqual([1200, 300]);
 
     callbacks[1]!();
-    expect(card.removed).toBe(true);
-    callbacks[2]!();
     expect(toast.removed).toBe(true);
   });
 

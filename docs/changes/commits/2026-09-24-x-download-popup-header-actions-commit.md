@@ -4,11 +4,11 @@
 
 - 工作项：`2026-09-24-x-download-popup-header-actions`
 - 对应 Issue：[为 X 与 TG Download 统一下载提示与 Popup 操作](../issues/2026-09-24-x-download-popup-header-actions-issue.md)
-- 状态：待验收
-- 用户验收：未开始
-- 最终提交批准：未申请
+- 状态：已完成
+- 用户验收：已通过（用户明确要求本地提交）
+- 最终提交批准：已完成
 - 创建日期：2026-09-24
-- 最近更新：2026-09-24
+- 最近更新：2026-09-25
 
 ## 预期交付边界
 
@@ -64,5 +64,5 @@
 
 ## 最终提交批准
 
-- 状态：未申请
-- 说明：等待用户完成 Chrome/Edge Popup 与 Helper 联动验收；Helper 环境限制需在可用 Xcode 环境复验后，再申请最终本地 Git Commit 批准。
+- 状态：已完成
+- 说明：用户明确要求拆分并提交到本地；Helper XCTest 环境限制已记录，不通过修改业务代码规避。

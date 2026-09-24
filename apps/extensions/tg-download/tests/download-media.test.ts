@@ -238,7 +238,7 @@ describe('媒体保存', () => {
     );
 
     expect(menu.notice).toHaveBeenCalledWith(
-      '已开始下载，可在扩展中查看进度',
+      '任务已加入下载列表，可在 Popup 中查看进度',
       1200,
     );
     expect(menu.close).not.toHaveBeenCalled();

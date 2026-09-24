@@ -114,7 +114,7 @@ export async function saveMedia(
     if (isVideoTask && videoLifecycle) {
       taskId = videoLifecycle.start(handle.name || suggestedName);
       // 确认路径后视频任务在内存中独立运行，页面只提示查看入口，不主动打断用户弹窗。
-      menu.notice('已开始下载，可在扩展中查看进度', 1200);
+      menu.notice('任务已加入下载列表，可在 Popup 中查看进度', 1200);
     }
     stage = 'create-writable';
     writable = await handle.createWritable();

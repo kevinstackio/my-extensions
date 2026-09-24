@@ -79,8 +79,7 @@ docs/
 
 ## 当前 Issue
 
-- [为 X Download Popup Header 增加下载操作](./issues/2026-09-24-x-download-popup-header-actions-issue.md)
-  - [Commit 记录](./commits/2026-09-24-x-download-popup-header-actions-commit.md)
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -91,6 +90,12 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [统一 TG Download 下载提示与操作样式](./issues/2026-09-25-tg-download-toast-button-style-issue.md)
+  - [Commit 记录](./commits/2026-09-25-tg-download-toast-button-style-commit.md)
+
+- [为 X 与 TG Download 统一下载提示与 Popup 操作](./issues/2026-09-24-x-download-popup-header-actions-issue.md)
+  - [Commit 记录](./commits/2026-09-24-x-download-popup-header-actions-commit.md)
 
 - [统一 WXT HTML 入口扫描保护](./issues/2026-09-24-repo-wxt-entry-scan-safety-issue.md)
   - [Commit 记录](./commits/2026-09-24-repo-wxt-entry-scan-safety-commit.md)

@@ -111,7 +111,7 @@ export function createDownloadMenu(
     const position = menuPosition(
       pointer,
       {
-        width: card.offsetWidth || 184,
+        width: card.offsetWidth || 132,
         height: card.offsetHeight || 40,
       },
       {
@@ -136,14 +136,8 @@ export function createDownloadMenu(
     notice: (text, duration) => {
       if (!card) return;
 
-      // 下载任务已经脱离页面菜单继续执行，保留原浮层提示，同时追加页面层 Toast。
-      button?.remove();
-      button = undefined;
-      label = undefined;
-      const menuNotice = document.createElement('div');
-      menuNotice.className = 'tg-download-menu__notice';
-      menuNotice.textContent = text;
-      card.append(menuNotice);
+      // 下载任务已经脱离页面菜单继续执行，关闭可点击浮层并只保留页面层 Toast。
+      close();
       clearToast();
       const pageToast = document.createElement('div');
       pageToast.className = 'tg-download-toast';
