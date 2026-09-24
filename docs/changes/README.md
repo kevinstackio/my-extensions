@@ -41,8 +41,8 @@ docs/
 - Sub-issue 只在 Issue 内部定义实施阶段，不创建独立文件，也不单独提交。
 - 简单任务直接在 Issue 中维护 3–6 个 Todo，不强制创建 Spec 或 Plan。
 - 当前 Issue 的最终交付 Commit 成功前，不开启下一个 Issue；临时想法先写入收件箱。
-- 自动化验证、用户验收和 Git Commit 批准是三个独立步骤。
-- 用户验收通过后只能进入提交准备；展示最终文件、diff 和 Commit message 并再次取得批准后，才能执行 `git commit`。
+- 自动化验证不等于用户验收；用户可单独确认验收，也可在看到阶段交付材料后用明确的本地提交请求同时表示验收通过和提交批准。
+- 本地提交必须同步把 Issue、Commit 记录和工作台更新为已完成；不得在 Git Commit 成功后仍保留待验收的活动 Issue。
 
 ## 状态
 
@@ -59,8 +59,8 @@ docs/
 1. 从想法或用户需求创建一份 Issue 和一份待填写 Commit 记录。
 2. 在 Issue 中写清范围、排除项、3–6 个 Todo 和验收标准。
 3. 用户批准后实施并完成必要验证。
-4. 用户验收通过后完善 Commit 记录。
-5. 展示最终 diff 和 Commit message，等待用户批准 Git Commit。
+4. 用户单独确认验收时，完善 Commit 记录并进入待提交。
+5. 展示最终 diff 和 Commit message；用户明确要求本地提交时，该请求同时完成验收和 Git Commit 批准。
 6. 最终审批请求同时列出将两份文档和工作台切换为完成状态的机械性更新；批准后执行这些更新并提交，提交失败则恢复原状态。
 
 ### 复杂改造
@@ -69,7 +69,7 @@ docs/
 2. 需要设计决策时编写 Spec；需要多步骤执行时编写 Plan。
 3. 用户分别批准设计、Plan 和可选的规划 Commit。
 4. 串行实施、验证并停在用户验收。
-5. 验收通过后完成 Commit 记录，再单独申请最终 Git Commit 批准。
+5. 验收通过后完成 Commit 记录；用户也可通过明确要求本地提交，同时表示验收通过和提交批准。
 
 ## 想法收件箱
 
@@ -79,8 +79,7 @@ docs/
 
 ## 当前 Issue
 
-- [制作本地 Issue 与 Commit 工作流 Skill](./issues/2026-09-24-repo-superpowers-internal-skill-issue.md)
-  - [Commit 记录](./commits/2026-09-24-repo-superpowers-internal-skill-commit.md)
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -91,6 +90,9 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [制作本地 Issue 与 Commit 工作流 Skill](./issues/2026-09-24-repo-superpowers-internal-skill-issue.md)
+  - [Commit 记录](./commits/2026-09-24-repo-superpowers-internal-skill-commit.md)
 
 - [建立 TG Download 视频下载任务 Popup](./issues/2026-09-23-tg-download-video-task-popup-issue.md)
   - [Commit 记录](./commits/2026-09-23-tg-download-video-task-popup-commit.md)

@@ -1,6 +1,6 @@
 ---
 name: local-issue-commit-workflow
-description: Use when a repository manages changes through local Issue and Commit records, requires one active work item, or separates implementation, user acceptance, and Git commit approval.
+description: Use when a repository manages changes through local Issue and Commit records, requires one active work item, or ties user acceptance to an explicit local Git commit request.
 ---
 
 # Local Issue and Commit Workflow
@@ -37,18 +37,18 @@ docs/changes/commits/<前缀>-commit.md
 - Commit 记录先保持待填写，只记录预期边界；实施后再补充实际交付和验证结果。
 - Todo 只有在实际完成并验证后才能勾选。
 - 阶段实现和自动化验证完成后，停在用户验收，不得把测试通过表述为用户已验收。
-- 用户明确验收通过后，才把记录更新为“待提交”。
+- 用户单独明确验收通过后，把记录更新为“待提交”。
 
 ## Git Commit 硬门槛
 
-用户验收和 Git Commit 批准是两次独立授权。执行 `git commit` 前必须展示：
+自动化验证不能代替用户验收。用户在看到阶段交付材料后明确要求本地 Git Commit 时，该请求同时表示验收通过和提交批准。执行 `git commit` 前必须展示或已经展示：
 
 - 待提交文件和 diff 摘要；
 - 验证结果及未验证事项；
 - 完整 Commit message；
 - 将随提交发生的 Issue、Commit 记录和工作台终态更新。
 
-只有用户再次明确批准后，才能执行这些机械性终态更新并提交。若内容或 diff 随后发生其他变化，原批准失效；若提交失败，恢复为真实的“待提交”和“未批准”状态。
+明确的本地提交请求覆盖已展示范围内的机械性终态更新和 `git commit`。提交成功时必须同步关闭 Issue；若内容或 diff 随后发生其他变化，原批准失效；若提交失败，恢复为真实的“待提交”和“未批准”状态。
 
 ## 冲突处理
 
