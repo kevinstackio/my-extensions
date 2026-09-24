@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [保留 TG Download 下载历史列表](./issues/2026-09-25-tg-download-persistent-history-issue.md)
+  - [Commit 记录](./commits/2026-09-25-tg-download-persistent-history-commit.md)
+
 - [统一 TG Download 下载提示与操作样式](./issues/2026-09-25-tg-download-toast-button-style-issue.md)
   - [Commit 记录](./commits/2026-09-25-tg-download-toast-button-style-commit.md)
 
