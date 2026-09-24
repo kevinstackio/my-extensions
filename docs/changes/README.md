@@ -79,7 +79,8 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+- [制作本地 Issue 与 Commit 工作流 Skill](./issues/2026-09-24-repo-superpowers-internal-skill-issue.md)
+  - [Commit 记录](./commits/2026-09-24-repo-superpowers-internal-skill-commit.md)
 
 ## Issue 队列
 

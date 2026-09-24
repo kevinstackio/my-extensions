@@ -1,0 +1,7 @@
+interface:
+  display_name: "Local Issue and Commit Workflow"
+  short_description: "Manage local work records and approval gates"
+  default_prompt: "Use $local-issue-commit-workflow to manage this repository change through its local Issue, acceptance, and Commit approval workflow."
+
+policy:
+  allow_implicit_invocation: true
