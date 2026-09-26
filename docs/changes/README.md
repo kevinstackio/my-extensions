@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [建立 TG Download GitHub 草稿发布流程](./issues/2026-09-26-tg-download-github-draft-release-issue.md)
+  - [Commit 记录](./commits/2026-09-26-tg-download-github-draft-release-commit.md)
+
 - [保留 TG Download 下载历史列表](./issues/2026-09-25-tg-download-persistent-history-issue.md)
   - [Commit 记录](./commits/2026-09-25-tg-download-persistent-history-commit.md)
 
