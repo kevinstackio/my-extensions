@@ -94,6 +94,9 @@ docs/
 - [保留 TG Download 下载历史列表](./issues/2026-09-25-tg-download-persistent-history-issue.md)
   - [Commit 记录](./commits/2026-09-25-tg-download-persistent-history-commit.md)
 
+- [收敛 TG Download 与根目录命令职责](./issues/2026-09-26-tg-download-command-scope-issue.md)
+  - [Commit 记录](./commits/2026-09-26-tg-download-command-scope-commit.md)
+
 - [统一 TG Download 下载提示与操作样式](./issues/2026-09-25-tg-download-toast-button-style-issue.md)
   - [Commit 记录](./commits/2026-09-25-tg-download-toast-button-style-commit.md)
 

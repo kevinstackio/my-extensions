@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "wxt build",
     "dev": "wxt",
-    "postinstall": "wxt prepare",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "check": "tsc --noEmit && vitest run",
+    "build": "wxt build",
+    "package": "wxt zip",
+    "postinstall": "wxt prepare"
   },
   "devDependencies": {
     "@my-extensions/stable-extension-dev": "workspace:1.0.0",
