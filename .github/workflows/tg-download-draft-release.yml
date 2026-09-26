@@ -1,0 +1,194 @@
+name: TG Download Draft Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/extensions/tg-download/package.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tg-download-draft-release
+  cancel-in-progress: false
+
+jobs:
+  draft-release:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 12.4.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5.0.0
+        with:
+          node-version: 24.16.0
+          cache: pnpm
+
+      - name: Decide whether to release
+        id: version
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          package_file='apps/extensions/tg-download/package.json'
+          current_version="$(node -p "JSON.parse(require('fs').readFileSync('$package_file', 'utf8')).version")"
+
+          node - "$current_version" <<'NODE'
+          const version = process.argv[2];
+          if (!/^\d+\.\d+\.\d+$/.test(version)) {
+            console.error(`无效的 TG Download 版本号：${version}`);
+            process.exit(1);
+          }
+          NODE
+
+          should_release=false
+          reason='版本没有升级'
+
+          if [[ "$EVENT_NAME" == 'workflow_dispatch' ]]; then
+            should_release=true
+            reason='手动触发首包或重试发布'
+          elif [[ "$BEFORE_SHA" != '0000000000000000000000000000000000000000' ]]; then
+            previous_version="$(git show "$BEFORE_SHA:$package_file" | node -e "let input=''; process.stdin.on('data', chunk => input += chunk); process.stdin.on('end', () => process.stdout.write(JSON.parse(input).version));")"
+
+            if node - "$previous_version" "$current_version" <<'NODE'
+          const [previous, current] = process.argv.slice(2);
+          const parse = value => value.split('.').map(Number);
+          const compare = (left, right) => {
+            const a = parse(left);
+            const b = parse(right);
+            for (let index = 0; index < 3; index += 1) {
+              if (a[index] !== b[index]) return a[index] - b[index];
+            }
+            return 0;
+          };
+          const result = compare(current, previous);
+          process.exit(result > 0 ? 0 : result < 0 ? 2 : 1);
+          NODE
+            then
+              should_release=true
+              reason="版本从 $previous_version 升级到 $current_version"
+            else
+              comparison_status=$?
+              if [[ "$comparison_status" -eq 2 ]]; then
+                echo "TG Download 版本从 $previous_version 降到了 $current_version。" >&2
+                exit 1
+              fi
+            fi
+          fi
+
+          latest_version="$(git tag --list 'tg-download-v*' | sed 's/^tg-download-v//' | node -e "let input=''; process.stdin.on('data', chunk => input += chunk); process.stdin.on('end', () => { const compare = (left, right) => { const a = left.split('.').map(Number); const b = right.split('.').map(Number); for (let index = 0; index < 3; index += 1) { if (a[index] !== b[index]) return a[index] - b[index]; } return 0; }; const versions = input.trim().split(/\\s+/).filter(value => /^\\d+\\.\\d+\\.\\d+$/.test(value)).sort(compare); process.stdout.write(versions.at(-1) ?? ''); });")"
+          if [[ -n "$latest_version" ]]; then
+            node - "$latest_version" "$current_version" <<'NODE'
+          const [latest, current] = process.argv.slice(2);
+          const parse = value => value.split('.').map(Number);
+          const compare = (left, right) => {
+            const a = parse(left);
+            const b = parse(right);
+            for (let index = 0; index < 3; index += 1) {
+              if (a[index] !== b[index]) return a[index] - b[index];
+            }
+            return 0;
+          };
+          if (compare(current, latest) < 0) {
+            throw new Error(`当前版本 ${current} 低于已有发布版本 ${latest}`);
+          }
+          NODE
+          fi
+
+          tag="tg-download-v$current_version"
+          {
+            echo "current_version=$current_version"
+            echo "tag=$tag"
+            echo "should_release=$should_release"
+            echo "reason=$reason"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Skip unchanged version
+        if: steps.version.outputs.should_release != 'true'
+        run: echo "跳过 TG Download 发布：${{ steps.version.outputs.reason }}"
+
+      - name: Install dependencies
+        if: steps.version.outputs.should_release == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Check TG Download
+        if: steps.version.outputs.should_release == 'true'
+        run: pnpm --filter @my-extensions/tg-download check
+
+      - name: Package TG Download
+        if: steps.version.outputs.should_release == 'true'
+        run: pnpm --filter @my-extensions/tg-download package
+
+      - name: Verify package
+        if: steps.version.outputs.should_release == 'true'
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.current_version }}
+        run: |
+          set -euo pipefail
+
+          zip_file="apps/extensions/tg-download/dist/tg-download-${VERSION}-chromium.zip"
+          test -f "$zip_file"
+          unzip -p "$zip_file" manifest.json > "$RUNNER_TEMP/tg-download-manifest.json"
+
+          node - "$RUNNER_TEMP/tg-download-manifest.json" "$VERSION" <<'NODE'
+          const fs = require('fs');
+          const [manifestPath, expectedVersion] = process.argv.slice(1);
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+          if (manifest.version !== expectedVersion) {
+            throw new Error(`ZIP Manifest 版本 ${manifest.version} 与项目版本 ${expectedVersion} 不一致`);
+          }
+          NODE
+
+      - name: Create tag and draft release
+        if: steps.version.outputs.should_release == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.current_version }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          zip_file="apps/extensions/tg-download/dist/tg-download-${VERSION}-chromium.zip"
+          tag_sha="$(git ls-remote origin "refs/tags/${TAG}^{}" | awk '{print $1}')"
+          if [[ -z "$tag_sha" ]]; then
+            tag_sha="$(git ls-remote origin "refs/tags/$TAG" | awk '{print $1}')"
+          fi
+
+          if [[ -n "$tag_sha" ]]; then
+            if [[ "$tag_sha" != "$TARGET_SHA" ]]; then
+              echo "Tag $TAG 已存在，但指向 $tag_sha，不是本次构建提交 $TARGET_SHA。" >&2
+              exit 1
+            fi
+
+            if gh release view "$TAG" --json isDraft --jq '.isDraft' >/tmp/tg-download-release-draft.txt 2>/dev/null; then
+              is_draft="$(cat /tmp/tg-download-release-draft.txt)"
+              if [[ "$is_draft" != 'true' ]]; then
+                echo "Release $TAG 已经公开发布，拒绝覆盖。" >&2
+                exit 1
+              fi
+              gh release upload "$TAG" "$zip_file" --clobber
+              gh release edit "$TAG" --title "TG Download v${VERSION}" --notes '适用于 Chrome 和 Edge 的 TG Download 扩展包。'
+            else
+              gh release create "$TAG" "$zip_file" --draft --verify-tag --title "TG Download v${VERSION}" --notes '适用于 Chrome 和 Edge 的 TG Download 扩展包。'
+            fi
+          else
+            gh release create "$TAG" "$zip_file" --draft --target "$TARGET_SHA" --title "TG Download v${VERSION}" --notes '适用于 Chrome 和 Edge 的 TG Download 扩展包。'
+          fi

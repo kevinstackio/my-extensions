@@ -41,6 +41,9 @@ export default defineConfig({
       entries: ['src/entrypoints/popup/index.html'],
     },
   }),
+  zip: {
+    artifactTemplate: 'tg-download-{{packageVersion}}-chromium.zip',
+  },
   hooks: {
     ...createStableDevelopmentHooks(),
     'prepare:publicPaths': (_, paths) => {
@@ -52,7 +55,6 @@ export default defineConfig({
   },
   manifest: {
     name: 'TG Download',
-    version: '1.0.0',
     description: '在 Telegram Web 中右键保存图片和视频。',
     icons: {
       16: '/icon/tg-download-16.png',
