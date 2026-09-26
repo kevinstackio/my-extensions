@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [修复 TG Download 草稿发布工作流运行失败](./issues/2026-09-27-tg-download-draft-release-fix-issue.md)
+  - [Commit 记录](./commits/2026-09-27-tg-download-draft-release-fix-commit.md)
+
 - [建立 TG Download GitHub 草稿发布流程](./issues/2026-09-26-tg-download-github-draft-release-issue.md)
   - [Commit 记录](./commits/2026-09-26-tg-download-github-draft-release-commit.md)
 

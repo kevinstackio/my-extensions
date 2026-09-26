@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4.1.0
+        uses: pnpm/action-setup@v6.1.0
         with:
           version: 12.4.2
 
@@ -34,7 +34,6 @@ jobs:
         uses: actions/setup-node@v5.0.0
         with:
           node-version: 24.16.0
-          cache: pnpm
 
       - name: Decide whether to release
         id: version
@@ -148,7 +147,7 @@ jobs:
 
           node - "$RUNNER_TEMP/tg-download-manifest.json" "$VERSION" <<'NODE'
           const fs = require('fs');
-          const [manifestPath, expectedVersion] = process.argv.slice(1);
+          const [manifestPath, expectedVersion] = process.argv.slice(2);
           const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
           if (manifest.version !== expectedVersion) {
             throw new Error(`ZIP Manifest 版本 ${manifest.version} 与项目版本 ${expectedVersion} 不一致`);
