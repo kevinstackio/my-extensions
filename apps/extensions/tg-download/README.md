@@ -1,41 +1,28 @@
 # TG Download
 
-用于在 Telegram Web 中通过右键菜单保存图片和视频的 Chromium 浏览器扩展。
+## 1. 介绍
 
-## 项目结构
+面向 Telegram Web 的 Chrome 与 Edge 扩展，通过右键菜单保存图片和视频，并在扩展中查看下载进度与历史记录。
+
+## 2. 项目框架
+
+- 使用 WXT 和 TypeScript 构建 Chromium 扩展。
+- Content Script 负责识别 Telegram Web 中的媒体并提供下载操作。
+- Popup 与后台任务共同展示下载进度、历史记录和终态任务。
+- 使用 `browser.storage.local` 保存任务历史，使用浏览器 Downloads API 保存文件。
+- 根目录开发、构建和检查命令：`pnpm tg:dev`、`pnpm tg:build`、`pnpm --filter @my-extensions/tg-download check`。
+
+## 3. 本目录项目结构
 
 ```text
 tg-download/
 ├─ src/
-│  ├─ assets/
-│  │  ├─ icons/          # 下载按钮使用的 SVG 图标
-│  │  └─ logo/           # Manifest 与工具栏使用的品牌图标
-│  ├─ components/
-│  │  └─ download-menu/  # 下载菜单组件
-│  ├─ entrypoints/       # WXT 扩展入口
-│  ├─ features/
-│  │  └─ download/       # 媒体下载业务逻辑
-│  └─ types/             # 项目类型声明
-└─ tests/                # 自动化测试
+│  ├─ assets/                    # Logo 与下载菜单图标
+│  ├─ components/                # 下载菜单与 Popup 组件
+│  ├─ entrypoints/               # WXT Content Script、Popup 和后台入口
+│  ├─ features/                  # 下载、任务和主题业务逻辑
+│  └─ types/                     # 项目类型声明
+├─ tests/                        # 自动化测试
+├─ package.json                  # 项目命令与依赖
+└─ wxt.config.ts                 # WXT 配置
 ```
-
-## 开发和验证
-
-在仓库根目录执行：
-
-```bash
-pnpm tg:dev
-pnpm tg:build
-```
-
-`pnpm tg:dev` 保持 WXT 的原有开发命令不变。WXT 的临时开发产物位于 `dist/chrome-mv3-dev/`，公共稳定发布工具会在构建成功后自动更新 `dist/chrome-mv3-dev-stable/`。浏览器开发时必须加载后者，生产验收才加载 `dist/chrome-mv3/`。
-
-如果开发构建失败，稳定目录会继续保留最近一次成功构建，浏览器无需重新加载损坏的半成品。修复代码后重新构建成功，稳定目录会一次性更新为新的完整版本。
-
-## 浏览器加载
-
-1. 在 Chrome 或 Edge 打开扩展管理页面并启用开发者模式。
-2. 选择“加载已解压的扩展程序”。
-3. 开发验证选择 `apps/extensions/tg-download/dist/chrome-mv3-dev-stable/`。
-4. 生产验证选择 `apps/extensions/tg-download/dist/chrome-mv3/`。
-5. 修改入口或 Manifest 后，确认 WXT 构建成功，再在扩展管理页面重新加载扩展。
