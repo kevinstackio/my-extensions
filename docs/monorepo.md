@@ -56,13 +56,9 @@ pnpm turbo ls
 
 ## 项目命令
 
-根目录不提供含义模糊的 `dev`、`build`、`test` 命令。需要调度整个 workspace 时，必须明确使用带 `:all` 后缀的命令；日常开发优先使用带项目简称的单插件命令。不需要为单独运行的 WXT 项目配置固定端口。
-
-如果使用 `dev:all` 同时运行多个扩展，再为各项目显式配置不同端口；当前版本暂不增加固定端口配置。
+根目录不提供聚合开发、构建或测试命令；日常开发使用带项目简称的单插件命令，按需进入对应项目执行其自身脚本。不需要为单独运行的 WXT 项目配置固定端口。
 
 ```bash
-pnpm dev:all
-pnpm build:all
 pnpm --filter @my-extensions/<项目名> dev
 pnpm --filter @my-extensions/<项目名> build
 pnpm --filter @my-extensions/<项目名> test
@@ -79,8 +75,6 @@ pnpm x:dev
 pnpm x:build
 ```
 
-- `dev:all`：通过 Turbo 同时启动所有提供 `dev` 脚本的 workspace 项目。
-- `build:all`：通过 Turbo 构建所有提供 `build` 脚本的 workspace 项目。
 - `*:dev`：启动对应扩展的 WXT 开发监听。
 - `*:build`：构建对应扩展的生产产物。
 - 测试和类型检查保留在各扩展的 `package.json`，通过 `pnpm --filter` 按需执行。
