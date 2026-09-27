@@ -10,7 +10,6 @@
     "pnpm": "12.4.2"
   },
   "scripts": {
-    "dev:all": "turbo run dev",
     "vitepress:dev": "turbo run dev --filter=@my-extensions/web",
     "tabs:dev": "pnpm --filter @my-extensions/my-tabs dev",
     "tg:dev": "pnpm --filter @my-extensions/tg-download dev",

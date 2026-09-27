@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [删除根目录聚合开发与构建命令](./issues/2026-09-28-repo-remove-aggregate-commands-issue.md)
+  - [Commit 记录](./commits/2026-09-28-repo-remove-aggregate-commands-commit.md)
+
 - [整理仓库 README 项目入口](./issues/2026-09-27-repo-readme-project-navigation-issue.md)
   - [Commit 记录](./commits/2026-09-27-repo-readme-project-navigation-commit.md)
 
