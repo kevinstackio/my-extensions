@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [整理仓库 README 项目入口](./issues/2026-09-27-repo-readme-project-navigation-issue.md)
+  - [Commit 记录](./commits/2026-09-27-repo-readme-project-navigation-commit.md)
+
 - [修复 TG Download 草稿发布工作流运行失败](./issues/2026-09-27-tg-download-draft-release-fix-issue.md)
   - [Commit 记录](./commits/2026-09-27-tg-download-draft-release-fix-commit.md)
 

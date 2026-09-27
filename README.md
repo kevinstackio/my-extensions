@@ -1,40 +1,49 @@
 # My Extensions
 
+## 1. 介绍
+
 将想法与能力延伸为实用工具，汇集浏览器扩展、应用、AI Skills 与开发工具。
 
-## 项目结构
+本仓库使用 monorepo 组织多个相互独立的浏览器扩展、原生配套应用和官网文档。每个可独立开发的目录都有自己的 README，具体说明以对应目录为准。
+
+## 2. 项目框架
+
+本仓库采用 Monorepo 组织方式，在同一个 Git 仓库中维护多个可以独立开发、构建和验证的子项目。
+
+- **Monorepo**：统一维护浏览器扩展、原生配套应用和官网文档，同时保留各子项目自己的源码、依赖、命令和 README。
+- **pnpm Workspace**：管理工作区依赖、项目包名和根目录统一命令；子项目可以单独执行，也可以从仓库根目录调用。
+- **Turborepo**：编排多个子项目的开发、构建和验证任务，并复用任务缓存。
+- **目录职责**：`apps/` 放可运行的应用项目，`packages/` 放可复用开发包，`skills/` 放本地 Skill，`docs/` 放项目管理与技术文档。
+
+## 3. 本目录项目结构
 
 ```text
 my-extensions/
-├─ apps/                   # 应用项目
-│  ├─ extensions/          # Chrome 和 Edge 扩展
-│  │  ├─ my-tabs/          # 我的标签页
-│  │  └─ tg-download/      # Telegram 资源下载插件
-│  ├─ helpers/             # 扩展配套程序
-│  └─ web/                 # 统一官网与文档
-├─ packages/               # 可复用的 npm 包
-├─ skills/                 # 可复用的 AI Skills
-├─ docs/                   # 项目管理与技术文档
-├─ .gitignore              # Git 忽略规则
-├─ AGENTS.md               # 项目协作规范
-├─ LICENSE                 # 开源许可证
-├─ README.md               # 项目说明
-├─ package.json            # 根项目配置与统一命令
-├─ pnpm-workspace.yaml     # pnpm 工作区配置
-└─ turbo.json              # Turborepo 任务配置
+├─ .github/workflows/             # GitHub Actions 工作流
+├─ apps/
+│  ├─ extensions/
+│  │  ├─ my-tabs/                 # My Tabs 浏览器扩展
+│  │  ├─ tg-download/             # TG Download 浏览器扩展
+│  │  └─ x-download/              # X Download 浏览器扩展
+│  ├─ helpers/
+│  │  └─ x-download-helper/       # X Download macOS 配套应用
+│  └─ web/                        # 官网与文档站点
+├─ packages/
+│  └─ stable-extension-dev/       # 稳定开发产物工具
+├─ skills/
+│  └─ local-issue-commit-workflow/ # 本地 Issue 与 Commit 工作流
+├─ docs/                          # 项目文档
+├─ AGENTS.md                      # 仓库协作规范
+├─ LICENSE                        # 开源许可证
+├─ package.json                   # 根目录命令
+├─ pnpm-workspace.yaml            # pnpm 工作区配置
+└─ turbo.json                     # Turborepo 配置
 ```
 
-## Apps
+子项目 README：
 
-### My Tabs
-我的标签页，保存和组织我喜爱的网站。
-
-### TG Download
-在 Telegram Web 中右键保存图片和视频。
-
-## 项目文档
-
-- [本地项目管理工作台](docs/changes/README.md)
-- [Monorepo 使用指南](docs/monorepo.md)
-- [WXT 使用指南](docs/wxt.md)
-- [扩展迁移到 WXT](docs/migrations/extension-to-wxt.md)
+- [My Tabs](apps/extensions/my-tabs/README.md)
+- [TG Download](apps/extensions/tg-download/README.md)
+- [X Download](apps/extensions/x-download/README.md)
+- [X Download Helper](apps/helpers/x-download-helper/README.md)
+- [Web](apps/web/README.md)
