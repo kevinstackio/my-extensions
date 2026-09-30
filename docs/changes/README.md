@@ -79,6 +79,8 @@ docs/
 
 ## 当前 Issue
 
+当前没有活动 Issue。
+
 ## Issue 队列
 
 当前没有排队 Issue。
@@ -88,6 +90,10 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [Oh My 产品命名迁移](./issues/2026-09-30-repo-rename-ohmy-products-issue.md)
+  - [Commit 记录](./commits/2026-09-30-repo-rename-ohmy-products-commit.md)
+  - 自动化验收完成；真实 Chrome/Edge、macOS App 与 iPhone 流程仍需用户实际加载或连接验证
 
 - [收口 Omy Photos 最小 MVP 稳定性](./issues/2026-09-30-omy-photos-mvp-hardening-issue.md)
   - [Commit 记录](./commits/2026-09-30-omy-photos-mvp-hardening-commit.md)

@@ -22,8 +22,8 @@ omyexts/
 ├─ .github/workflows/             # GitHub Actions 工作流
 ├─ apps/
 │  ├─ extensions/
-│  │  ├─ omytabs/                 # OmyTabs 浏览器扩展
-│  │  ├─ omydl/                   # OmyDL 浏览器扩展
+│  │  ├─ ohmy-tabs/               # Oh My Tabs 浏览器扩展
+│  │  ├─ ohmy-dl/                 # Oh My DL 浏览器扩展
 │  │  └─ x-download/              # X Download 浏览器扩展
 │  ├─ helpers/
 │  │  └─ x-download-helper/       # X Download macOS 配套应用
@@ -42,8 +42,8 @@ omyexts/
 
 子项目 README：
 
-- [OmyTabs](apps/extensions/omytabs/README.md)
-- [OmyDL](apps/extensions/omydl/README.md)
+- [Oh My Tabs](apps/extensions/ohmy-tabs/README.md)
+- [Oh My DL](apps/extensions/ohmy-dl/README.md)
 - [X Download](apps/extensions/x-download/README.md)
 - [X Download Helper](apps/helpers/x-download-helper/README.md)
 - [Website](apps/website/README.md)

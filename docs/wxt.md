@@ -2,7 +2,7 @@
 
 WXT 是浏览器扩展的开发和构建框架，负责入口发现、Manifest 生成、开发监听和生产构建。它不是 React 或 Vue 的替代品；扩展可以使用原生 JavaScript、TypeScript、React 或 Vue。
 
-本仓库当前包含 OmyDL 和 OmyTabs 两个 WXT 项目。WXT 只负责扩展入口、Manifest、开发监听和构建流程；是否使用 React、TypeScript 或其他视图层技术由各项目自行决定。
+本仓库当前包含 Oh My DL 和 Oh My Tabs 两个 WXT 项目。WXT 只负责扩展入口、Manifest、开发监听和构建流程；是否使用 React、TypeScript 或其他视图层技术由各项目自行决定。
 
 ## 推荐目录
 
@@ -33,8 +33,8 @@ WXT 是浏览器扩展的开发和构建框架，负责入口发现、Manifest �
 
 项目专属配置必须留在项目目录内，例如：
 
-- OmyDL 的 Telegram 匹配范围和内容脚本资源。
-- OmyTabs 的 `tabGroups` 权限和新标签页入口。
+- Oh My DL 的 Telegram 匹配范围和内容脚本资源。
+- Oh My Tabs 的 `tabGroups` 权限和新标签页入口。
 
 ## Entrypoints
 
@@ -43,7 +43,7 @@ WXT 根据 `src/entrypoints` 中的文件发现扩展入口。常见入口包括
 - `background.ts`：后台 Service Worker。
 - `*.content.ts`：注入网页的内容脚本。
 - `popup/`、`options/`、`sidepanel/`：扩展页面。
-- `newtab/`：覆盖浏览器新标签页的页面，适用于 OmyTabs。
+- `newtab/`：覆盖浏览器新标签页的页面，适用于 Oh My Tabs。
 
 内容脚本必须明确考虑执行世界：
 
@@ -63,7 +63,7 @@ src/assets/
 
 页面入口中的资源应交给 Vite/WXT 处理。Manifest 和运行时需要固定地址的资源，可以在构建配置中映射到扩展输出目录。
 
-OmyDL 不保留 `public` 源码目录，而是在 `wxt.config.ts` 中使用：
+Oh My DL 不保留 `public` 源码目录，而是在 `wxt.config.ts` 中使用：
 
 - `prepare:publicPaths`：为 `browser.runtime.getURL()` 补充类型安全的输出路径。
 - `build:publicAssets`：将 `src/assets` 中的文件复制到构建产物的 `icon` 目录。
@@ -78,34 +78,34 @@ OmyDL 不保留 `public` 源码目录，而是在 `wxt.config.ts` 中使用：
 扩展开发模式：
 
 ```bash
-pnpm omydl:dev
+pnpm ohmy-dl:dev
 ```
 
-OmyTabs 使用：
+Oh My Tabs 使用：
 
 ```bash
-pnpm omytabs:dev
+pnpm ohmy-tabs:dev
 ```
 
 WXT 会监听源码变化并重新构建扩展。扩展重新加载后，已打开且匹配内容脚本的网页可能同步刷新，以便重新注入最新脚本；这是开发流程的一部分。
 
-OmyDL 生产构建：
+Oh My DL 生产构建：
 
 ```bash
-pnpm omydl:build
+pnpm ohmy-dl:build
 ```
 
-OmyTabs 生产构建：
+Oh My Tabs 生产构建：
 
 ```bash
-pnpm omytabs:build
+pnpm ohmy-tabs:build
 ```
 
 生产构建产物分别位于：
 
 ```text
-apps/extensions/omydl/dist/chrome-mv3/
-apps/extensions/omytabs/dist/chrome-mv3/
+apps/extensions/ohmy-dl/dist/chrome-mv3/
+apps/extensions/ohmy-tabs/dist/chrome-mv3/
 ```
 
 日常开发预览不需要每次手动运行生产构建。保持 `dev` 命令运行即可；每次开发构建完成后，接入扩展会自动输出包体积预警。准备发布、手动验证生产产物或执行严格体积校验时再运行 `build` 和 `check:bundle-size`。
@@ -131,8 +131,8 @@ WXT 的开发构建会重建临时输出目录，因此浏览器不得直接加�
 React 适合 popup、options、新标签页等具有较多交互状态的扩展页面，但不是 WXT 的必选项。
 
 - 简单内容脚本优先保持原生 TypeScript，避免增加运行时和构建复杂度。
-- OmyTabs 使用 React、TypeScript、Tailwind CSS v4 和按需引入的 shadcn/ui/Radix 原语；其组件边界、测试和交互约束由子项目 README 与 `AGENTS.md` 维护。
-- OmyDL 仍以原生 TypeScript 和内容脚本为主，不因为同仓库存在 React 项目而引入额外运行时。
+- Oh My Tabs 使用 React、TypeScript、Tailwind CSS v4 和按需引入的 shadcn/ui/Radix 原语；其组件边界、测试和交互约束由子项目 README 与 `AGENTS.md` 维护。
+- Oh My DL 仍以原生 TypeScript 和内容脚本为主，不因为同仓库存在 React 项目而引入额外运行时。
 - React 目录、组件状态和测试规范不作为所有 WXT 项目的强制规范，由实际使用 React 的项目单独约定。
 
 ## 测试建议

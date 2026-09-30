@@ -170,7 +170,7 @@ importers:
         specifier: 2.10.12
         version: 2.10.12
 
-  apps/extensions/omytabs:
+  apps/extensions/ohmy-tabs:
     dependencies:
       class-variance-authority:
         specifier: 0.7.1
@@ -234,7 +234,7 @@ importers:
         specifier: 0.21.4
         version: 0.21.4(rolldown@1.2.8)(typescript@7.0.2)(vite@8.3.0(@types/node@24.13.4)(jiti@2.7.0))
 
-  apps/extensions/omydl:
+  apps/extensions/ohmy-dl:
     devDependencies:
       '@omyexts/stable-extension-dev':
         specifier: workspace:1.0.0
