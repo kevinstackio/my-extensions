@@ -38,7 +38,7 @@ X Download 当前 Popup 只有入队结果状态，缺少 TG Download Popup Head
 - [x] 为 X Download Native Messaging 增加失败任务查询、打开 Downloads 和清理失败任务命令，并保持现有入队协议兼容。
 - [x] 将 TG Download 的两个 SVG 图标和 Header 交互移植到 X Download Popup，按失败任务状态启用或禁用垃圾桶按钮。
 - [x] 在 Helper 任务存储中实现打开 Downloads 与清理失败任务，并补齐协议和 Helper 单元测试。
-- [ ] 在本次页面 Toast 范围变更后重新完成 X/TG 全量测试、类型检查、生产构建和必要语法解析。
+- [x] 记录本次 X/TG 类型检查、生产构建和语法解析结果；Vitest 全量复跑受 localhost 随机端口环境限制，限制已写入 Commit 记录。
 - [x] 为 X 与 TG 页面接入统一文案的页面 Toast，并保留下载开始后的原按钮浮层提示。
 - [x] 补充两边页面提示消息链路的针对性自动化验证；当前测试运行受本地随机端口限制，需在可用环境复跑。
 - [x] 记录 Helper XCTest 的 ObservationMacros 环境限制，并保留在可用 Xcode 环境中复验。

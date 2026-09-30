@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [收敛历史 Issue 与 Commit 终态](./issues/2026-09-30-repo-close-historical-issue-states-issue.md)
+  - [Commit 记录](./commits/2026-09-30-repo-close-historical-issue-states-commit.md)
+
 - [统一 OmyExts 仓库与产品命名](./issues/2026-09-30-repo-unify-omy-product-naming-issue.md)
   - [Commit 记录](./commits/2026-09-30-repo-unify-omy-product-naming-commit.md)
 
