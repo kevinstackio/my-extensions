@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [建立 Omy Photos 选择与安全下载](./issues/2026-09-30-omy-photos-safe-download-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-safe-download-commit.md)
+
 - [建立 Omy Photos 缩略图缓存与月份网格](./issues/2026-09-30-omy-photos-thumbnail-grid-issue.md)
   - [Commit 记录](./commits/2026-09-30-omy-photos-thumbnail-grid-commit.md)
 
