@@ -79,7 +79,10 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+- [统一 OmyExts 仓库与产品命名](./issues/2026-09-30-repo-unify-omy-product-naming-issue.md)
+  - 状态：规划中
+  - 当前阶段：Spec 与 Plan 已完成，待按计划实施。
+  - [Commit 记录](./commits/2026-09-30-repo-unify-omy-product-naming-commit.md)
 
 ## Issue 队列
 
