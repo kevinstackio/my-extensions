@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 enum SelectionState: Equatable {
@@ -6,8 +7,8 @@ enum SelectionState: Equatable {
     case all
 }
 
-final class SelectionStore {
-    private(set) var selectedIDs: Set<String> = []
+final class SelectionStore: ObservableObject {
+    @Published private(set) var selectedIDs: Set<String> = []
 
     func toggle(id: String) {
         if selectedIDs.contains(id) {

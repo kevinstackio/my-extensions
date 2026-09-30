@@ -16,6 +16,14 @@ final class DecodedImageCache {
         self.maxBytes = max(1, maxBytes)
     }
 
+    var count: Int { entries.count }
+    var currentBytes: Int { totalBytes }
+
+    func removeAll() {
+        entries.removeAll()
+        totalBytes = 0
+    }
+
     func data(for id: String) -> Data? {
         guard var entry = entries[id] else { return nil }
         sequence += 1

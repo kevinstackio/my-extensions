@@ -11,6 +11,16 @@ final class DownloadCoordinator {
     let maxConcurrent = 2
 
     private let filenameResolver = FilenameResolver()
+    private let stateLock = NSLock()
+    private var operationQueue: OperationQueue?
+    private var cancelled = false
+
+    func cancel() {
+        stateLock.lock()
+        cancelled = true
+        operationQueue?.cancelAllOperations()
+        stateLock.unlock()
+    }
 
     func enqueue(
         items: [MediaItem],
@@ -44,19 +54,42 @@ final class DownloadCoordinator {
 
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = maxConcurrent
+        stateLock.lock()
+        cancelled = false
+        self.operationQueue = operationQueue
+        stateLock.unlock()
         var results = Array<DownloadResult?>(repeating: nil, count: plans.count)
         let lock = NSLock()
 
         for (index, plan) in plans.enumerated() {
             operationQueue.addOperation { [self] in
-                let result = self.download(plan.0, to: plan.1, transfer: transfer)
+                let result: DownloadResult
+                if self.isCancelled {
+                    result = DownloadResult(
+                        itemID: plan.0.id,
+                        url: nil,
+                        succeeded: false,
+                        errorDescription: "下载已取消"
+                    )
+                } else {
+                    result = self.download(plan.0, to: plan.1, transfer: transfer)
+                }
                 lock.lock()
                 results[index] = result
                 lock.unlock()
             }
         }
         operationQueue.waitUntilAllOperationsAreFinished()
+        stateLock.lock()
+        self.operationQueue = nil
+        stateLock.unlock()
         return results.compactMap { $0 }
+    }
+
+    private var isCancelled: Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return cancelled
     }
 
     private func download(
