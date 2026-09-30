@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [建立 Omy Photos 应用壳与设备会话](./issues/2026-09-30-omy-photos-app-shell-device-session-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-app-shell-device-session-commit.md)
+
 - [验证 Omy Photos 的 ImageCaptureCore 真机能力](./issues/2026-09-30-omy-photos-image-capture-validation-issue.md)
   - [Commit 记录](./commits/2026-09-30-omy-photos-image-capture-validation-commit.md)
 

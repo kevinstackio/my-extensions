@@ -8,9 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		04998EE0475E5FCFA5F24BB2 /* OmyPhotosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85928DF647A2AE19C49A2F8A /* OmyPhotosApp.swift */; };
+		11D8544C77DE665D8C451188 /* DeviceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2651A0AECCE717355192FC /* DeviceSession.swift */; };
+		773714D724B0D2D40FC21438 /* DeviceAuthorizationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574BF8F09F007B431A13FD21 /* DeviceAuthorizationState.swift */; };
 		7CD254B081AEA168AAA3F47F /* ProbeEventReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2751C51FB6C32C119C7897C9 /* ProbeEventReducerTests.swift */; };
 		86A17BE77EBE853F8971AF3A /* ProbeEventReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFDBB22059C248DE55EECF9 /* ProbeEventReducer.swift */; };
+		B3A59D06498A0DB8F4E165C8 /* ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BEB6E492528CD9FF338DA /* ConnectionView.swift */; };
 		E78A8EAD99F9AEB380F257B7 /* MediaProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB6AAD5E576333077516700 /* MediaProbe.swift */; };
+		E8C7440001BFA4BBD91835D4 /* DeviceSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE92A738879241802F34AB5 /* DeviceSessionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,21 +28,43 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1D2651A0AECCE717355192FC /* DeviceSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSession.swift; sourceTree = "<group>"; };
 		2751C51FB6C32C119C7897C9 /* ProbeEventReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeEventReducerTests.swift; sourceTree = "<group>"; };
+		2CE92A738879241802F34AB5 /* DeviceSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSessionTests.swift; sourceTree = "<group>"; };
 		3BB6AAD5E576333077516700 /* MediaProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaProbe.swift; sourceTree = "<group>"; };
 		4D88E2321B8CF70298D748F5 /* OmyPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OmyPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5363BF36B93FDB944EB47819 /* OmyPhotosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OmyPhotosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		574BF8F09F007B431A13FD21 /* DeviceAuthorizationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAuthorizationState.swift; sourceTree = "<group>"; };
 		5AFDBB22059C248DE55EECF9 /* ProbeEventReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeEventReducer.swift; sourceTree = "<group>"; };
 		85928DF647A2AE19C49A2F8A /* OmyPhotosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OmyPhotosApp.swift; sourceTree = "<group>"; };
+		CA4BEB6E492528CD9FF338DA /* ConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		2FC97AB131DF928F86E3DCE9 /* Device */ = {
+			isa = PBXGroup;
+			children = (
+				574BF8F09F007B431A13FD21 /* DeviceAuthorizationState.swift */,
+				1D2651A0AECCE717355192FC /* DeviceSession.swift */,
+			);
+			path = Device;
+			sourceTree = "<group>";
+		};
 		3F5F983A630EEB2145C45D26 /* OmyPhotosTests */ = {
 			isa = PBXGroup;
 			children = (
+				2CE92A738879241802F34AB5 /* DeviceSessionTests.swift */,
 				2751C51FB6C32C119C7897C9 /* ProbeEventReducerTests.swift */,
 			);
 			path = OmyPhotosTests;
+			sourceTree = "<group>";
+		};
+		744C19DC6D2C43B0EDC3A2F8 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				CA4BEB6E492528CD9FF338DA /* ConnectionView.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		7F6930CC14309685F36F5F08 = {
@@ -71,7 +97,9 @@
 			isa = PBXGroup;
 			children = (
 				C407E7481794DBF0760EDAF3 /* App */,
+				2FC97AB131DF928F86E3DCE9 /* Device */,
 				F20291D0FEE1D9085C654FF5 /* Probe */,
+				744C19DC6D2C43B0EDC3A2F8 /* UI */,
 			);
 			path = OmyPhotos;
 			sourceTree = "<group>";
@@ -159,6 +187,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3A59D06498A0DB8F4E165C8 /* ConnectionView.swift in Sources */,
+				773714D724B0D2D40FC21438 /* DeviceAuthorizationState.swift in Sources */,
+				11D8544C77DE665D8C451188 /* DeviceSession.swift in Sources */,
 				E78A8EAD99F9AEB380F257B7 /* MediaProbe.swift in Sources */,
 				04998EE0475E5FCFA5F24BB2 /* OmyPhotosApp.swift in Sources */,
 				86A17BE77EBE853F8971AF3A /* ProbeEventReducer.swift in Sources */,
@@ -169,6 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8C7440001BFA4BBD91835D4 /* DeviceSessionTests.swift in Sources */,
 				7CD254B081AEA168AAA3F47F /* ProbeEventReducerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
