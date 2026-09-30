@@ -79,7 +79,7 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+当前阶段已完成并保存到本地；下一阶段 Issue 将在本阶段提交成功后建立。
 
 ## Issue 队列
 
@@ -90,6 +90,9 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [验证 Omy Photos 的 ImageCaptureCore 真机能力](./issues/2026-09-30-omy-photos-image-capture-validation-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-image-capture-validation-commit.md)
 
 - [收敛历史 Issue 与 Commit 终态](./issues/2026-09-30-repo-close-historical-issue-states-issue.md)
   - [Commit 记录](./commits/2026-09-30-repo-close-historical-issue-states-commit.md)
