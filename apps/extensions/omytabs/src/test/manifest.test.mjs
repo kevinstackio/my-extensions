@@ -5,13 +5,13 @@ import { access, readFile, stat } from 'node:fs/promises';
 import wxtConfig from '../../wxt.config.ts';
 
 const iconSizes = [16, 32, 48, 128];
-const darkIconPaths = iconSizes.map((size) => `/src/assets/logo/my-tabs-dark-${size}.png`);
+const darkIconPaths = iconSizes.map((size) => `/src/assets/logo/omytabs-dark-${size}.png`);
 
 // 验证扩展配置将首页设置为浏览器新标签页，并申请标签组权限。
 test('Manifest 覆盖新标签页并声明标签组权限', async () => {
   const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
 
-  assert.match(config, /name:\s*'My Tabs'/);
+  assert.match(config, /name:\s*'OmyTabs'/);
   assert.match(config, /version:\s*'1\.0\.0'/);
   assert.match(config, /description:\s*'我的标签页，保存和组织我喜爱的网站。'/);
   assert.match(config, /permissions:\s*\['tabGroups'\]/);
@@ -49,7 +49,7 @@ test('首页加载书签入口', async () => {
   assert.match(home, /<div id="app"><\/div>/);
   assert.match(home, /<script type="module" src="\.\/main\.tsx"><\/script>/);
   assert.doesNotMatch(home, /views\/home\/index\.js/);
-  assert.match(home, /<link rel="icon" href="..\/..\/assets\/logo\/my-tabs-dark-16\.png">/);
+  assert.match(home, /<link rel="icon" href="..\/..\/assets\/logo\/omytabs-dark-16\.png">/);
 });
 
 // 验证新标签页只通过 React 入口挂载，避免原生脚本与 React 双重渲染。
@@ -80,7 +80,7 @@ test('新标签页接入 React 入口与 WXT 模块', async () => {
 test('深浅色图标提供完整且尺寸正确的 PNG 资源', async () => {
   for (const theme of ['dark', 'light']) {
     for (const size of iconSizes) {
-      const icon = new URL(`../assets/logo/my-tabs-${theme}-${size}.png`, import.meta.url);
+      const icon = new URL(`../assets/logo/omytabs-${theme}-${size}.png`, import.meta.url);
       const [metadata, content] = await Promise.all([stat(icon), readFile(icon)]);
 
       assert.equal(metadata.size > 0, true);

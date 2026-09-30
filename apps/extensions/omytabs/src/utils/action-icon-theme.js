@@ -6,7 +6,7 @@ const actionIconPaths = Object.fromEntries(
   ['dark', 'light'].map((theme) => [
     theme,
     Object.fromEntries(
-      ICON_SIZES.map((size) => [size, getExtensionAsset(`logo/my-tabs-${theme}-${size}.png`, { relative: true })]),
+      ICON_SIZES.map((size) => [size, getExtensionAsset(`logo/omytabs-${theme}-${size}.png`, { relative: true })]),
     ),
   ]),
 );
@@ -25,7 +25,7 @@ export function installActionIconTheme(window, document) {
     }
 
     if (favicon) {
-      favicon.setAttribute('href', getExtensionAsset(`logo/my-tabs-${theme}-16.png`));
+      favicon.setAttribute('href', getExtensionAsset(`logo/omytabs-${theme}-16.png`));
     }
   };
 

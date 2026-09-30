@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 
 import tailwindcss from '@tailwindcss/vite';
-import { createStableDevelopmentHooks } from '@my-extensions/stable-extension-dev';
+import { createStableDevelopmentHooks } from '@omyexts/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
 import { createBundleSizeWarningHook } from './scripts/bundle-size.mjs';
@@ -23,14 +23,14 @@ const assetFiles = [
   'brand/youtube.svg',
   'fonts/OFL.txt',
   'fonts/SOURCE.md',
-  'logo/my-tabs-dark-128.png',
-  'logo/my-tabs-dark-16.png',
-  'logo/my-tabs-dark-32.png',
-  'logo/my-tabs-dark-48.png',
-  'logo/my-tabs-light-128.png',
-  'logo/my-tabs-light-16.png',
-  'logo/my-tabs-light-32.png',
-  'logo/my-tabs-light-48.png',
+  'logo/omytabs-dark-128.png',
+  'logo/omytabs-dark-16.png',
+  'logo/omytabs-dark-32.png',
+  'logo/omytabs-dark-48.png',
+  'logo/omytabs-light-128.png',
+  'logo/omytabs-light-16.png',
+  'logo/omytabs-light-32.png',
+  'logo/omytabs-light-48.png',
   'tools/antd.svg',
   'tools/element-plus.svg',
   'tools/element-ui.svg',
@@ -46,10 +46,10 @@ const assetCopies = assetFiles.map((file) => ({
 }));
 
 const actionIcons = {
-  16: '/src/assets/logo/my-tabs-dark-16.png',
-  32: '/src/assets/logo/my-tabs-dark-32.png',
-  48: '/src/assets/logo/my-tabs-dark-48.png',
-  128: '/src/assets/logo/my-tabs-dark-128.png',
+  16: '/src/assets/logo/omytabs-dark-16.png',
+  32: '/src/assets/logo/omytabs-dark-32.png',
+  48: '/src/assets/logo/omytabs-dark-48.png',
+  128: '/src/assets/logo/omytabs-dark-128.png',
 };
 
 const stableDevelopmentHooks = createStableDevelopmentHooks();
@@ -81,14 +81,14 @@ export default defineConfig({
     },
   },
   manifest: {
-    name: 'My Tabs',
+    name: 'OmyTabs',
     version: '1.0.0',
     description: '我的标签页，保存和组织我喜爱的网站。',
     permissions: ['tabGroups'],
     icons: actionIcons,
     action: {
       default_icon: actionIcons,
-      default_title: 'My Tabs',
+      default_title: 'OmyTabs',
     },
   },
 });
