@@ -79,10 +79,7 @@ docs/
 
 ## 当前 Issue
 
-- [统一 OmyExts 仓库与产品命名](./issues/2026-09-30-repo-unify-omy-product-naming-issue.md)
-  - 状态：规划中
-  - 当前阶段：Spec 与 Plan 已完成，待按计划实施。
-  - [Commit 记录](./commits/2026-09-30-repo-unify-omy-product-naming-commit.md)
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -93,6 +90,9 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [统一 OmyExts 仓库与产品命名](./issues/2026-09-30-repo-unify-omy-product-naming-issue.md)
+  - [Commit 记录](./commits/2026-09-30-repo-unify-omy-product-naming-commit.md)
 
 - [删除根目录聚合开发与构建命令](./issues/2026-09-28-repo-remove-aggregate-commands-issue.md)
   - [Commit 记录](./commits/2026-09-28-repo-remove-aggregate-commands-commit.md)

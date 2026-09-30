@@ -4,9 +4,9 @@
 
 - 工作项：`2026-09-30-repo-unify-omy-product-naming`
 - 对应 Issue：[统一 OmyExts 仓库与产品命名](../issues/2026-09-30-repo-unify-omy-product-naming-issue.md)
-- 状态：待填写
-- 用户验收：待验收
-- 最终提交批准：待批准
+- 状态：已完成
+- 用户验收：已通过
+- 最终提交批准：已批准
 - 创建日期：2026-09-30
 - 最近更新：2026-09-30
 
@@ -22,29 +22,43 @@
 
 ## 实际完成内容
 
-待实施。
+- 根包名、workspace scope、官网目录与 OmyExts 现行文档已统一；当前 workspace 包为 `@omyexts/*`。
+- OmyTabs 已迁移到 `apps/extensions/omytabs`，同步更新 Logo、Manifest、入口标题、包名、根命令、测试与稳定构建引用。
+- OmyDL 已迁移到 `apps/extensions/omydl`，同步更新内部存储键、文件选择器 ID、运行时消息、页面事件、主题消息、样式前缀、Logo、发布 ZIP 与 GitHub Draft Release 工作流。
+- X Download 仅同步 workspace scope 与稳定包引用；X Download Helper 的路径、Native Host、Bundle Identifier、命令和通信契约未修改。
 
 ## 验证结果
 
-待实施。
+- 官网：`apps/website/node_modules/.bin/vitepress build apps/website` 通过。
+- OmyTabs：Vitest 8 个文件/33 项通过；`tsc --noEmit` 通过；`wxt build` 通过，产物总大小 506.79 kB。
+- OmyDL：Vitest 15 个文件/77 项通过；`tsc --noEmit` 通过；`wxt build` 与 `wxt zip` 通过，生成 `dist/omydl-1.0.0-chromium.zip`。
+- 共享包：Vitest 1 个文件/7 项通过；Turbo workspace 列出 5 个 `@omyexts/*` 包；X Download `tsc --noEmit` 与 `wxt build` 通过。
+- `git diff --check` 通过；当前引用扫描未发现活动的旧 scope、旧目录、旧根命令或旧产品展示名。
 
 ## 未验证事项与限制
 
-- 待迁移 Spec 与 Plan 批准后执行验证。
+- pnpm CLI 在当前本地环境中无输出挂起，因此锁文件按未升级依赖的 importer/path/internal-name 机械变化同步；验证使用各 workspace 已安装的本地可执行文件。
 - 浏览器加载、扩展交互与官网视觉结果由用户验收。
 - 本次不保留旧下载历史和旧文件选择器目录记忆。
 - GitHub 仓库改名、远端地址、商店后台和外部平台更新由用户执行。
 
 ## 用户验收
 
-- 结果：待验收
-- 说明：待完成阶段交付后由用户确认。
+- 结果：已通过
+- 说明：用户明确要求拆分并创建本地 Git commit，视为验收通过和提交批准。
 
-## 最终 Commit message
+## 拆分后的 Commit message
 
-待实施完成后确定。
+1. `refactor(repo): 统一 workspace 与官网命名`
+2. `refactor(omytabs): 迁移新标签页扩展命名`
+3. `refactor(omydl): 迁移下载扩展命名与发布流程`
+4. `docs(repo): 完成命名迁移交付记录`
+
+- 前三个 commit 按仓库/官网、OmyTabs、OmyDL 功能边界拆分
+- 最后一个 commit 收敛 Issue、Commit 记录和工作台的最终状态
+- 保持 X Download Helper 的 Native Messaging 边界不变
 
 ## 最终提交批准
 
-- 状态：待批准
-- 说明：待展示完整 diff、验证结果与最终 Commit message 后，由用户明确决定。
+- 状态：已批准
+- 说明：已按拆分后的功能边界创建本地 Git commit，未执行远端推送或 GitHub 操作。
