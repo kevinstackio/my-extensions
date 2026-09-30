@@ -79,8 +79,6 @@ docs/
 
 ## 当前 Issue
 
-当前阶段已完成并保存到本地；下一阶段 Issue 将在本阶段提交成功后建立。
-
 ## Issue 队列
 
 当前没有排队 Issue。
@@ -90,6 +88,10 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [收口 Omy Photos 最小 MVP 稳定性](./issues/2026-09-30-omy-photos-mvp-hardening-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-mvp-hardening-commit.md)
+  - 自动化验收完成；真实 Mac+iPhone 最终验收待用户补做
 
 - [建立 Omy Photos 选择与安全下载](./issues/2026-09-30-omy-photos-safe-download-issue.md)
   - [Commit 记录](./commits/2026-09-30-omy-photos-safe-download-commit.md)
