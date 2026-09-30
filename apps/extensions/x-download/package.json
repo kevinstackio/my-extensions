@@ -1,5 +1,5 @@
 {
-  "name": "@my-extensions/x-download",
+  "name": "@omyexts/x-download",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@my-extensions/stable-extension-dev": "workspace:1.0.0",
+    "@omyexts/stable-extension-dev": "workspace:1.0.0",
     "@types/chrome": "0.2.9",
     "@types/node": "24.13.4",
     "typescript": "7.0.2",

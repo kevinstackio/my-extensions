@@ -1,6 +1,6 @@
 ---
 title: Docs
-description: My Extensions 的统一文档入口。
+description: OmyExts 的统一文档入口。
 ---
 
 # Docs
