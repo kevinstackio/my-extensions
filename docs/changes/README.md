@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [建立 Omy Photos 缩略图缓存与月份网格](./issues/2026-09-30-omy-photos-thumbnail-grid-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-thumbnail-grid-commit.md)
+
 - [建立 Omy Photos 本地媒体索引与增量同步](./issues/2026-09-30-omy-photos-library-index-sync-issue.md)
   - [Commit 记录](./commits/2026-09-30-omy-photos-library-index-sync-commit.md)
 
