@@ -68,10 +68,10 @@ pnpm --filter @omyexts/<项目名> test
 
 ```bash
 pnpm website:dev
-pnpm omydl:dev
-pnpm omydl:build
-pnpm omytabs:dev
-pnpm omytabs:build
+pnpm ohmy-dl:dev
+pnpm ohmy-dl:build
+pnpm ohmy-tabs:dev
+pnpm ohmy-tabs:build
 pnpm x:dev
 pnpm x:build
 ```
@@ -92,7 +92,7 @@ pnpm x:build
 
 ## 共享配置边界
 
-OmyDL 与 OmyTabs 均已完成 WXT 化，但暂不提取共享 WXT、TypeScript 或 Vitest 配置。两个项目的共同部分应在形成稳定重复模式后再考虑提取：
+Oh My DL 与 Oh My Tabs 均已完成 WXT 化，但暂不提取共享 WXT、TypeScript 或 Vitest 配置。两个项目的共同部分应在形成稳定重复模式后再考虑提取：
 
 - 完全相同且会持续同步的配置可以提取到 `packages`。
 - Manifest 权限、入口、页面和业务代码继续留在各自项目中。
