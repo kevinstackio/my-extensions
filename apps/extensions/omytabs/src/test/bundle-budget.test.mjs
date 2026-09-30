@@ -12,7 +12,7 @@ import {
 } from '../../scripts/bundle-size.mjs';
 
 test('生产体积按全部 JS、CSS 与 WOFF2 统一统计', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'my-tabs-size-'));
+  const root = await mkdtemp(join(tmpdir(), 'omytabs-size-'));
 
   try {
     await mkdir(join(root, 'assets'));
@@ -46,7 +46,7 @@ test('超过 JS gzip 增量预算时给出可诊断错误', () => {
 });
 
 test('开发构建超过预算时只输出预警，不阻断构建', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'my-tabs-warning-'));
+  const root = await mkdtemp(join(tmpdir(), 'omytabs-warning-'));
   const budgetPath = join(root, 'bundle-budget.json');
   const warnings = [];
 
@@ -69,7 +69,7 @@ test('开发构建超过预算时只输出预警，不阻断构建', async () =>
 });
 
 test('包体积预警钩子只在 WXT serve 构建中执行', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'my-tabs-hook-'));
+  const root = await mkdtemp(join(tmpdir(), 'omytabs-hook-'));
   const budgetPath = join(root, 'bundle-budget.json');
   const hookWarnings = [];
   const hook = createBundleSizeWarningHook({ budgetPath });

@@ -1,5 +1,5 @@
 {
-  "name": "@my-extensions/my-tabs",
+  "name": "@omyexts/omytabs",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -21,7 +21,7 @@
     "tailwind-merge": "3.7.0"
   },
   "devDependencies": {
-    "@my-extensions/stable-extension-dev": "workspace:1.0.0",
+    "@omyexts/stable-extension-dev": "workspace:1.0.0",
     "@tailwindcss/vite": "4.3.3",
     "@types/chrome": "0.2.9",
     "@types/node": "24.13.4",

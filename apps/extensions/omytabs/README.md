@@ -1,8 +1,8 @@
-# My Tabs
+# OmyTabs
 
 ## 1. 介绍
 
-My Tabs 是一个基于 Chromium 新标签页的浏览器扩展，用于保存和组织常用网站、书签和工具入口。
+OmyTabs 是一个基于 Chromium 新标签页的浏览器扩展，用于保存和组织常用网站、书签和工具入口。
 
 ## 2. 项目框架
 
@@ -10,12 +10,12 @@ My Tabs 是一个基于 Chromium 新标签页的浏览器扩展，用于保存�
 - 使用 shadcn/ui 与 Radix 原语构建 DropdownMenu、Tooltip、Dock 等界面组件。
 - 新标签页入口位于 `src/entrypoints/newtab/`。
 - 书签、标签组和浏览器交互逻辑位于 `src/types/`、`src/constants/` 与 `src/utils/`。
-- 根目录开发命令：`pnpm tabs:dev`。
+- 根目录开发命令：`pnpm omytabs:dev`。
 
 ## 3. 本目录项目结构
 
 ```text
-my-tabs/
+omytabs/
 ├─ src/
 │  ├─ assets/                    # 书签、工具和扩展图标资源
 │  ├─ components/                # UI 原语与共享组件
