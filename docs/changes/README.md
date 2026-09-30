@@ -91,6 +91,9 @@ docs/
 
 ## 已完成
 
+- [建立 Omy Photos 本地媒体索引与增量同步](./issues/2026-09-30-omy-photos-library-index-sync-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-library-index-sync-commit.md)
+
 - [建立 Omy Photos 应用壳与设备会话](./issues/2026-09-30-omy-photos-app-shell-device-session-issue.md)
   - [Commit 记录](./commits/2026-09-30-omy-photos-app-shell-device-session-commit.md)
 

@@ -19,7 +19,7 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Omy Photos
         INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © 2026 Kevin
         GENERATE_INFOPLIST_FILE: YES
-        OTHER_LDFLAGS: "$(inherited) -framework ImageCaptureCore"
+        OTHER_LDFLAGS: "$(inherited) -framework ImageCaptureCore -lsqlite3"
   OmyPhotosTests:
     type: bundle.unit-test
     platform: macOS

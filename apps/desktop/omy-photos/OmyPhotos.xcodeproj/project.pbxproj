@@ -9,12 +9,18 @@
 /* Begin PBXBuildFile section */
 		04998EE0475E5FCFA5F24BB2 /* OmyPhotosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85928DF647A2AE19C49A2F8A /* OmyPhotosApp.swift */; };
 		11D8544C77DE665D8C451188 /* DeviceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2651A0AECCE717355192FC /* DeviceSession.swift */; };
+		1BAE2FB4D55998697A269CAE /* MediaGrouping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F773270BD5F25EEED5354F8 /* MediaGrouping.swift */; };
+		55D31B4C1702B66199D641EB /* MediaIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8626F5943DD7FD5131E1CE49 /* MediaIndexer.swift */; };
 		773714D724B0D2D40FC21438 /* DeviceAuthorizationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574BF8F09F007B431A13FD21 /* DeviceAuthorizationState.swift */; };
 		7CD254B081AEA168AAA3F47F /* ProbeEventReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2751C51FB6C32C119C7897C9 /* ProbeEventReducerTests.swift */; };
+		85FDC199C694DEE32F137DE5 /* MediaGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFBDD5CC57EAB0005585719 /* MediaGroupingTests.swift */; };
 		86A17BE77EBE853F8971AF3A /* ProbeEventReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFDBB22059C248DE55EECF9 /* ProbeEventReducer.swift */; };
 		B3A59D06498A0DB8F4E165C8 /* ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BEB6E492528CD9FF338DA /* ConnectionView.swift */; };
+		C5321399809E7F97AB4B3D49 /* SQLiteMediaStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC2D920FFAF265486B7B68 /* SQLiteMediaStoreTests.swift */; };
+		D60111B4CE542598B6E21020 /* SQLiteMediaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AB49CFF3B81901C4198075 /* SQLiteMediaStore.swift */; };
 		E78A8EAD99F9AEB380F257B7 /* MediaProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB6AAD5E576333077516700 /* MediaProbe.swift */; };
 		E8C7440001BFA4BBD91835D4 /* DeviceSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE92A738879241802F34AB5 /* DeviceSessionTests.swift */; };
+		F4C635673D03F3DEBE022486 /* MediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEAC7B22F7A85638D45E5B0 /* MediaItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,13 +40,30 @@
 		3BB6AAD5E576333077516700 /* MediaProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaProbe.swift; sourceTree = "<group>"; };
 		4D88E2321B8CF70298D748F5 /* OmyPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OmyPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5363BF36B93FDB944EB47819 /* OmyPhotosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OmyPhotosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		53CC2D920FFAF265486B7B68 /* SQLiteMediaStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteMediaStoreTests.swift; sourceTree = "<group>"; };
 		574BF8F09F007B431A13FD21 /* DeviceAuthorizationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAuthorizationState.swift; sourceTree = "<group>"; };
 		5AFDBB22059C248DE55EECF9 /* ProbeEventReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeEventReducer.swift; sourceTree = "<group>"; };
+		6F773270BD5F25EEED5354F8 /* MediaGrouping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaGrouping.swift; sourceTree = "<group>"; };
+		7DEAC7B22F7A85638D45E5B0 /* MediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItem.swift; sourceTree = "<group>"; };
+		7DFBDD5CC57EAB0005585719 /* MediaGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaGroupingTests.swift; sourceTree = "<group>"; };
 		85928DF647A2AE19C49A2F8A /* OmyPhotosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OmyPhotosApp.swift; sourceTree = "<group>"; };
+		8626F5943DD7FD5131E1CE49 /* MediaIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaIndexer.swift; sourceTree = "<group>"; };
 		CA4BEB6E492528CD9FF338DA /* ConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionView.swift; sourceTree = "<group>"; };
+		F5AB49CFF3B81901C4198075 /* SQLiteMediaStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteMediaStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		256DF0687718C4FCB70DD558 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				6F773270BD5F25EEED5354F8 /* MediaGrouping.swift */,
+				8626F5943DD7FD5131E1CE49 /* MediaIndexer.swift */,
+				7DEAC7B22F7A85638D45E5B0 /* MediaItem.swift */,
+				F5AB49CFF3B81901C4198075 /* SQLiteMediaStore.swift */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
 		2FC97AB131DF928F86E3DCE9 /* Device */ = {
 			isa = PBXGroup;
 			children = (
@@ -54,7 +77,9 @@
 			isa = PBXGroup;
 			children = (
 				2CE92A738879241802F34AB5 /* DeviceSessionTests.swift */,
+				7DFBDD5CC57EAB0005585719 /* MediaGroupingTests.swift */,
 				2751C51FB6C32C119C7897C9 /* ProbeEventReducerTests.swift */,
+				53CC2D920FFAF265486B7B68 /* SQLiteMediaStoreTests.swift */,
 			);
 			path = OmyPhotosTests;
 			sourceTree = "<group>";
@@ -98,6 +123,7 @@
 			children = (
 				C407E7481794DBF0760EDAF3 /* App */,
 				2FC97AB131DF928F86E3DCE9 /* Device */,
+				256DF0687718C4FCB70DD558 /* Library */,
 				F20291D0FEE1D9085C654FF5 /* Probe */,
 				744C19DC6D2C43B0EDC3A2F8 /* UI */,
 			);
@@ -190,9 +216,13 @@
 				B3A59D06498A0DB8F4E165C8 /* ConnectionView.swift in Sources */,
 				773714D724B0D2D40FC21438 /* DeviceAuthorizationState.swift in Sources */,
 				11D8544C77DE665D8C451188 /* DeviceSession.swift in Sources */,
+				1BAE2FB4D55998697A269CAE /* MediaGrouping.swift in Sources */,
+				55D31B4C1702B66199D641EB /* MediaIndexer.swift in Sources */,
+				F4C635673D03F3DEBE022486 /* MediaItem.swift in Sources */,
 				E78A8EAD99F9AEB380F257B7 /* MediaProbe.swift in Sources */,
 				04998EE0475E5FCFA5F24BB2 /* OmyPhotosApp.swift in Sources */,
 				86A17BE77EBE853F8971AF3A /* ProbeEventReducer.swift in Sources */,
+				D60111B4CE542598B6E21020 /* SQLiteMediaStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +231,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8C7440001BFA4BBD91835D4 /* DeviceSessionTests.swift in Sources */,
+				85FDC199C694DEE32F137DE5 /* MediaGroupingTests.swift in Sources */,
 				7CD254B081AEA168AAA3F47F /* ProbeEventReducerTests.swift in Sources */,
+				C5321399809E7F97AB4B3D49 /* SQLiteMediaStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,7 +260,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				OTHER_LDFLAGS = "$(inherited) -framework ImageCaptureCore";
+				OTHER_LDFLAGS = "$(inherited) -framework ImageCaptureCore -lsqlite3";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.kevinstack.omyphotos;
 				SDKROOT = macosx;
 			};
@@ -309,7 +341,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				OTHER_LDFLAGS = "$(inherited) -framework ImageCaptureCore";
+				OTHER_LDFLAGS = "$(inherited) -framework ImageCaptureCore -lsqlite3";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.kevinstack.omyphotos;
 				SDKROOT = macosx;
 			};
