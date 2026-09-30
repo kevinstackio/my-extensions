@@ -11,8 +11,8 @@ description: 浏览器扩展、原生应用和配套 Helper 的统一入口。
 
 面向 Chrome 和 Edge 的浏览器扩展：
 
-- **My Tabs**：保存和组织我喜爱的网站。
-- **TG Download**：在 Telegram Web 中下载图片和视频。
+- **OmyTabs**：保存和组织我喜爱的网站。
+- **OmyDL**：在 Telegram Web 中下载图片和视频。
 - **X Download**：在 X 中整理和下载媒体内容。
 
 ## Native Apps and Helpers

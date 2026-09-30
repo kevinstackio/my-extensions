@@ -1,4 +1,4 @@
-# My Extensions
+# OmyExts
 
 ## 1. 介绍
 
@@ -18,16 +18,16 @@
 ## 3. 本目录项目结构
 
 ```text
-my-extensions/
+omyexts/
 ├─ .github/workflows/             # GitHub Actions 工作流
 ├─ apps/
 │  ├─ extensions/
-│  │  ├─ my-tabs/                 # My Tabs 浏览器扩展
-│  │  ├─ tg-download/             # TG Download 浏览器扩展
+│  │  ├─ omytabs/                 # OmyTabs 浏览器扩展
+│  │  ├─ omydl/                   # OmyDL 浏览器扩展
 │  │  └─ x-download/              # X Download 浏览器扩展
 │  ├─ helpers/
 │  │  └─ x-download-helper/       # X Download macOS 配套应用
-│  └─ web/                        # 官网与文档站点
+│  └─ website/                    # 官网与文档站点
 ├─ packages/
 │  └─ stable-extension-dev/       # 稳定开发产物工具
 ├─ skills/
@@ -42,8 +42,8 @@ my-extensions/
 
 子项目 README：
 
-- [My Tabs](apps/extensions/my-tabs/README.md)
-- [TG Download](apps/extensions/tg-download/README.md)
+- [OmyTabs](apps/extensions/omytabs/README.md)
+- [OmyDL](apps/extensions/omydl/README.md)
 - [X Download](apps/extensions/x-download/README.md)
 - [X Download Helper](apps/helpers/x-download-helper/README.md)
-- [Web](apps/web/README.md)
+- [Website](apps/website/README.md)
