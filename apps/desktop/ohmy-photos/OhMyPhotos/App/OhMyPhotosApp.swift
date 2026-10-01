@@ -10,6 +10,9 @@ struct OhMyPhotosApp: App {
                 if session.state == .available {
                     LibraryView(
                         items: session.mediaItems,
+                        images: session.thumbnailImages,
+                        failedThumbnailIDs: session.failedThumbnailIDs,
+                        onRequestThumbnail: { session.requestThumbnail(for: $0) },
                         onDownload: { session.download(items: $0) }
                     )
                 } else {

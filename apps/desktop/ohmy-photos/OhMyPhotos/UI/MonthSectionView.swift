@@ -5,6 +5,8 @@ struct MonthSectionView: View {
     let title: String
     let items: [MediaItem]
     let images: [String: NSImage]
+    let failedThumbnailIDs: Set<String>
+    let requestThumbnail: (String) -> Void
     let selectedIDs: Set<String>
     let selectionState: SelectionState
     let toggleItem: (String) -> Void
@@ -26,8 +28,10 @@ struct MonthSectionView: View {
                     MediaGridItemView(
                         item: item,
                         image: images[item.id],
+                        thumbnailFailed: failedThumbnailIDs.contains(item.id),
                         isSelected: selectedIDs.contains(item.id),
-                        toggle: { toggleItem(item.id) }
+                        toggle: { toggleItem(item.id) },
+                        requestThumbnail: { requestThumbnail(item.id) }
                     )
                 }
             }

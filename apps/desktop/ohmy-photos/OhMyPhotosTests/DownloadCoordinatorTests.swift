@@ -11,6 +11,7 @@ final class DownloadCoordinatorTests: XCTestCase {
         let results = coordinator.enqueue(items: items, destination: destination) { item, temporaryURL in
             if item.id == "fail" { throw TestError.failed }
             try Data(item.id.utf8).write(to: temporaryURL)
+            return .success
         }
 
         XCTAssertEqual(results.filter(\.succeeded).count, 3)
@@ -19,6 +20,25 @@ final class DownloadCoordinatorTests: XCTestCase {
         XCTAssertFalse(try FileManager.default.contentsOfDirectory(at: destination, includingPropertiesForKeys: nil)
             .contains { $0.pathExtension == "tmp" })
         XCTAssertEqual(coordinator.maxConcurrent, 2)
+    }
+
+    func testKeepsMainFileSuccessWhenTransferReportsSidecarFailure() throws {
+        let destination = FileManager.default.temporaryDirectory
+            .appendingPathComponent("OhMyPhotosSidecarTests-\(UUID().uuidString)", isDirectory: true)
+        let coordinator = DownloadCoordinator()
+
+        let results = coordinator.enqueue(
+            items: [makeItem(id: "sidecar")],
+            destination: destination
+        ) { _, temporaryURL in
+            try Data("main".utf8).write(to: temporaryURL)
+            return DownloadTransferResult(sidecarErrorDescription: "AAE 下载失败")
+        }
+
+        XCTAssertEqual(results.count, 1)
+        XCTAssertTrue(results[0].succeeded)
+        XCTAssertEqual(results[0].sidecarErrorDescription, "AAE 下载失败")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: results[0].url!.path))
     }
 
     private func makeItem(id: String) -> MediaItem {

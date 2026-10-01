@@ -4,16 +4,22 @@ import SwiftUI
 struct LibraryView: View {
     let items: [MediaItem]
     let images: [String: NSImage]
+    let failedThumbnailIDs: Set<String>
+    let onRequestThumbnail: (String) -> Void
     let onDownload: ([MediaItem]) -> [DownloadResult]
     @StateObject private var selection: SelectionStore
 
     init(
         items: [MediaItem],
         images: [String: NSImage] = [:],
+        failedThumbnailIDs: Set<String> = [],
+        onRequestThumbnail: @escaping (String) -> Void = { _ in },
         onDownload: @escaping ([MediaItem]) -> [DownloadResult] = { _ in [] }
     ) {
         self.items = items
         self.images = images
+        self.failedThumbnailIDs = failedThumbnailIDs
+        self.onRequestThumbnail = onRequestThumbnail
         self.onDownload = onDownload
         _selection = StateObject(wrappedValue: SelectionStore())
     }
@@ -44,6 +50,8 @@ struct LibraryView: View {
                             title: month,
                             items: monthItems,
                             images: images,
+                            failedThumbnailIDs: failedThumbnailIDs,
+                            requestThumbnail: onRequestThumbnail,
                             selectedIDs: selection.selectedIDs,
                             selectionState: selection.state(for: monthItems.map(\.id)),
                             toggleItem: { selection.toggle(id: $0) },
