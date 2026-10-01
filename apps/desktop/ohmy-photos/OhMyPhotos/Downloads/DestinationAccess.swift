@@ -3,7 +3,7 @@ import Foundation
 enum DestinationAccess {
     static func defaultDirectory() -> URL {
         FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Downloads/Oh My Photos", isDirectory: true)
+            .appendingPathComponent("Downloads/OhMy Photos", isDirectory: true)
     }
 
     static func prepare(_ directory: URL) throws {

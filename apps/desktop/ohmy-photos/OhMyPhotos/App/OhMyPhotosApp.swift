@@ -5,7 +5,7 @@ struct OhMyPhotosApp: App {
     @StateObject private var session = DeviceSession()
 
     var body: some Scene {
-        WindowGroup("Oh My Photos") {
+        WindowGroup("OhMy Photos") {
             Group {
                 if session.state == .available {
                     LibraryView(
