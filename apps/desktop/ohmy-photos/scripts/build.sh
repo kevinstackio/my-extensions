@@ -12,3 +12,5 @@ xcodebuild build \
   -configuration Debug \
   -derivedDataPath "$ROOT_DIR/DerivedData" \
   CODE_SIGNING_ALLOWED=NO
+
+open "$ROOT_DIR/DerivedData/Build/Products/Debug/OhMyPhotos.app"

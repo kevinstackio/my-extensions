@@ -91,6 +91,10 @@ docs/
 
 ## 已完成
 
+- [补充 Omy Photos 根目录开发命令](./issues/2026-10-01-repo-ohmy-photos-dev-command-issue.md)
+  - [Commit 记录](./commits/2026-10-01-repo-ohmy-photos-dev-command-commit.md)
+  - 用户已实际启动应用并进入图库界面；代理环境构建无输出限制已保留记录
+
 - [Oh My 产品命名迁移](./issues/2026-09-30-repo-rename-ohmy-products-issue.md)
   - [Commit 记录](./commits/2026-09-30-repo-rename-ohmy-products-commit.md)
   - 自动化验收完成；真实 Chrome/Edge、macOS App 与 iPhone 流程仍需用户实际加载或连接验证
