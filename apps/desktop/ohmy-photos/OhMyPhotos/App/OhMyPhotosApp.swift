@@ -22,5 +22,6 @@ struct OhMyPhotosApp: App {
                 .onAppear { session.start() }
                 .onDisappear { session.stop() }
         }
+        .defaultSize(width: 1100, height: 720)
     }
 }
