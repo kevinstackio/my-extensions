@@ -15,6 +15,7 @@
     "ohmy-tabs:build": "pnpm --filter @omyexts/ohmy-tabs build",
     "ohmy-dl:dev": "pnpm --filter @omyexts/ohmy-dl dev",
     "ohmy-dl:build": "pnpm --filter @omyexts/ohmy-dl build",
+    "ohmy-photos:dev": "zsh apps/desktop/ohmy-photos/scripts/build.sh",
     "ohmy-dl:package": "pnpm --filter @omyexts/ohmy-dl package",
     "x:dev": "pnpm --filter @omyexts/x-download dev",
     "x-helper:dev": "zsh apps/helpers/x-download-helper/scripts/run.sh"
