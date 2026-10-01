@@ -27,6 +27,14 @@ final class SelectionStore: ObservableObject {
         }
     }
 
+    func remove(ids: Set<String>) {
+        selectedIDs.subtract(ids)
+    }
+
+    func selectedIDs(in ids: [String]) -> Set<String> {
+        selectedIDs.intersection(Set(ids))
+    }
+
     func state(for ids: [String]) -> SelectionState {
         let uniqueIDs = Set(ids)
         guard !uniqueIDs.isEmpty else { return .none }

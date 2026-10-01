@@ -79,18 +79,21 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue；下一项仍在 Issue 队列中。
+当前没有活动 Issue。
 
 ## Issue 队列
 
-1. [收敛图库窗口与月份批量操作](./issues/2026-10-01-ohmy-photos-library-month-actions-issue.md)
-   - [Commit 记录](./commits/2026-10-01-ohmy-photos-library-month-actions-commit.md)
+当前没有其他排队 Issue。
 
 ## 待办
 
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [收敛图库窗口与月份批量操作](./issues/2026-10-01-ohmy-photos-library-month-actions-issue.md)
+  - [Commit 记录](./commits/2026-10-01-ohmy-photos-library-month-actions-commit.md)
+  - 用户已完成实际 App 验收并批准本地提交；完整 XCTest 仍受当前沙箱 `testmanagerd` 限制
 
 - [修复媒体备份与缩略图刷新](./issues/2026-10-01-ohmy-photos-media-backup-thumbnails-issue.md)
   - [Commit 记录](./commits/2026-10-01-ohmy-photos-media-backup-thumbnails-commit.md)

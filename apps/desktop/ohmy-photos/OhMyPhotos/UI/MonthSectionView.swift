@@ -11,6 +11,7 @@ struct MonthSectionView: View {
     let selectionState: SelectionState
     let toggleItem: (String) -> Void
     let toggleMonth: () -> Void
+    let downloadSelected: () -> Void
 
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 12)]
 
@@ -20,8 +21,12 @@ struct MonthSectionView: View {
                 Text(title)
                     .font(.headline)
                 Spacer()
+                Text("已选 \(selectedCount)")
+                    .foregroundStyle(.secondary)
                 Button(selectionButtonTitle, action: toggleMonth)
                     .buttonStyle(.link)
+                Button("下载", action: downloadSelected)
+                    .disabled(selectedCount == 0)
             }
             LazyVGrid(columns: columns, alignment: .leading, spacing: 12) {
                 ForEach(items) { item in
@@ -40,9 +45,14 @@ struct MonthSectionView: View {
 
     private var selectionButtonTitle: String {
         switch selectionState {
-        case .none: return "全选"
-        case .partial: return "补全选择"
+        case .none, .partial: return "全选"
         case .all: return "取消全选"
+        }
+    }
+
+    private var selectedCount: Int {
+        items.reduce(into: 0) { count, item in
+            if selectedIDs.contains(item.id) { count += 1 }
         }
     }
 }

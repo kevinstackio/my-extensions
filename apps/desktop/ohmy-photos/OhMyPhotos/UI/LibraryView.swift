@@ -26,41 +26,33 @@ struct LibraryView: View {
 
     var body: some View {
         let groups = Dictionary(grouping: items) { MediaGrouping.monthKey(for: $0) }
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text("媒体库")
-                    .font(.title2)
-                Spacer()
-                Text("已选 \(selection.selectedIDs.count) 项")
-                    .foregroundStyle(.secondary)
-                Button("下载") {
-                    let selected = items.filter { selection.selectedIDs.contains($0.id) }
-                    _ = onDownload(selected)
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 24) {
+                ForEach(groups.keys.sorted(by: monthSort), id: \.self) { month in
+                    let monthItems = groups[month] ?? []
+                    MonthSectionView(
+                        title: month,
+                        items: monthItems,
+                        images: images,
+                        failedThumbnailIDs: failedThumbnailIDs,
+                        requestThumbnail: onRequestThumbnail,
+                        selectedIDs: selection.selectedIDs,
+                        selectionState: selection.state(for: monthItems.map(\.id)),
+                        toggleItem: { selection.toggle(id: $0) },
+                        toggleMonth: { selection.toggle(monthIDs: monthItems.map(\.id)) },
+                        downloadSelected: {
+                            let selectedIDs = selection.selectedIDs(in: monthItems.map(\.id))
+                            let selected = monthItems.filter { selectedIDs.contains($0.id) }
+                            let results = onDownload(selected)
+                            let successfulIDs = Set(
+                                results.filter { $0.succeeded }.map(\.itemID)
+                            )
+                            selection.remove(ids: successfulIDs)
+                        }
+                    )
                 }
-                .disabled(selection.selectedIDs.isEmpty)
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 16)
-
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 24) {
-                    ForEach(groups.keys.sorted(by: monthSort), id: \.self) { month in
-                        let monthItems = groups[month] ?? []
-                        MonthSectionView(
-                            title: month,
-                            items: monthItems,
-                            images: images,
-                            failedThumbnailIDs: failedThumbnailIDs,
-                            requestThumbnail: onRequestThumbnail,
-                            selectedIDs: selection.selectedIDs,
-                            selectionState: selection.state(for: monthItems.map(\.id)),
-                            toggleItem: { selection.toggle(id: $0) },
-                            toggleMonth: { selection.toggle(monthIDs: monthItems.map(\.id)) }
-                        )
-                    }
-                }
-                .padding(24)
-            }
+            .padding(24)
         }
     }
 

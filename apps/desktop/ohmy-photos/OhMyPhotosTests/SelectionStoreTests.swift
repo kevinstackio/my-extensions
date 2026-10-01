@@ -16,4 +16,20 @@ final class SelectionStoreTests: XCTestCase {
         store.toggle(monthIDs: monthIDs)
         XCTAssertEqual(store.state(for: monthIDs), .none)
     }
+
+    func testRemovingSuccessfulIDsKeepsFailedSelection() {
+        let store = SelectionStore()
+        store.toggle(monthIDs: ["success", "failed"])
+
+        store.remove(ids: ["success"])
+
+        XCTAssertEqual(store.selectedIDs, ["failed"])
+    }
+
+    func testSelectedIDsCanBeScopedToMonth() {
+        let store = SelectionStore()
+        store.toggle(monthIDs: ["january", "february"])
+
+        XCTAssertEqual(store.selectedIDs(in: ["january", "march"]), ["january"])
+    }
 }
