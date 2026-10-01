@@ -5,6 +5,13 @@ struct DownloadResult {
     let url: URL?
     let succeeded: Bool
     let errorDescription: String?
+    let sidecarErrorDescription: String?
+}
+
+struct DownloadTransferResult {
+    let sidecarErrorDescription: String?
+
+    static let success = DownloadTransferResult(sidecarErrorDescription: nil)
 }
 
 final class DownloadCoordinator {
@@ -25,7 +32,7 @@ final class DownloadCoordinator {
     func enqueue(
         items: [MediaItem],
         destination: URL = DestinationAccess.defaultDirectory(),
-        transfer: @escaping (MediaItem, URL) throws -> Void
+        transfer: @escaping (MediaItem, URL) throws -> DownloadTransferResult
     ) -> [DownloadResult] {
         do {
             try DestinationAccess.prepare(destination)
@@ -35,7 +42,8 @@ final class DownloadCoordinator {
                     itemID: $0.id,
                     url: nil,
                     succeeded: false,
-                    errorDescription: error.localizedDescription
+                    errorDescription: error.localizedDescription,
+                    sidecarErrorDescription: nil
                 )
             }
         }
@@ -69,7 +77,8 @@ final class DownloadCoordinator {
                         itemID: plan.0.id,
                         url: nil,
                         succeeded: false,
-                        errorDescription: "下载已取消"
+                        errorDescription: "下载已取消",
+                        sidecarErrorDescription: nil
                     )
                 } else {
                     result = self.download(plan.0, to: plan.1, transfer: transfer)
@@ -95,22 +104,29 @@ final class DownloadCoordinator {
     private func download(
         _ item: MediaItem,
         to destination: URL,
-        transfer: (MediaItem, URL) throws -> Void
+        transfer: (MediaItem, URL) throws -> DownloadTransferResult
     ) -> DownloadResult {
         let temporary = destination.deletingLastPathComponent()
             .appendingPathComponent(".\(destination.lastPathComponent).\(UUID().uuidString).tmp")
         defer { try? FileManager.default.removeItem(at: temporary) }
 
         do {
-            try transfer(item, temporary)
+            let transferResult = try transfer(item, temporary)
             try FileManager.default.moveItem(at: temporary, to: destination)
-            return DownloadResult(itemID: item.id, url: destination, succeeded: true, errorDescription: nil)
+            return DownloadResult(
+                itemID: item.id,
+                url: destination,
+                succeeded: true,
+                errorDescription: nil,
+                sidecarErrorDescription: transferResult.sidecarErrorDescription
+            )
         } catch {
             return DownloadResult(
                 itemID: item.id,
                 url: nil,
                 succeeded: false,
-                errorDescription: error.localizedDescription
+                errorDescription: error.localizedDescription,
+                sidecarErrorDescription: nil
             )
         }
     }

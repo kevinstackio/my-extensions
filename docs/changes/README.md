@@ -79,13 +79,11 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+当前没有活动 Issue；下一项仍在 Issue 队列中。
 
 ## Issue 队列
 
-1. [修复媒体备份与缩略图刷新](./issues/2026-10-01-ohmy-photos-media-backup-thumbnails-issue.md)
-   - [Commit 记录](./commits/2026-10-01-ohmy-photos-media-backup-thumbnails-commit.md)
-2. [收敛图库窗口与月份批量操作](./issues/2026-10-01-ohmy-photos-library-month-actions-issue.md)
+1. [收敛图库窗口与月份批量操作](./issues/2026-10-01-ohmy-photos-library-month-actions-issue.md)
    - [Commit 记录](./commits/2026-10-01-ohmy-photos-library-month-actions-commit.md)
 
 ## 待办
@@ -93,6 +91,10 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [修复媒体备份与缩略图刷新](./issues/2026-10-01-ohmy-photos-media-backup-thumbnails-issue.md)
+  - [Commit 记录](./commits/2026-10-01-ohmy-photos-media-backup-thumbnails-commit.md)
+  - 用户已明确要求本地提交；真实 iPhone 验收和 XCTest 运行仍受环境限制
 
 - [统一 OhMy Photos 显示名称与本地目录](./issues/2026-10-01-ohmy-photos-product-naming-storage-issue.md)
   - [Commit 记录](./commits/2026-10-01-ohmy-photos-product-naming-storage-commit.md)

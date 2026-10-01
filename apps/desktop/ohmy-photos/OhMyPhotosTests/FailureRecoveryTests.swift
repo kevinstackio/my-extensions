@@ -17,6 +17,7 @@ final class FailureRecoveryTests: XCTestCase {
         let results = coordinator.enqueue(items: items, destination: destination) { item, url in
             if item.id == "failed" { throw RecoveryError.failed }
             try Data("ok".utf8).write(to: url)
+            return .success
         }
 
         XCTAssertEqual(results.map(\.succeeded), [false, true])
@@ -33,6 +34,7 @@ final class FailureRecoveryTests: XCTestCase {
         let coordinator = DownloadCoordinator()
         let results = coordinator.enqueue(items: [makeItem(id: "blocked")], destination: destination) { _, _ in
             XCTFail("目标目录不可用时不应开始传输")
+            return .success
         }
 
         XCTAssertEqual(results.count, 1)

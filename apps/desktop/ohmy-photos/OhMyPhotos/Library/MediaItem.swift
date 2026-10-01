@@ -13,4 +13,8 @@ struct MediaItem: Equatable, Identifiable {
     var sortDate: Date? {
         creationDate ?? modificationDate
     }
+
+    static func isAAESidecar(name: String, uti: String?) -> Bool {
+        name.lowercased().hasSuffix(".aae")
+    }
 }

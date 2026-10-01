@@ -26,6 +26,17 @@ final class ThumbnailSchedulerTests: XCTestCase {
         XCTAssertTrue(scheduler.queuedRequests.isEmpty)
     }
 
+    func testCompletedRequestPromotesNextQueuedThumbnail() {
+        let scheduler = ThumbnailScheduler(maxConcurrent: 1)
+
+        XCTAssertEqual(scheduler.enqueue(id: "v1", priority: .visible)?.id, "v1")
+        XCTAssertNil(scheduler.enqueue(id: "v2", priority: .visible))
+
+        XCTAssertEqual(scheduler.complete(id: "v1")?.id, "v2")
+        XCTAssertEqual(scheduler.activeRequests.map(\.id), ["v2"])
+        XCTAssertTrue(scheduler.queuedRequests.isEmpty)
+    }
+
     func testDiskCacheAndDecodedCacheExposeBoundedPolicies() throws {
         let disk = try ThumbnailDiskStore(rootURL: temporaryDirectory())
         let payload = Data([1, 2, 3])
