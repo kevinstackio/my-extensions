@@ -7,7 +7,7 @@ final class ThumbnailDiskStore {
         self.rootURL = rootURL ?? FileManager.default.urls(
             for: .applicationSupportDirectory,
             in: .userDomainMask
-        )[0].appendingPathComponent("Oh My Photos/Thumbnails", isDirectory: true)
+        )[0].appendingPathComponent("OhMy Photos/Thumbnails", isDirectory: true)
         try FileManager.default.createDirectory(
             at: self.rootURL,
             withIntermediateDirectories: true

@@ -83,13 +83,20 @@ docs/
 
 ## Issue 队列
 
-当前没有排队 Issue。
+1. [修复媒体备份与缩略图刷新](./issues/2026-10-01-ohmy-photos-media-backup-thumbnails-issue.md)
+   - [Commit 记录](./commits/2026-10-01-ohmy-photos-media-backup-thumbnails-commit.md)
+2. [收敛图库窗口与月份批量操作](./issues/2026-10-01-ohmy-photos-library-month-actions-issue.md)
+   - [Commit 记录](./commits/2026-10-01-ohmy-photos-library-month-actions-commit.md)
 
 ## 待办
 
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [统一 OhMy Photos 显示名称与本地目录](./issues/2026-10-01-ohmy-photos-product-naming-storage-issue.md)
+  - [Commit 记录](./commits/2026-10-01-ohmy-photos-product-naming-storage-commit.md)
+  - 用户验收通过；旧目录未自动迁移或删除
 
 - [补充 Omy Photos 根目录开发命令](./issues/2026-10-01-repo-ohmy-photos-dev-command-issue.md)
   - [Commit 记录](./commits/2026-10-01-repo-ohmy-photos-dev-command-commit.md)

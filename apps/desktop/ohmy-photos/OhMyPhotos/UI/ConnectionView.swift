@@ -5,7 +5,7 @@ struct ConnectionView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Oh My Photos")
+            Text("OhMy Photos")
                 .font(.title2)
 
             Text(statusText)
