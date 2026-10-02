@@ -91,6 +91,10 @@ docs/
 
 ## 已完成
 
+- [补充本地 Commit 正文换行规范](./issues/2026-10-01-repo-commit-message-format-issue.md)
+  - [Commit 记录](./commits/2026-10-01-repo-commit-message-format-commit.md)
+  - 已补充真实 LF 换行规则，未修改历史 Commit
+
 - [收敛图库窗口与月份批量操作](./issues/2026-10-01-ohmy-photos-library-month-actions-issue.md)
   - [Commit 记录](./commits/2026-10-01-ohmy-photos-library-month-actions-commit.md)
   - 用户已完成实际 App 验收并批准本地提交；完整 XCTest 仍受当前沙箱 `testmanagerd` 限制
