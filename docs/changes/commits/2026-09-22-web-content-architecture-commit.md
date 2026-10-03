@@ -4,7 +4,7 @@
 
 - 工作项：`2026-09-22-web-content-architecture`
 - 对应 Issue：[完善 My Extensions 品牌定位与内容入口](../issues/2026-09-22-web-content-architecture-issue.md)
-- 状态：已提交
+- 状态：已完成
 - 用户验收：已通过
 - 最终提交批准：已获得
 - 创建日期：2026-09-22

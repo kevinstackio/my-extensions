@@ -79,17 +79,68 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+- [更新 OhMy 系列产品图标](./issues/2026-10-03-repo-ohmy-product-icons-issue.md)
+  - [Commit 记录](./commits/2026-10-03-repo-ohmy-product-icons-commit.md)
+  - 当前阶段：生成并接入正式图标资源
 
 ## Issue 队列
 
-当前没有排队 Issue。
+当前没有其他排队 Issue。
 
 ## 待办
 
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [补充本地 Commit 正文换行规范](./issues/2026-10-01-repo-commit-message-format-issue.md)
+  - [Commit 记录](./commits/2026-10-01-repo-commit-message-format-commit.md)
+  - 已补充真实 LF 换行规则，未修改历史 Commit
+
+- [收敛图库窗口与月份批量操作](./issues/2026-10-01-ohmy-photos-library-month-actions-issue.md)
+  - [Commit 记录](./commits/2026-10-01-ohmy-photos-library-month-actions-commit.md)
+  - 用户已完成实际 App 验收并批准本地提交；完整 XCTest 仍受当前沙箱 `testmanagerd` 限制
+
+- [修复媒体备份与缩略图刷新](./issues/2026-10-01-ohmy-photos-media-backup-thumbnails-issue.md)
+  - [Commit 记录](./commits/2026-10-01-ohmy-photos-media-backup-thumbnails-commit.md)
+  - 用户已明确要求本地提交；真实 iPhone 验收和 XCTest 运行仍受环境限制
+
+- [统一 OhMy Photos 显示名称与本地目录](./issues/2026-10-01-ohmy-photos-product-naming-storage-issue.md)
+  - [Commit 记录](./commits/2026-10-01-ohmy-photos-product-naming-storage-commit.md)
+  - 用户验收通过；旧目录未自动迁移或删除
+
+- [补充 Omy Photos 根目录开发命令](./issues/2026-10-01-repo-ohmy-photos-dev-command-issue.md)
+  - [Commit 记录](./commits/2026-10-01-repo-ohmy-photos-dev-command-commit.md)
+  - 用户已实际启动应用并进入图库界面；代理环境构建无输出限制已保留记录
+
+- [Oh My 产品命名迁移](./issues/2026-09-30-repo-rename-ohmy-products-issue.md)
+  - [Commit 记录](./commits/2026-09-30-repo-rename-ohmy-products-commit.md)
+  - 自动化验收完成；真实 Chrome/Edge、macOS App 与 iPhone 流程仍需用户实际加载或连接验证
+
+- [收口 Omy Photos 最小 MVP 稳定性](./issues/2026-09-30-omy-photos-mvp-hardening-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-mvp-hardening-commit.md)
+  - 自动化验收完成；真实 Mac+iPhone 最终验收待用户补做
+
+- [建立 Omy Photos 选择与安全下载](./issues/2026-09-30-omy-photos-safe-download-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-safe-download-commit.md)
+
+- [建立 Omy Photos 缩略图缓存与月份网格](./issues/2026-09-30-omy-photos-thumbnail-grid-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-thumbnail-grid-commit.md)
+
+- [建立 Omy Photos 本地媒体索引与增量同步](./issues/2026-09-30-omy-photos-library-index-sync-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-library-index-sync-commit.md)
+
+- [建立 Omy Photos 应用壳与设备会话](./issues/2026-09-30-omy-photos-app-shell-device-session-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-app-shell-device-session-commit.md)
+
+- [验证 Omy Photos 的 ImageCaptureCore 真机能力](./issues/2026-09-30-omy-photos-image-capture-validation-issue.md)
+  - [Commit 记录](./commits/2026-09-30-omy-photos-image-capture-validation-commit.md)
+
+- [收敛历史 Issue 与 Commit 终态](./issues/2026-09-30-repo-close-historical-issue-states-issue.md)
+  - [Commit 记录](./commits/2026-09-30-repo-close-historical-issue-states-commit.md)
+
+- [统一 OmyExts 仓库与产品命名](./issues/2026-09-30-repo-unify-omy-product-naming-issue.md)
+  - [Commit 记录](./commits/2026-09-30-repo-unify-omy-product-naming-commit.md)
 
 - [删除根目录聚合开发与构建命令](./issues/2026-09-28-repo-remove-aggregate-commands-issue.md)
   - [Commit 记录](./commits/2026-09-28-repo-remove-aggregate-commands-commit.md)

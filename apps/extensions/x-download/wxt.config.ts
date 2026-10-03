@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 
-import { createStableDevelopmentHooks } from '@my-extensions/stable-extension-dev';
+import { createStableDevelopmentHooks } from '@omyexts/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
 const logoFiles = [

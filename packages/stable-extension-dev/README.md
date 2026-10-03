@@ -29,7 +29,7 @@ WXT 开发模式会持续把产物写入临时目录。重新构建开始时，�
 在扩展的 `wxt.config.ts` 中引入 hook：
 
 ```ts
-import { createStableDevelopmentHooks } from '@my-extensions/stable-extension-dev';
+import { createStableDevelopmentHooks } from '@omyexts/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
@@ -82,7 +82,7 @@ createStableDevelopmentHooks({ suffix: '-browser' });
 如果项目需要自行控制 WXT hook，也可以直接调用 `publishStableBuild`：
 
 ```ts
-import { publishStableBuild } from '@my-extensions/stable-extension-dev';
+import { publishStableBuild } from '@omyexts/stable-extension-dev';
 
 await publishStableBuild({
   sourceDir: 'dist/chrome-mv3-dev',
@@ -136,11 +136,11 @@ await publishStableBuild({
 运行测试：
 
 ```bash
-pnpm --filter @my-extensions/stable-extension-dev test
+pnpm --filter @omyexts/stable-extension-dev test
 ```
 
 集成扩展还应在 Chrome 或 Edge 中完成一次“成功构建 → 构建失败 → 修复后恢复构建”的实际加载验证。
 
 ## 当前状态
 
-当前包作为 `my-extensions` monorepo 中的共享 WXT 开发工具，已由 `apps/extensions/tg-download` 和 `apps/extensions/my-tabs` 接入。扩展项目不应复制内部的校验、复制或目录替换逻辑。
+当前包作为 `omyexts` monorepo 中的共享 WXT 开发工具，已由现有扩展项目接入。扩展项目不应复制内部的校验、复制或目录替换逻辑。

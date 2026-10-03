@@ -4,7 +4,7 @@
 
 - 工作项：`2026-09-26-tg-download-command-scope`
 - 对应 Issue：[收敛 TG Download 与根目录命令职责](../issues/2026-09-26-tg-download-command-scope-issue.md)
-- 状态：已提交
+- 状态：已完成
 - 用户验收：已通过
 - 最终提交批准：已批准
 - 创建日期：2026-09-26

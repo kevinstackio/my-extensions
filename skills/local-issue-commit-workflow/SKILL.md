@@ -48,6 +48,8 @@ docs/changes/commits/<前缀>-commit.md
 - 完整 Commit message；
 - 将随提交发生的 Issue、Commit 记录和工作台终态更新。
 
+Commit message 的正文必须使用真实 LF 换行，不得写入字面量 `\n`。需要多行正文时，使用多个 `-m` 参数或 `-F` 文件生成真实换行，提交前用 `git log -1 --format=%B` 检查显示结果。
+
 明确的本地提交请求覆盖已展示范围内的机械性终态更新和 `git commit`。提交成功时必须同步关闭 Issue；若内容或 diff 随后发生其他变化，原批准失效；若提交失败，恢复为真实的“待提交”和“未批准”状态。
 
 ## 冲突处理
