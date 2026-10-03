@@ -79,7 +79,9 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+- [更新 OhMy 系列产品图标](./issues/2026-10-03-repo-ohmy-product-icons-issue.md)
+  - [Commit 记录](./commits/2026-10-03-repo-ohmy-product-icons-commit.md)
+  - 当前阶段：生成并接入正式图标资源
 
 ## Issue 队列
 
