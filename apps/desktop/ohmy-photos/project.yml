@@ -15,7 +15,7 @@ targets:
       - path: OhMyPhotos
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.kevinstack.ohmyphotos
+        PRODUCT_BUNDLE_IDENTIFIER: dev.kevinstack.ohmy-photos
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: OhMy Photos
         INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © 2026 Kevin

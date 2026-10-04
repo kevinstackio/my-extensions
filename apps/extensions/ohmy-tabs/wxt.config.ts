@@ -81,14 +81,14 @@ export default defineConfig({
     },
   },
   manifest: {
-    name: 'Oh My Tabs',
+    name: 'OhMy Tabs',
     version: '1.0.0',
     description: '我的标签页，保存和组织我喜爱的网站。',
     permissions: ['tabGroups'],
     icons: actionIcons,
     action: {
       default_icon: actionIcons,
-      default_title: 'Oh My Tabs',
+      default_title: 'OhMy Tabs',
     },
   },
 });

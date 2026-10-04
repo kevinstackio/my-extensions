@@ -174,7 +174,7 @@ export async function saveMedia(
 
     await writable?.abort?.();
     const errorCode = getDownloadFailureCode(error, stage);
-    dependencies.logger.error('Oh My DL 下载失败：', { errorCode, error });
+    dependencies.logger.error('OhMy DL 下载失败：', { errorCode, error });
     if (taskId && videoLifecycle) {
       videoLifecycle.fail(taskId, errorCode);
       return;

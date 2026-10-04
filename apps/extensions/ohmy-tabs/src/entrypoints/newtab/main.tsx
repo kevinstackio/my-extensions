@@ -8,7 +8,7 @@ import { App } from './App';
 const container = document.getElementById('app');
 
 if (!container) {
-  throw new Error('Oh My Tabs React 根节点不存在。');
+  throw new Error('OhMy Tabs React 根节点不存在。');
 }
 
 createRoot(container).render(<App />);

@@ -21,6 +21,7 @@
 		466262CC70F8FE9FAE69C40B /* MediaItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C7B6FDE4E4349C9B929BF /* MediaItemTests.swift */; };
 		4A9B7A6C550BEB77FAE9D40B /* FailureRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209FF92DA29F18369310D804 /* FailureRecoveryTests.swift */; };
 		6E7C2CD21ACF4F74AE315289 /* SelectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2BF40EFBA69458BBC7A9F8 /* SelectionStore.swift */; };
+		7DB2E41455B21EBD7302BBAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF1610A7E0D44732D5A9FAC2 /* Assets.xcassets */; };
 		8218D96066243E469B849841 /* ProbeEventReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD41002BDC8A77BA1B1FA8B6 /* ProbeEventReducer.swift */; };
 		856014CA7100EBEF1394CE79 /* ThumbnailSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA67CE84AF2759D48F980437 /* ThumbnailSchedulerTests.swift */; };
 		8FD163222BA82083E01276E3 /* DeviceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0749E36CDF0CD27A3D19718 /* DeviceSession.swift */; };
@@ -81,6 +82,7 @@
 		BE2BF40EFBA69458BBC7A9F8 /* SelectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionStore.swift; sourceTree = "<group>"; };
 		BF332F78FE0CF6CC086DE88B /* MediaProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaProbe.swift; sourceTree = "<group>"; };
 		E0ABB9346FF4498E38B63B75 /* DecodedImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodedImageCache.swift; sourceTree = "<group>"; };
+		EF1610A7E0D44732D5A9FAC2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F0749E36CDF0CD27A3D19718 /* DeviceSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSession.swift; sourceTree = "<group>"; };
 		F8DD279300910CAAA12EE519 /* ProbeEventReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeEventReducerTests.swift; sourceTree = "<group>"; };
 		F94C0D3C74937BADE60F72F2 /* MediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItem.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 		3D9DAB521916A041FB0E1370 /* OhMyPhotos */ = {
 			isa = PBXGroup;
 			children = (
+				EF1610A7E0D44732D5A9FAC2 /* Assets.xcassets */,
 				2DFF39192C1CB873D7C625CA /* App */,
 				2A7D66FF72565BEEC57C9660 /* Device */,
 				5208DD8A3923397D7AE0C660 /* Downloads */,
@@ -222,6 +225,7 @@
 			buildConfigurationList = 89679BFBA18881B23888D6FF /* Build configuration list for PBXNativeTarget "OhMyPhotos" */;
 			buildPhases = (
 				CACBFE193D1238B13A6C3996 /* Sources */,
+				EC42AF851A14BDA8D13414A8 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -282,6 +286,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EC42AF851A14BDA8D13414A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7DB2E41455B21EBD7302BBAF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		43083D20F2E663319203EBAA /* Sources */ = {
@@ -489,7 +504,7 @@
 					"@executable_path/../Frameworks",
 				);
 				OTHER_LDFLAGS = "$(inherited) -framework ImageCaptureCore -lsqlite3";
-				PRODUCT_BUNDLE_IDENTIFIER = dev.kevinstack.ohmyphotos;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.kevinstack.ohmy-photos";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -507,7 +522,7 @@
 					"@executable_path/../Frameworks",
 				);
 				OTHER_LDFLAGS = "$(inherited) -framework ImageCaptureCore -lsqlite3";
-				PRODUCT_BUNDLE_IDENTIFIER = dev.kevinstack.ohmyphotos;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.kevinstack.ohmy-photos";
 				SDKROOT = macosx;
 			};
 			name = Release;

@@ -11,7 +11,7 @@ const darkIconPaths = iconSizes.map((size) => `/src/assets/logo/ohmy-tabs-dark-$
 test('Manifest 覆盖新标签页并声明标签组权限', async () => {
   const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
 
-  assert.match(config, /name:\s*'Oh My Tabs'/);
+  assert.match(config, /name:\s*'OhMy Tabs'/);
   assert.match(config, /version:\s*'1\.0\.0'/);
   assert.match(config, /description:\s*'我的标签页，保存和组织我喜爱的网站。'/);
   assert.match(config, /permissions:\s*\['tabGroups'\]/);

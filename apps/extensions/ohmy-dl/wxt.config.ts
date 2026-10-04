@@ -54,7 +54,7 @@ export default defineConfig({
     },
   },
   manifest: {
-    name: 'Oh My DL',
+    name: 'OhMy DL',
     description: '在 Telegram Web 中右键保存图片和视频。',
     icons: {
       16: '/icon/ohmy-dl-16.png',
@@ -69,7 +69,7 @@ export default defineConfig({
         48: '/icon/ohmy-dl-48.png',
         128: '/icon/ohmy-dl-128.png',
       },
-      default_title: 'Oh My DL',
+      default_title: 'OhMy DL',
     },
     permissions: ['downloads', 'storage'],
     web_accessible_resources: [

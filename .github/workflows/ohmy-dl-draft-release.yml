@@ -1,4 +1,4 @@
-name: Oh My DL Draft Release
+name: OhMy DL Draft Release
 
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
           node - "$current_version" <<'NODE'
           const version = process.argv[2];
           if (!/^\d+\.\d+\.\d+$/.test(version)) {
-            console.error(`无效的 Oh My DL 版本号：${version}`);
+            console.error(`无效的 OhMy DL 版本号：${version}`);
             process.exit(1);
           }
           NODE
@@ -84,7 +84,7 @@ jobs:
             else
               comparison_status=$?
               if [[ "$comparison_status" -eq 2 ]]; then
-                echo "Oh My DL 版本从 $previous_version 降到了 $current_version。" >&2
+                echo "OhMy DL 版本从 $previous_version 降到了 $current_version。" >&2
                 exit 1
               fi
             fi
@@ -119,19 +119,19 @@ jobs:
 
       - name: Skip unchanged version
         if: steps.version.outputs.should_release != 'true'
-        run: echo "跳过 Oh My DL 发布：${{ steps.version.outputs.reason }}"
+        run: echo "跳过 OhMy DL 发布：${{ steps.version.outputs.reason }}"
 
       - name: Install dependencies
         if: steps.version.outputs.should_release == 'true'
         run: pnpm install --frozen-lockfile
 
-      - name: Check Oh My DL
+      - name: Check OhMy DL
         if: steps.version.outputs.should_release == 'true'
-        run: pnpm --filter @omyexts/ohmy-dl check
+        run: pnpm --filter @ohmy-exts/ohmy-dl check
 
-      - name: Package Oh My DL
+      - name: Package OhMy DL
         if: steps.version.outputs.should_release == 'true'
-        run: pnpm --filter @omyexts/ohmy-dl package
+        run: pnpm --filter @ohmy-exts/ohmy-dl package
 
       - name: Verify package
         if: steps.version.outputs.should_release == 'true'
@@ -184,10 +184,10 @@ jobs:
                 exit 1
               fi
               gh release upload "$TAG" "$zip_file" --clobber
-              gh release edit "$TAG" --title "Oh My DL v${VERSION}" --notes '适用于 Chrome 和 Edge 的 Oh My DL 扩展包。'
+              gh release edit "$TAG" --title "OhMy DL v${VERSION}" --notes '适用于 Chrome 和 Edge 的 OhMy DL 扩展包。'
             else
-              gh release create "$TAG" "$zip_file" --draft --verify-tag --title "Oh My DL v${VERSION}" --notes '适用于 Chrome 和 Edge 的 Oh My DL 扩展包。'
+              gh release create "$TAG" "$zip_file" --draft --verify-tag --title "OhMy DL v${VERSION}" --notes '适用于 Chrome 和 Edge 的 OhMy DL 扩展包。'
             fi
           else
-            gh release create "$TAG" "$zip_file" --draft --target "$TARGET_SHA" --title "Oh My DL v${VERSION}" --notes '适用于 Chrome 和 Edge 的 Oh My DL 扩展包。'
+            gh release create "$TAG" "$zip_file" --draft --target "$TARGET_SHA" --title "OhMy DL v${VERSION}" --notes '适用于 Chrome 和 Edge 的 OhMy DL 扩展包。'
           fi
