@@ -194,7 +194,7 @@ importers:
         specifier: 3.7.0
         version: 3.7.0
     devDependencies:
-      '@omyexts/stable-extension-dev':
+      '@ohmy-exts/stable-extension-dev':
         specifier: workspace:1.0.0
         version: link:../../../packages/stable-extension-dev
       '@tailwindcss/vite':
@@ -236,7 +236,7 @@ importers:
 
   apps/extensions/ohmy-dl:
     devDependencies:
-      '@omyexts/stable-extension-dev':
+      '@ohmy-exts/stable-extension-dev':
         specifier: workspace:1.0.0
         version: link:../../../packages/stable-extension-dev
       '@types/chrome':
@@ -260,7 +260,7 @@ importers:
 
   apps/extensions/x-download:
     devDependencies:
-      '@omyexts/stable-extension-dev':
+      '@ohmy-exts/stable-extension-dev':
         specifier: workspace:1.0.0
         version: link:../../../packages/stable-extension-dev
       '@types/chrome':

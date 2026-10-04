@@ -1,5 +1,5 @@
 {
-  "name": "@omyexts/ohmy-tabs",
+  "name": "@ohmy-exts/ohmy-tabs",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -21,7 +21,7 @@
     "tailwind-merge": "3.7.0"
   },
   "devDependencies": {
-    "@omyexts/stable-extension-dev": "workspace:1.0.0",
+    "@ohmy-exts/stable-extension-dev": "workspace:1.0.0",
     "@tailwindcss/vite": "4.3.3",
     "@types/chrome": "0.2.9",
     "@types/node": "24.13.4",

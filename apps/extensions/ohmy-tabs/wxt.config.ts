@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 
 import tailwindcss from '@tailwindcss/vite';
-import { createStableDevelopmentHooks } from '@omyexts/stable-extension-dev';
+import { createStableDevelopmentHooks } from '@ohmy-exts/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
 import { createBundleSizeWarningHook } from './scripts/bundle-size.mjs';
