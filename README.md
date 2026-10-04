@@ -1,4 +1,4 @@
-# OmyExts
+# OhMy Exts
 
 ## 1. 介绍
 
@@ -18,12 +18,12 @@
 ## 3. 本目录项目结构
 
 ```text
-omyexts/
+ohmy-exts/
 ├─ .github/workflows/             # GitHub Actions 工作流
 ├─ apps/
 │  ├─ extensions/
-│  │  ├─ ohmy-tabs/               # Oh My Tabs 浏览器扩展
-│  │  ├─ ohmy-dl/                 # Oh My DL 浏览器扩展
+│  │  ├─ ohmy-tabs/               # OhMy Tabs 浏览器扩展
+│  │  ├─ ohmy-dl/                 # OhMy DL 浏览器扩展
 │  │  └─ x-download/              # X Download 浏览器扩展
 │  ├─ helpers/
 │  │  └─ x-download-helper/       # X Download macOS 配套应用
@@ -42,8 +42,8 @@ omyexts/
 
 子项目 README：
 
-- [Oh My Tabs](apps/extensions/ohmy-tabs/README.md)
-- [Oh My DL](apps/extensions/ohmy-dl/README.md)
+- [OhMy Tabs](apps/extensions/ohmy-tabs/README.md)
+- [OhMy DL](apps/extensions/ohmy-dl/README.md)
 - [X Download](apps/extensions/x-download/README.md)
 - [X Download Helper](apps/helpers/x-download-helper/README.md)
 - [Website](apps/website/README.md)

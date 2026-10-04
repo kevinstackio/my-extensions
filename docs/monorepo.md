@@ -1,11 +1,11 @@
 # Monorepo 使用指南
 
-本文说明 `omyexts` 的目录职责、workspace 规则、依赖边界和统一命令。具体的 WXT 使用方式见 [WXT 使用指南](wxt.md)，迁移已有扩展时见 [扩展迁移到 WXT](migrations/extension-to-wxt.md)。
+本文说明 `ohmy-exts` 的目录职责、workspace 规则、依赖边界和统一命令。具体的 WXT 使用方式见 [WXT 使用指南](wxt.md)，迁移已有扩展时见 [扩展迁移到 WXT](migrations/extension-to-wxt.md)。
 
 ## 目录职责
 
 ```text
-omyexts/
+ohmy-exts/
 ├─ apps/
 │  ├─ extensions/       # Chrome 和 Edge 扩展
 │  ├─ helpers/          # 扩展配套程序，包括 Swift 等非 Node 项目
@@ -31,7 +31,7 @@ packages:
 ```
 
 - Node 项目必须包含独立的 `package.json`，否则 pnpm 和 Turbo 不会把它识别为 workspace 包。
-- 包名统一使用 `@omyexts/<项目名>`，项目名使用 kebab-case。
+- 包名统一使用 `@ohmy-exts/<项目名>`，项目名使用 kebab-case。
 - 每个项目独立维护入口、依赖、构建配置和测试。
 - Swift、Xcode 等非 Node 项目可以继续放在 `apps` 中，不要求为了加入目录而创建 `package.json`。
 - 只有确实需要由根命令调度非 Node 项目时，才为它增加薄包装脚本或专用构建任务。
@@ -59,9 +59,9 @@ pnpm turbo ls
 根目录不提供聚合开发、构建或测试命令；日常开发使用带项目简称的单插件命令，按需进入对应项目执行其自身脚本。不需要为单独运行的 WXT 项目配置固定端口。
 
 ```bash
-pnpm --filter @omyexts/<项目名> dev
-pnpm --filter @omyexts/<项目名> build
-pnpm --filter @omyexts/<项目名> test
+pnpm --filter @ohmy-exts/<项目名> dev
+pnpm --filter @ohmy-exts/<项目名> build
+pnpm --filter @ohmy-exts/<项目名> test
 ```
 
 当前 WXT 扩展已提供：
@@ -92,7 +92,7 @@ pnpm x:build
 
 ## 共享配置边界
 
-Oh My DL 与 Oh My Tabs 均已完成 WXT 化，但暂不提取共享 WXT、TypeScript 或 Vitest 配置。两个项目的共同部分应在形成稳定重复模式后再考虑提取：
+OhMy DL 与 OhMy Tabs 均已完成 WXT 化，但暂不提取共享 WXT、TypeScript 或 Vitest 配置。两个项目的共同部分应在形成稳定重复模式后再考虑提取：
 
 - 完全相同且会持续同步的配置可以提取到 `packages`。
 - Manifest 权限、入口、页面和业务代码继续留在各自项目中。

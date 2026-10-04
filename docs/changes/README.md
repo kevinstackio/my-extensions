@@ -79,9 +79,7 @@ docs/
 
 ## 当前 Issue
 
-- [更新 OhMy 系列产品图标](./issues/2026-10-03-repo-ohmy-product-icons-issue.md)
-  - [Commit 记录](./commits/2026-10-03-repo-ohmy-product-icons-commit.md)
-  - 当前阶段：生成并接入正式图标资源
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -92,6 +90,16 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [统一 OhMy 命名格式](./issues/2026-10-04-repo-unify-ohmy-naming-issue.md)
+  - [Commit 记录](./commits/2026-10-04-repo-unify-ohmy-naming-commit.md)
+  - [Spec](../superpowers/specs/2026-10-04-repo-unify-ohmy-naming-design.md)
+  - [Plan](../superpowers/plans/2026-10-04-repo-unify-ohmy-naming.md)
+  - 用户已批准拆分为三个本地 Commit；OhMy DL Vitest 与真实视觉验收限制已记录
+
+- [更新 OhMy 系列产品图标](./issues/2026-10-03-repo-ohmy-product-icons-issue.md)
+  - [Commit 记录](./commits/2026-10-03-repo-ohmy-product-icons-commit.md)
+  - 用户确认现有图标交付已经完成，不再创建单独的收口 Commit
 
 - [补充本地 Commit 正文换行规范](./issues/2026-10-01-repo-commit-message-format-issue.md)
   - [Commit 记录](./commits/2026-10-01-repo-commit-message-format-commit.md)

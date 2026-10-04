@@ -1,4 +1,4 @@
-# Oh My DL
+# OhMy DL
 
 ## 1. 介绍
 
@@ -10,7 +10,7 @@
 - Content Script 负责识别 Telegram Web 中的媒体并提供下载操作。
 - Popup 与后台任务共同展示下载进度、历史记录和终态任务。
 - 使用 `browser.storage.local` 保存任务历史，使用浏览器 Downloads API 保存文件。
-- 根目录开发、构建和检查命令：`pnpm ohmy-dl:dev`、`pnpm ohmy-dl:build`、`pnpm --filter @omyexts/ohmy-dl check`。
+- 根目录开发、构建和检查命令：`pnpm ohmy-dl:dev`、`pnpm ohmy-dl:build`、`pnpm --filter @ohmy-exts/ohmy-dl check`。
 
 ## 3. 本目录项目结构
 

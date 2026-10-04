@@ -12,7 +12,7 @@
 
 ## shadcn/ui 受控引入
 
-- Oh My Tabs 以 shadcn/ui 与 Radix 原语作为通用 UI 基础，但只按已批准的真实交互需求引入组件；禁止执行 `shadcn add --all`，不得为了形式统一机械替换业务组件。
+- OhMy Tabs 以 shadcn/ui 与 Radix 原语作为通用 UI 基础，但只按已批准的真实交互需求引入组件；禁止执行 `shadcn add --all`，不得为了形式统一机械替换业务组件。
 - `src/components/ui/` 只维护项目持有的通用 shadcn/ui 原语源码，不得包含书签、Dock、Chrome API 或其他业务逻辑；业务差异应在 `src/features/` 或现有业务组件中通过组合、variant 和 `className` 实现。
 - 当前受控范围只包含 `Button`、`Tooltip`、`DropdownMenu` 和已有 `Separator`；`Card`、shadcn `Popover`、`Dialog` 与 `AlertDialog` 在没有独立需求和用户批准前不得引入。
 - 添加或更新 shadcn/ui 原语前必须检查生成差异，不得直接覆盖本地 Token、字体或已批准的可访问性定制；组件升级必须保留与真实行为和架构边界对应的现有测试。
@@ -37,7 +37,7 @@
 - 已废弃的自定义 Popover 不得重新引入；DropdownMenu 与 Tooltip 分别承担菜单和提示职责，不维护双轨实现。
 - 桌面应用、搜索、编辑、拖拽、设置、主题按钮、`Dialog`、`AlertDialog` 和新的全局状态管理均不属于当前功能范围；新增时必须建立新的本地 Issue，并按任务规模完成必要设计批准。
 
-## Oh My Tabs 验收
+## OhMy Tabs 验收
 
 - 自动化测试覆盖不依赖真实浏览器布局与焦点环境的配置、数据处理、链接安全属性和必要架构边界；不得用假 DOM 模拟 Tooltip、菜单、键盘、焦点或指针交互。
 - 架构测试只用于防止高风险边界回退，例如旧 Popover、Lucide 全量导入、业务逻辑进入 `src/components/ui/` 或未批准的 shadcn 原语被重新引入；不得大量断言源码文本和内部实现形式。

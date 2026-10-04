@@ -1,8 +1,8 @@
-# Oh My Tabs
+# OhMy Tabs
 
 ## 1. 介绍
 
-Oh My Tabs 是一个基于 Chromium 新标签页的浏览器扩展，用于保存和组织常用网站、书签和工具入口。
+OhMy Tabs 是一个基于 Chromium 新标签页的浏览器扩展，用于保存和组织常用网站、书签和工具入口。
 
 ## 2. 项目框架
 

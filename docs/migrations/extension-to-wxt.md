@@ -1,6 +1,6 @@
 # 扩展迁移到 WXT
 
-本文是一份可复用的迁移清单，用于将已有 Chrome/Edge 扩展接入 `omyexts` monorepo 并迁移到 WXT。它不是 Oh My DL 的代码副本，也不强制使用 React。
+本文是一份可复用的迁移清单，用于将已有 Chrome/Edge 扩展接入 `ohmy-exts` monorepo 并迁移到 WXT。它不是 OhMy DL 的代码副本，也不强制使用 React。
 
 ## 项目信息
 
@@ -8,7 +8,7 @@
 
 ```text
 项目目录：apps/extensions/<project-name>
-Workspace 包名：@omyexts/<project-name>
+Workspace 包名：@ohmy-exts/<project-name>
 扩展显示名称：<display-name>
 扩展类型：content script / newtab / popup / options / mixed
 目标浏览器：Chrome / Edge
@@ -29,7 +29,7 @@ Workspace 包名：@omyexts/<project-name>
 ## 阶段二：接入 Workspace
 
 - [ ] 新增项目级 `package.json`。
-- [ ] 设置唯一包名 `@omyexts/<project-name>`。
+- [ ] 设置唯一包名 `@ohmy-exts/<project-name>`。
 - [ ] 设置 `private: true`。
 - [ ] 使用完整、精确的依赖版本。
 - [ ] 提供需要的 `dev`、`build`、`test`、`typecheck` 和 `postinstall` 脚本。
@@ -102,9 +102,9 @@ pnpm --filter <package-name> build
 pnpm turbo ls
 ```
 
-## Oh My Tabs 迁移经验
+## OhMy Tabs 迁移经验
 
-Oh My Tabs 已完成 WXT、React、TypeScript 和 Vitest 迁移，以下经验适用于其他新标签页扩展：
+OhMy Tabs 已完成 WXT、React、TypeScript 和 Vitest 迁移，以下经验适用于其他新标签页扩展：
 
 - `chrome_url_overrides.newtab` 必须映射到 WXT newtab 页面入口。
 - 迁移后重新核对 `tabGroups` 权限和相关浏览器 API 行为。
