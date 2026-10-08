@@ -1,0 +1,6 @@
+/* 清除浏览器默认边距并保证根页面至少占满视口。 */
+html,
+body {
+  margin: 0;
+  min-height: 100vh;
+}

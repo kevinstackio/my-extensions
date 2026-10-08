@@ -1,0 +1,115 @@
+import { test } from 'vitest';
+import assert from 'node:assert/strict';
+import { access, readFile, stat } from 'node:fs/promises';
+
+import wxtConfig from '../../wxt.config.ts';
+
+const iconSizes = [16, 32, 48, 128];
+const darkIconPaths = iconSizes.map((size) => `/src/assets/logo/ohmy-tabs-dark-${size}.png`);
+
+// 验证扩展配置将首页设置为浏览器新标签页，并申请标签组权限。
+test('Manifest 覆盖新标签页并声明标签组权限', async () => {
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+
+  assert.match(config, /name:\s*'OhMy Tabs'/);
+  assert.match(config, /version:\s*'1\.0\.0'/);
+  assert.match(config, /description:\s*'我的标签页，保存和组织我喜爱的网站。'/);
+  assert.match(config, /permissions:\s*\['tabGroups'\]/);
+  for (const iconPath of darkIconPaths) {
+    assert.match(config, new RegExp(`['"]${iconPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]`));
+  }
+});
+
+// 验证 WXT 配置接入稳定开发产物，并保留旧版运行时使用的资源目录。
+test('WXT 配置发布稳定目录并映射静态资源', async () => {
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+
+  assert.match(config, /createStableDevelopmentHooks\(\)/);
+  assert.match(config, /'prepare:publicPaths'/);
+  assert.match(config, /'build:publicAssets'/);
+  assert.match(config, /relativeDest: `src\/assets\/\$\{file\}`/);
+});
+
+// 依赖扫描只读取源码入口，避免与 WXT 清空临时构建目录产生竞态。
+test('Vite 依赖扫描排除 WXT 临时与稳定产物', async () => {
+  const viteConfig = await wxtConfig.vite();
+
+  assert.deepEqual(viteConfig.optimizeDeps?.entries, [
+    'src/entrypoints/newtab/index.html',
+  ]);
+});
+
+// 验证首页通过唯一 React 样式入口加载书签样式、标签页图标回退资源与挂载节点。
+test('首页加载书签入口', async () => {
+  const home = await readFile(new URL('../entrypoints/newtab/index.html', import.meta.url), 'utf8');
+  const main = await readFile(new URL('../entrypoints/newtab/main.tsx', import.meta.url), 'utf8');
+
+  assert.doesNotMatch(home, /<link rel="stylesheet"/);
+  assert.match(main, /import ['"]\.\.\/\.\.\/styles\/index\.css['"]/);
+  assert.match(home, /<div id="app"><\/div>/);
+  assert.match(home, /<script type="module" src="\.\/main\.tsx"><\/script>/);
+  assert.doesNotMatch(home, /views\/home\/index\.js/);
+  assert.match(home, /<link rel="icon" href="..\/..\/assets\/logo\/ohmy-tabs-dark-16\.png">/);
+});
+
+// 验证新标签页只通过 React 入口挂载，避免原生脚本与 React 双重渲染。
+test('新标签页接入 React 入口与 WXT 模块', async () => {
+  const packageJson = JSON.parse(await readFile(new URL('../../package.json', import.meta.url), 'utf8'));
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+  const home = await readFile(new URL('../entrypoints/newtab/index.html', import.meta.url), 'utf8');
+  const [mainStat, appStat] = await Promise.all([
+    stat(new URL('../entrypoints/newtab/main.tsx', import.meta.url)),
+    stat(new URL('../entrypoints/newtab/App.tsx', import.meta.url)),
+  ]);
+
+  assert.equal(packageJson.dependencies.react, '19.3.0');
+  assert.equal(packageJson.dependencies['react-dom'], '19.3.0');
+  assert.equal(packageJson.devDependencies['@types/react'], '19.3.0');
+  assert.equal(packageJson.devDependencies['@types/react-dom'], '19.3.0');
+  assert.equal(packageJson.devDependencies['@vitejs/plugin-react'], '6.1.1');
+  assert.equal(packageJson.devDependencies['@wxt-dev/module-react'], '1.2.2');
+  assert.match(config, /modules:\s*\[\s*'@wxt-dev\/module-react'\s*\]/);
+  assert.match(home, /<div id="app"><\/div>/);
+  assert.match(home, /<script type="module" src="\.\/main\.tsx"><\/script>/);
+  assert.doesNotMatch(home, /views\/home\/index\.js/);
+  assert.equal(mainStat.isFile(), true);
+  assert.equal(appStat.isFile(), true);
+});
+
+// 验证深浅色图标均以完整的 PNG 尺寸集交付，避免主题资源缺失。
+test('深浅色图标提供完整且尺寸正确的 PNG 资源', async () => {
+  for (const theme of ['dark', 'light']) {
+    for (const size of iconSizes) {
+      const icon = new URL(`../assets/logo/ohmy-tabs-${theme}-${size}.png`, import.meta.url);
+      const [metadata, content] = await Promise.all([stat(icon), readFile(icon)]);
+
+      assert.equal(metadata.size > 0, true);
+      assert.equal(content.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])), true);
+      assert.equal(content.readUInt32BE(16), size);
+      assert.equal(content.readUInt32BE(20), size);
+    }
+  }
+});
+
+// 验证已替换的通用图标不会继续发布，也不会从源码资源目录加载。
+test('已替换的通用图标不再发布或存在', async () => {
+  const config = await readFile(new URL('../../wxt.config.ts', import.meta.url), 'utf8');
+  const removedAssets = ['icons/brush-cleaning.svg', 'icons/components.svg', 'icons/devtools.svg'];
+
+  for (const asset of removedAssets) {
+    const assetPattern = asset.replaceAll('.', '[.]');
+    assert.doesNotMatch(config, new RegExp(`['"]${assetPattern}['"]`));
+    await assert.rejects(access(new URL(`../assets/${asset}`, import.meta.url)), { code: 'ENOENT' });
+  }
+});
+
+// 验证收藏品牌图标使用紧凑画布，避免在 Dock 中因原始留白显得过小。
+test('ChatGPT 收藏图标遵循品牌 SVG 规范', async () => {
+  const icon = await readFile(new URL('../assets/brand/chatgpt.svg', import.meta.url), 'utf8');
+
+  assert.match(icon, /<svg role="img" viewBox="0 0 24 24"/);
+  assert.match(icon, /<title id="chatgpt-title">ChatGPT<\/title>/);
+  assert.match(icon, /aria-labelledby="chatgpt-title"/);
+  assert.equal((icon.match(/<path /g) ?? []).length, 1);
+  assert.doesNotMatch(icon, /<\?xml|<!DOCTYPE|class=|p-id=|width=|height=|stroke=|opacity|<line|<rect|<image/);
+});

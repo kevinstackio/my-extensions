@@ -79,7 +79,9 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+- [迁入 Tabs 与 Photos 并统一根命令](./issues/2026-10-08-repo-app-foundations-root-commands-issue.md) — 实施中，用户已批准开始
+  - [Commit 记录](./commits/2026-10-08-repo-app-foundations-root-commands-commit.md)
+  - [Plan](../superpowers/plans/2026-10-08-repo-app-foundations-root-commands.md)
 
 ## Issue 队列
 

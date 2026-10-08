@@ -10,7 +10,12 @@
     "pnpm": "12.4.2"
   },
   "scripts": {
-    "website:dev": "turbo run dev --filter=@ohmy-exts/website"
+    "web:dev": "pnpm --filter @ohmy-exts/website dev",
+    "web:build": "pnpm --filter @ohmy-exts/website build",
+    "ext:dev": "pnpm --filter @ohmy-exts/extension dev",
+    "ext:build": "pnpm --filter @ohmy-exts/extension build",
+    "desk:dev": "node apps/desktop/scripts/desk.mjs dev",
+    "desk:build": "node apps/desktop/scripts/desk.mjs build"
   },
   "devDependencies": {
     "turbo": "2.10.12"
