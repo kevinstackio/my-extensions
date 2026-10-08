@@ -10,13 +10,7 @@
     "pnpm": "12.4.2"
   },
   "scripts": {
-    "website:dev": "turbo run dev --filter=@ohmy-exts/website",
-    "ohmy-tabs:dev": "pnpm --filter @ohmy-exts/ohmy-tabs dev",
-    "ohmy-dl:dev": "pnpm --filter @ohmy-exts/ohmy-dl dev",
-    "ohmy-photos:dev": "zsh apps/desktop/ohmy-photos/scripts/build.sh",
-    "ohmy-dl:package": "pnpm --filter @ohmy-exts/ohmy-dl package",
-    "x:dev": "pnpm --filter @ohmy-exts/x-download dev",
-    "x-helper:dev": "zsh apps/helpers/x-download-helper/scripts/run.sh"
+    "website:dev": "turbo run dev --filter=@ohmy-exts/website"
   },
   "devDependencies": {
     "turbo": "2.10.12"

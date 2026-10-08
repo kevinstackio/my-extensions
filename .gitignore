@@ -19,9 +19,9 @@ xcuserdata/
 .vite/
 apps/website/.vitepress/cache/
 .superpowers/
-apps/helpers/x-download-helper/VendorTools/yt-dlp
-apps/helpers/x-download-helper/VendorTools/ffmpeg
-apps/helpers/x-download-helper/Tools/downloads/
+archive/apps/helpers/x-download-helper/VendorTools/yt-dlp
+archive/apps/helpers/x-download-helper/VendorTools/ffmpeg
+archive/apps/helpers/x-download-helper/Tools/downloads/
 
 # 测试与类型检查产物
 coverage/
