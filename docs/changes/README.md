@@ -83,13 +83,16 @@ docs/
 
 ## Issue 队列
 
-当前没有其他排队 Issue。
+- 归档旧应用并调整仓库入口 — 第一步验收并最终提交后再创建 Issue 和 Commit 记录；范围为目录移动及必要配置同步，不迁移业务功能
 
 ## 待办
 
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [梳理现有功能与统一应用结构](./issues/2026-10-08-repo-app-integration-inventory-issue.md)
+  - [Commit 记录](./commits/2026-10-08-repo-app-integration-inventory-commit.md)
 
 - [统一 OhMy 命名格式](./issues/2026-10-04-repo-unify-ohmy-naming-issue.md)
   - [Commit 记录](./commits/2026-10-04-repo-unify-ohmy-naming-commit.md)
