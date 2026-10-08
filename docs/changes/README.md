@@ -83,13 +83,18 @@ docs/
 
 ## Issue 队列
 
-- 归档旧应用并调整仓库入口 — 第一步验收并最终提交后再创建 Issue 和 Commit 记录；范围为目录移动及必要配置同步，不迁移业务功能
+当前没有其他排队 Issue。
 
 ## 待办
 
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [归档旧应用并调整仓库入口](./issues/2026-10-08-repo-archive-legacy-apps-issue.md)
+  - [Commit 记录](./commits/2026-10-08-repo-archive-legacy-apps-commit.md)
+  - [Plan](../superpowers/plans/2026-10-08-repo-archive-legacy-apps.md)
+  - 用户已批准拆分本地提交；归档内容、脚本模式、官网构建和公共工具测试已验证
 
 - [梳理现有功能与统一应用结构](./issues/2026-10-08-repo-app-integration-inventory-issue.md)
   - [Commit 记录](./commits/2026-10-08-repo-app-integration-inventory-commit.md)

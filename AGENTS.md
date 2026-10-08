@@ -2,8 +2,9 @@
 
 ## 项目结构
 
-- 仓库包含多个相互独立的浏览器插件；每个插件目录独立维护扩展配置、源代码与测试。
-- 跨插件的通用规则维护在根目录 `AGENTS.md`；插件专属约束应维护在对应插件目录中。
+- 仓库使用 monorepo 维护 `apps/website`、`apps/desktop` 和 `apps/extension` 三个应用位置；desktop 与 extension 的功能按独立 Issue 逐项迁入。
+- 旧应用保存在 `archive/apps`，用于源码参考，不参与活动 Workspace 或默认构建；功能迁入并验收、数据处理和依赖解除后，才可在明确批准的范围内删除对应归档项目。
+- 通用规则维护在根目录 `AGENTS.md`；应用专属约束维护在对应应用目录中。`packages` 保存实际复用的内部工具，`skills` 保存 Skill，`docs` 保存项目管理与设计文档。
 
 ## Apple 项目标识
 
