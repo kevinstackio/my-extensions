@@ -93,6 +93,11 @@ docs/
 
 ## 已完成
 
+- [修复 pnpm 安装缺少原生依赖](./issues/2026-10-08-repo-pnpm-native-install-issue.md)
+  - [Commit 记录](./commits/2026-10-08-repo-pnpm-native-install-commit.md)
+  - 用户批准独立本地提交；正常与冻结安装、WXT prepare 通过，保持原版本
+
+
 - [归档旧应用并调整仓库入口](./issues/2026-10-08-repo-archive-legacy-apps-issue.md)
   - [Commit 记录](./commits/2026-10-08-repo-archive-legacy-apps-commit.md)
   - [Plan](../superpowers/plans/2026-10-08-repo-archive-legacy-apps.md)
