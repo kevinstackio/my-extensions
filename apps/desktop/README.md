@@ -1,17 +1,27 @@
-# Desktop
+# exts 桌面应用
 
-统一桌面应用的预留位置，当前仅定义职责，尚无应用工程、可执行产物或开发命令。
+macOS 原生应用，Bundle Identifier 为 `dev.linguio.exts`，Organization Identifier 为 `dev.linguio`。
 
-## 功能归属
+## 当前结构
 
-- 设备媒体：迁入 OhMy Photos 的设备会话、媒体索引、缩略图、选择与安全备份。
-- 网页下载：迁入 X Download Helper 的本机下载与媒体处理。
-- 任务管理：展示本机执行任务的状态、结果与失败原因；具体公共边界在迁移时确定。
-- 浏览器桥接：接收扩展提交，返回本机任务状态；保留独立 Native Host 的需要在接入时确认。
+- `src/app/`：ExtsApp 入口与窗口组合。
+- `src/modules/media/`：设备会话、媒体索引、缩略图、选择与备份，含模块 UI。
+- `src/resources/`：应用 Assets 和已确认的 AppIcon。
+- `tests/modules/media/`：现有媒体纯逻辑 XCTest；`tests/scripts/`：desk 入口逻辑测试。
+- `project.yml`／`exts.xcodeproj/`：工程配置；`scripts/`：原生构建入口；`dist/`：Release 产物。
 
-## 迁入原则
+当前没有需要跨模块复用的 Swift 能力，故不创建空 shared 目录；后续功能按模块迁入，不将业务混入 app。
 
-每项能力独立确认范围并验收，优先复用已有实现。应用名称、Bundle Identifier、存储接续和退出行为在建立工程前确定；本目录不承诺已经支持以上功能。
+## 根目录命令
 
-- [归档与候选迁移顺序](../../archive/README.md)
-- [项目工作台](../../docs/changes/README.md)
+`pnpm desk:dev` 构建 Debug 并打开应用；`pnpm desk:build` 生成 `apps/desktop/dist/exts.app`。
+
+需要 macOS 27、Xcode 27 和 xcodegen；非 macOS 或缺少工具时明确报错。逻辑入口检查：`node --test apps/desktop/tests/scripts/desk.test.mjs`。
+
+旧下载目录 `~/Downloads/OhMy Photos` 与缩略图缓存 `~/Library/Application Support/OhMy Photos/Thumbnails` 保留以接续已有文件，不自动迁移或删除。新 Bundle Identifier 可能需要重新授权设备或目录。
+
+[当前 Issue](../../docs/changes/issues/2026-10-08-repo-app-foundations-root-commands-issue.md)
+
+## 本轮验证限制
+
+XCTest 27 项中 25 项通过；既有 SQLiteMediaStore 分页 SQL 拼接缺少空格导致两项失败。该实现与归档一致，当前媒体界面尚未使用它；本轮未改业务。真实设备、图标及备份由用户验收。

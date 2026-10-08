@@ -20,8 +20,8 @@ if [[ "$MODE" == 'build' ]]; then
 fi
 
 xcodebuild build \
-  -project OhMyPhotos.xcodeproj \
-  -scheme OhMyPhotos \
+  -project exts.xcodeproj \
+  -scheme exts \
   -sdk macosx \
   -configuration "$CONFIGURATION" \
   -derivedDataPath "$ROOT_DIR/DerivedData" \
@@ -29,7 +29,7 @@ xcodebuild build \
   CODE_SIGNING_ALLOWED=NO
 
 if [[ "$MODE" == 'dev' ]]; then
-  open "$ROOT_DIR/DerivedData/Build/Products/Debug/OhMyPhotos.app"
+  open "$ROOT_DIR/DerivedData/Build/Products/Debug/exts.app"
 else
-  print "桌面构建产物：$ROOT_DIR/dist/OhMyPhotos.app"
+  print "桌面构建产物：$ROOT_DIR/dist/exts.app"
 fi

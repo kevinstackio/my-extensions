@@ -1,6 +1,6 @@
-name: OhMyPhotos
+name: exts
 options:
-  bundleIdPrefix: dev.kevinstack
+  bundleIdPrefix: dev.linguio
   deploymentTarget:
     macOS: "27.0"
 settings:
@@ -8,27 +8,27 @@ settings:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "27.0"
 targets:
-  OhMyPhotos:
+  exts:
     type: application
     platform: macOS
     sources:
       - path: src
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.kevinstack.ohmy-photos
+        PRODUCT_BUNDLE_IDENTIFIER: dev.linguio.exts
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        INFOPLIST_KEY_CFBundleDisplayName: OhMy Photos
+        INFOPLIST_KEY_CFBundleDisplayName: exts
         INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © 2026 Kevin
         GENERATE_INFOPLIST_FILE: YES
         OTHER_LDFLAGS: "$(inherited) -framework ImageCaptureCore -lsqlite3"
-  OhMyPhotosTests:
+  extsTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: OhMyPhotosTests
+      - path: tests/modules/media
     dependencies:
-      - target: OhMyPhotos
+      - target: exts
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.kevinstack.ohmyphotos.tests
+        PRODUCT_BUNDLE_IDENTIFIER: dev.linguio.exts.tests
         GENERATE_INFOPLIST_FILE: YES

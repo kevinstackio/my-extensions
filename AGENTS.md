@@ -8,8 +8,8 @@
 
 ## Apple 项目标识
 
-- macOS 应用统一使用 `dev.kevinstack` 作为 Xcode Organization Identifier。
-- Bundle Identifier 使用 `dev.kevinstack.<产品标识>` 格式；产品标识使用稳定的小写英文，不包含空格。
+- macOS 应用统一使用 `dev.linguio` 作为 Xcode Organization Identifier。
+- Bundle Identifier 使用 `dev.linguio.<产品标识>` 格式；产品标识使用稳定的小写英文，不包含空格。
 - 每个 macOS 项目的完整 Bundle Identifier 必须同时记录在项目配置和对应 Spec 中。
 
 ## 操作批准
