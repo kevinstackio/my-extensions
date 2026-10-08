@@ -1,5 +1,5 @@
 {
-  "name": "@ohmy-exts/stable-extension-dev",
+  "name": "@exts/stable-extension-dev",
   "version": "1.0.0",
   "private": true,
   "type": "module",

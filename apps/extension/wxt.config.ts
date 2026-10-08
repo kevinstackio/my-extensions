@@ -1,55 +1,55 @@
 import { resolve } from 'node:path';
 
 import tailwindcss from '@tailwindcss/vite';
-import { createStableDevelopmentHooks } from '@ohmy-exts/stable-extension-dev';
+import { createStableDevelopmentHooks } from '@exts/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
 import { createBundleSizeWarningHook } from './scripts/bundle-size.mjs';
 
 const assetFiles = [
-  'brand/bilibili.svg',
-  'brand/chatgpt.svg',
-  'brand/github.svg',
-  'brand/gmail.svg',
-  'brand/linear.svg',
-  'brand/namecheap.svg',
-  'brand/notion.svg',
-  'brand/text-chsi.svg',
-  'brand/text-ielts.svg',
-  'brand/text-jlpt.svg',
-  'brand/text-pmi.svg',
-  'brand/vercel.svg',
-  'brand/x.svg',
-  'brand/youtube.svg',
-  'fonts/OFL.txt',
-  'fonts/SOURCE.md',
-  'logo/ohmy-tabs-dark-128.png',
-  'logo/ohmy-tabs-dark-16.png',
-  'logo/ohmy-tabs-dark-32.png',
-  'logo/ohmy-tabs-dark-48.png',
-  'logo/ohmy-tabs-light-128.png',
-  'logo/ohmy-tabs-light-16.png',
-  'logo/ohmy-tabs-light-32.png',
-  'logo/ohmy-tabs-light-48.png',
-  'tools/antd.svg',
-  'tools/element-plus.svg',
-  'tools/element-ui.svg',
-  'tools/google-translate.png',
-  'tools/iconfont.svg',
-  'tools/lucide.svg',
+  'modules/newtab/assets/brand/bilibili.svg',
+  'modules/newtab/assets/brand/chatgpt.svg',
+  'modules/newtab/assets/brand/github.svg',
+  'modules/newtab/assets/brand/gmail.svg',
+  'modules/newtab/assets/brand/linear.svg',
+  'modules/newtab/assets/brand/namecheap.svg',
+  'modules/newtab/assets/brand/notion.svg',
+  'modules/newtab/assets/brand/text-chsi.svg',
+  'modules/newtab/assets/brand/text-ielts.svg',
+  'modules/newtab/assets/brand/text-jlpt.svg',
+  'modules/newtab/assets/brand/text-pmi.svg',
+  'modules/newtab/assets/brand/vercel.svg',
+  'modules/newtab/assets/brand/x.svg',
+  'modules/newtab/assets/brand/youtube.svg',
+  'assets/fonts/OFL.txt',
+  'assets/fonts/SOURCE.md',
+  'assets/logo/exts-128.png',
+  'assets/logo/exts-16.png',
+  'assets/logo/exts-32.png',
+  'assets/logo/exts-48.png',
+  'assets/logo/exts-light-128.png',
+  'assets/logo/exts-light-16.png',
+  'assets/logo/exts-light-32.png',
+  'assets/logo/exts-light-48.png',
+  'modules/newtab/assets/tools/antd.svg',
+  'modules/newtab/assets/tools/element-plus.svg',
+  'modules/newtab/assets/tools/element-ui.svg',
+  'modules/newtab/assets/tools/google-translate.png',
+  'modules/newtab/assets/tools/iconfont.svg',
+  'modules/newtab/assets/tools/lucide.svg',
 ] as const;
 
-const outputAssetPaths = assetFiles.map((file) => `/src/assets/${file}`);
+const outputAssetPaths = assetFiles.map((file) => `/src/${file}`);
 const assetCopies = assetFiles.map((file) => ({
-  absoluteSrc: resolve('src/assets', file),
-  relativeDest: `src/assets/${file}`,
+  absoluteSrc: resolve('src', file),
+  relativeDest: `src/${file}`,
 }));
 
 const actionIcons = {
-  16: '/src/assets/logo/ohmy-tabs-dark-16.png',
-  32: '/src/assets/logo/ohmy-tabs-dark-32.png',
-  48: '/src/assets/logo/ohmy-tabs-dark-48.png',
-  128: '/src/assets/logo/ohmy-tabs-dark-128.png',
+  16: '/src/assets/logo/exts-16.png',
+  32: '/src/assets/logo/exts-32.png',
+  48: '/src/assets/logo/exts-48.png',
+  128: '/src/assets/logo/exts-128.png',
 };
 
 const stableDevelopmentHooks = createStableDevelopmentHooks();
@@ -81,14 +81,14 @@ export default defineConfig({
     },
   },
   manifest: {
-    name: 'OhMy Tabs',
+    name: 'exts',
     version: '1.0.0',
     description: '我的标签页，保存和组织我喜爱的网站。',
     permissions: ['tabGroups'],
     icons: actionIcons,
     action: {
       default_icon: actionIcons,
-      default_title: 'OhMy Tabs',
+      default_title: 'exts',
     },
   },
 });

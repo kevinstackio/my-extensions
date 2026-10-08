@@ -1,32 +1,22 @@
-# OhMy Tabs
+# exts 浏览器扩展
 
-## 1. 介绍
+统一 Chrome／Edge 扩展，首批模块为新标签页，保留书签、Dock 和标签组功能。
 
-OhMy Tabs 是一个基于 Chromium 新标签页的浏览器扩展，用于保存和组织常用网站、书签和工具入口。
+## 目录职责
 
-## 2. 项目框架
+- `src/entrypoints/`：WXT 入口；`src/app/`：应用组合和图标配色适配。
+- `src/modules/newtab/`：书签数据、类型、业务组件、视图、标签组逻辑及品牌／工具资源。
+- `src/shared/ui/`：通用 UI 原语；`src/shared/lib/`：共用工具；`src/shared/browser/`：扩展资源地址工具。
+- `src/assets/`：应用图标与公共字体；`src/styles/`：全局样式。
+- `tests/modules/newtab/`：数据与标签组行为；`tests/config/`：图标分派、配置资源与体积边界。
+- 根 `wxt.config.ts`、`scripts/`、`package.json`：构建与应用配置。
 
-- 使用 WXT、React、TypeScript 和 Tailwind CSS v4。
-- 使用 shadcn/ui 与 Radix 原语构建 DropdownMenu、Tooltip、Dock 等界面组件。
-- 新标签页入口位于 `src/entrypoints/newtab/`。
-- 书签、标签组和浏览器交互逻辑位于 `src/types/`、`src/constants/` 与 `src/utils/`。
-- 根目录开发命令：`pnpm ohmy-tabs:dev`、`pnpm ohmy-tabs:build`。
+入口组合模块，shared 不导入业务模块。后续功能有独立模块，不预建占位目录。
 
-## 3. 本目录项目结构
+## 根目录用法
 
-```text
-ohmy-tabs/
-├─ src/
-│  ├─ assets/                    # 书签、工具和扩展图标资源
-│  ├─ components/                # UI 原语与共享组件
-│  ├─ entrypoints/               # WXT 入口
-│  ├─ lib/                       # UI 共用工具
-│  ├─ styles/                    # Tailwind、主题和全局样式
-│  ├─ types/                     # 书签领域类型
-│  ├─ utils/                     # 浏览器 API 与通用工具
-│  └─ views/                     # 新标签页视图
-├─ scripts/                      # 构建与包体积检查脚本
-├─ tests/                        # 自动化测试配置与测试文件
-├─ package.json                  # 项目命令与依赖
-└─ wxt.config.ts                 # WXT 配置
-```
+`pnpm ext:dev` 启动 WXT；Chrome／Edge 只加载 `apps/extension/dist/chrome-mv3-dev-stable/`，不能加载会被重建清空的临时目录。
+
+`pnpm ext:build` 生成生产产物 `apps/extension/dist/chrome-mv3/`。包内 `pnpm test`、`pnpm typecheck`、`pnpm check:bundle-size` 负责逻辑与构建验证，不执行视觉或交互验收。
+
+应用图标为透明黑／白 PNG，系统配色偏好在新标签页挂载后同步到工具栏及 favicon。用户自行检查真实浏览器主题效果；扩展 ID 或加载目录变化不保证旧存储自动继承。
