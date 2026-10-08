@@ -1,22 +1,20 @@
 ---
 title: Apps
-description: 浏览器扩展、原生应用和配套 Helper 的统一入口。
+description: exts 浏览器扩展与桌面应用。
 ---
 
-# Apps
+# exts Apps
 
-这里展示可以直接使用的浏览器扩展、原生应用和配套 Helper。每个产品后续都可以在这里进入自己的介绍、安装说明和使用文档。
+一个工具应用的两个入口，功能按模块逐步整合。
 
-## Browser Extensions
+## 浏览器扩展
 
-面向 Chrome 和 Edge 的浏览器扩展：
+面向 Chrome 和 Edge，当前提供新标签页、常用书签、Dock 和标签组。
 
-- **OhMy Tabs**：保存和组织我喜爱的网站。
-- **OhMy DL**：在 Telegram Web 中下载图片和视频。
-- **X Download**：在 X 中整理和下载媒体内容。
+## macOS 桌面应用
 
-## Native Apps and Helpers
+当前提供设备媒体浏览、缩略图、选择与安全备份。
 
-为扩展提供本地能力的应用和 Helper，例如下载执行、系统集成和后台任务处理。
+网页下载与浏览器桥接尚未迁入。旧应用保留为历史源码参考，不表示统一应用已支持其全部能力。
 
-Toolkits 中的 AI Skills 和 npm Packages 属于可复用能力，不属于 Apps；可以从 [Toolkits](/toolkits/) 进入。
+[工具包](/toolkits/)与[使用文档](/docs/)可从对应栏目进入。

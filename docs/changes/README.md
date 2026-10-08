@@ -75,13 +75,11 @@ docs/
 
 想法只表示可能开展的方向，不代表已经批准创建 Issue 或开始实施。
 
-当前没有其他想法。
+- SQLiteMediaStore 分页查询拼接缺少空格：本轮 XCTest 发现两项失败，已确认与归档一致，当前 UI 未使用；作为待批准后续事项，不擅自扩大本 Issue。
 
 ## 当前 Issue
 
-- [迁入 Tabs 与 Photos 并统一根命令](./issues/2026-10-08-repo-app-foundations-root-commands-issue.md) — 实施中，用户已批准开始
-  - [Commit 记录](./commits/2026-10-08-repo-app-foundations-root-commands-commit.md)
-  - [Plan](../superpowers/plans/2026-10-08-repo-app-foundations-root-commands.md)
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -93,9 +91,14 @@ docs/
 
 ## 已完成
 
+- [建立 exts 应用结构并迁入首批功能](./issues/2026-10-08-repo-app-foundations-root-commands-issue.md)
+  - [Commit 记录](./commits/2026-10-08-repo-app-foundations-root-commands-commit.md)
+  - [Plan](../superpowers/plans/2026-10-08-repo-app-foundations-root-commands.md)
+  - 用户于 2026-10-09 明确批准四份本地提交：安装、桌面、扩展、官网／仓库；原生 XCTest 25／27，SQLite 已有缺陷和真实设备未验证限制保留
+
 - [修复 pnpm 安装缺少原生依赖](./issues/2026-10-08-repo-pnpm-native-install-issue.md)
   - [Commit 记录](./commits/2026-10-08-repo-pnpm-native-install-commit.md)
-  - 用户批准独立本地提交；正常与冻结安装、WXT prepare 通过，保持原版本
+  - 独立 fix，正常／冻结安装与 WXT prepare 通过，原依赖引用保留
 
 
 - [归档旧应用并调整仓库入口](./issues/2026-10-08-repo-archive-legacy-apps-issue.md)

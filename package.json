@@ -1,5 +1,5 @@
 {
-  "name": "ohmy-exts",
+  "name": "exts",
   "private": true,
   "packageManager": "pnpm@12.4.2",
   "engines": {
@@ -10,8 +10,8 @@
     "pnpm": "12.4.2"
   },
   "scripts": {
-    "web:dev": "pnpm --filter @ohmy-exts/website dev",
-    "web:build": "pnpm --filter @ohmy-exts/website build",
+    "web:dev": "pnpm --filter @exts/website dev",
+    "web:build": "pnpm --filter @exts/website build",
     "ext:dev": "pnpm --filter @exts/extension dev",
     "ext:build": "pnpm --filter @exts/extension build",
     "desk:dev": "node apps/desktop/scripts/desk.mjs dev",

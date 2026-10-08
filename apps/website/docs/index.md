@@ -1,6 +1,6 @@
 ---
 title: Docs
-description: OhMy Exts 的统一文档入口。
+description: exts 的统一文档入口。
 ---
 
 # Docs

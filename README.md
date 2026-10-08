@@ -1,10 +1,10 @@
-# OhMy Exts
+# exts
 
 ## 1. 介绍
 
 将想法与能力延伸为实用工具，汇集浏览器扩展、应用、AI Skills 与开发工具。
 
-本仓库使用 monorepo 逐步整合一个自用工具：官网记录使用与开发文档，桌面应用承载本机能力，浏览器扩展提供网页与新标签页入口。旧应用已归档，desktop 与 extension 当前仅预留目录，尚未迁入功能。
+本仓库使用 monorepo 逐步整合一个自用工具：官网记录使用与开发文档，桌面应用承载本机能力，浏览器扩展提供网页与新标签页入口。旧应用保留在归档中；extension 已迁入新标签页，desktop 已迁入设备媒体能力，后续功能按模块逐项整合。
 
 ## 2. 项目框架
 
@@ -13,15 +13,15 @@
 - **Monorepo**：统一维护 website、desktop 和 extension；功能在应用内部按职责组织，不再分别维护独立产品入口。
 - **pnpm Workspace**：管理工作区依赖、项目包名和根目录统一命令；子项目可以单独执行，也可以从仓库根目录调用。
 - **Turborepo**：编排多个子项目的开发、构建和验证任务，并复用任务缓存。
-- **目录职责**：`apps/` 放当前应用及预留位置，`archive/` 保存旧源码，`packages/` 放内部复用工具，`skills/` 放本地 Skill，`docs/` 放项目管理与技术文档。
+- **目录职责**：`apps/` 放当前应用，`archive/` 保存旧源码，`packages/` 放内部复用工具，`skills/` 放本地 Skill，`docs/` 放项目管理与技术文档。
 
 ## 3. 本目录项目结构
 
 ```text
-ohmy-exts/
+exts/
 ├─ apps/
-│  ├─ desktop/                  # 统一桌面应用预留位置
-│  ├─ extension/                # 统一浏览器扩展预留位置
+│  ├─ desktop/                  # 统一桌面应用，含设备媒体模块
+│  ├─ extension/                # 统一浏览器扩展，含新标签页模块
 │  └─ website/                    # 官网与文档站点
 ├─ archive/
 │  ├─ apps/                     # 旧扩展、Photos 和 Helper 源码
@@ -45,10 +45,16 @@ ohmy-exts/
 - [Website](apps/website/README.md)
 - [旧应用归档与迁移说明](archive/README.md)
 
-## 4. 当前可用命令
+## 4. 根目录命令
 
-- 官网开发：`pnpm website:dev`。
-- 官网构建：`pnpm --filter @ohmy-exts/website build`。
-- 公共稳定发布工具测试：`pnpm --filter @ohmy-exts/stable-extension-dev test`。
+| 应用 | 开发 | 构建 |
+|---|---|---|
+| 官网 | `pnpm web:dev` | `pnpm web:build` |
+| Chrome／Edge 扩展 | `pnpm ext:dev` | `pnpm ext:build` |
+| macOS 桌面 | `pnpm desk:dev` | `pnpm desk:build` |
 
-旧应用的根开发与打包命令已退役。新 desktop 与 extension 尚无开发、构建或发布命令；后续功能迁入时再增加。
+先运行 `pnpm i`。Node 24.16.0、pnpm 12.4.2；原生桌面需要 macOS 27、Xcode 27 和 xcodegen。
+
+扩展开发只加载 `apps/extension/dist/chrome-mv3-dev-stable/`；生产产物为 `apps/extension/dist/chrome-mv3/`。桌面 Release 为 `apps/desktop/dist/exts.app`，官网构建为 `apps/website/dist/`。
+
+内部包统一使用 `@exts/*`。品牌源稿和分平台资源见 [assets/brand](assets/brand/README.md)。未迁入功能不建立空模块；归档与历史文档保留原名。
