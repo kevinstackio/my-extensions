@@ -10,6 +10,7 @@
 		03F84F8F174C40CAA92EAB04 /* MediaGrouping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01437008B82635566A54A380 /* MediaGrouping.swift */; };
 		06CF44748309F814CDC29C3B /* SQLiteMediaStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8220615D00F6B08CBC3787AF /* SQLiteMediaStoreTests.swift */; };
 		079AB24C58452BE8E45A3817 /* FilenameResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188FF576A364D8D27F00285B /* FilenameResolver.swift */; };
+		0AA5FC1980441B36BB2FD811 /* exts.icon in Resources */ = {isa = PBXBuildFile; fileRef = 939F6586336FEC16FE3E2B23 /* exts.icon */; };
 		0EB404147D55E93340E7D286 /* DeviceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2301934308BD71B7555B120F /* DeviceSession.swift */; };
 		0F141B4E408E885987883EF2 /* MonthSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BC51CD0E5AC9848C89E79 /* MonthSectionView.swift */; };
 		1F0618A75745CD19B9AD8464 /* MediaItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6113D0ADF9CDC6776C579680 /* MediaItemTests.swift */; };
@@ -72,6 +73,7 @@
 		7B31AFC9FC605320E2FF7F9D /* SelectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionStore.swift; sourceTree = "<group>"; };
 		7BDF9CFED023BE309A018293 /* DownloadCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadCoordinatorTests.swift; sourceTree = "<group>"; };
 		8220615D00F6B08CBC3787AF /* SQLiteMediaStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteMediaStoreTests.swift; sourceTree = "<group>"; };
+		939F6586336FEC16FE3E2B23 /* exts.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = exts.icon; sourceTree = "<group>"; };
 		A088F43AD0F4A1F1813AE7B3 /* FilenameResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilenameResolverTests.swift; sourceTree = "<group>"; };
 		A5C0B1CBBBF340A6EB6854DD /* ThumbnailDiskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailDiskStore.swift; sourceTree = "<group>"; };
 		B2C48EA6A09D6712C9F00407 /* ExtsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtsApp.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				0D5020207C86BB9AAB2BEED2 /* Assets.xcassets */,
+				939F6586336FEC16FE3E2B23 /* exts.icon */,
 			);
 			path = resources;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58C6D076BFDA68AFA3CD6D9C /* Assets.xcassets in Resources */,
+				0AA5FC1980441B36BB2FD811 /* exts.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,7 +387,7 @@
 		028635AA530D82CF723B67AA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = exts;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = exts;
@@ -435,7 +439,7 @@
 		CB5B1F23304ADD3366B357E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = exts;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = exts;

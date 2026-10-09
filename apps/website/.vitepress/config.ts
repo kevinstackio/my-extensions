@@ -6,15 +6,11 @@ export default defineConfig({
   description: "将想法与能力延伸为实用工具，汇集浏览器扩展、应用、AI Skills 与开发工具。",
   outDir: 'dist',
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/exts.svg', media: '(prefers-color-scheme: light)' }],
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/exts-light.svg', media: '(prefers-color-scheme: dark)' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/exts.svg' }],
     ['link', { rel: 'apple-touch-icon', href: '/exts-180.png' }]
   ],
   themeConfig: {
-    logo: {
-      light: '/exts.svg',
-      dark: '/exts-light.svg'
-    },
+    logo: '/exts.svg',
     // VitePress 默认主题配置
     nav: [
       { text: '首页', link: '/' },
