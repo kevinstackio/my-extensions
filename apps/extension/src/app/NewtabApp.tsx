@@ -1,20 +1,12 @@
-import { useEffect } from 'react';
-
 import { BOOKMARK_GRID, DOCK_COMPONENTS, DOCK_DEVTOOLS, DOCK_FAVORITES } from '../modules/newtab/constants/bookmarks';
 import { BookmarkDock } from '../modules/newtab/views/bookmarks/bookmark-dock';
 import { BookmarkGrid } from '../modules/newtab/views/bookmarks/bookmark-grid';
 import { TooltipProvider } from '../shared/ui/tooltip';
 import { openBookmarkInGroup } from '../modules/newtab/utils/tab.js';
-import { installActionIconTheme } from './action-icon-theme.js';
 import type { Bookmark, BookmarkCollection } from '../modules/newtab/types/bookmarks';
 
 /** 页面级组合入口：业务数据由 constants 提供，交互由下层视图组件负责。 */
 export function App() {
-  useEffect(() => {
-    // 浏览器工具栏图标和新标签页 favicon 共用系统明暗偏好，只需在根组件挂载时注册一次。
-    installActionIconTheme(window, document);
-  }, []);
-
   const onOpenBookmark = (folder: BookmarkCollection, bookmark: Bookmark) => {
     void openBookmarkInGroup(window.chrome, folder, bookmark);
   };

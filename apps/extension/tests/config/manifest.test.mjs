@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { access, readFile } from 'node:fs/promises';
+import { access } from 'node:fs/promises';
 import wxtConfig from '../../wxt.config.ts';
 
 // 配置行为与发布资源完整性，不依赖浏览器布局或源码写法。
@@ -12,7 +12,6 @@ test('统一扩展保留标签组权限并提供完整图标', async () => {
     const icon = wxtConfig.manifest.icons[size];
     assert.equal(icon, `/src/assets/logo/exts-${size}.png`);
     await access(new URL(`../..${icon}`, import.meta.url));
-    await access(new URL(`../../src/assets/logo/exts-light-${size}.png`, import.meta.url));
   }
 });
 
