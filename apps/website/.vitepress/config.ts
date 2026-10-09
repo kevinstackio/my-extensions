@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // VitePress 站点配置
 export default defineConfig({
-  title: "exts",
+  title: "Exts",
   description: "将想法与能力延伸为实用工具，汇集浏览器扩展、应用、AI Skills 与开发工具。",
   outDir: 'dist',
   head: [

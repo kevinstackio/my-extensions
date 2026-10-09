@@ -5,7 +5,7 @@ struct ExtsApp: App {
     @StateObject private var session = DeviceSession()
 
     var body: some Scene {
-        WindowGroup("exts") {
+        WindowGroup("Exts") {
             Group {
                 if session.state == .available {
                     LibraryView(

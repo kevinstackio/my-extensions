@@ -77,14 +77,14 @@ export default defineConfig({
     },
   },
   manifest: {
-    name: 'exts',
+    name: 'Exts',
     version: '1.0.0',
     description: '我的标签页，保存和组织我喜爱的网站。',
     permissions: ['tabGroups'],
     icons: actionIcons,
     action: {
       default_icon: actionIcons,
-      default_title: 'exts',
+      default_title: 'Exts',
     },
   },
 });

@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: "exts"
+  name: "Exts"
   text: "我的数字能力延伸"
   tagline: "将想法与能力延伸为实用工具，汇集浏览器扩展、应用、AI Skills 与开发工具。"
   actions:

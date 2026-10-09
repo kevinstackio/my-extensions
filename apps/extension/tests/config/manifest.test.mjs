@@ -5,8 +5,8 @@ import wxtConfig from '../../wxt.config.ts';
 
 // 配置行为与发布资源完整性，不依赖浏览器布局或源码写法。
 test('统一扩展保留标签组权限并提供完整图标', async () => {
-  assert.equal(wxtConfig.manifest.name, 'exts');
-  assert.equal(wxtConfig.manifest.action.default_title, 'exts');
+  assert.equal(wxtConfig.manifest.name, 'Exts');
+  assert.equal(wxtConfig.manifest.action.default_title, 'Exts');
   assert.deepEqual(wxtConfig.manifest.permissions, ['tabGroups']);
   for (const size of [16, 32, 48, 128]) {
     const icon = wxtConfig.manifest.icons[size];

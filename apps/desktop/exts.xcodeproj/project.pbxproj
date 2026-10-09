@@ -390,7 +390,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = exts;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = exts;
+				INFOPLIST_KEY_CFBundleDisplayName = Exts;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Kevin";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -442,7 +442,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = exts;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = exts;
+				INFOPLIST_KEY_CFBundleDisplayName = Exts;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Kevin";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
