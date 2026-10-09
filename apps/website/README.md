@@ -27,4 +27,4 @@ website/
 └─ package.json                  # 站点命令与依赖
 ```
 
-图标位于 public：浅色导航使用 exts.svg，深色使用 exts-light.svg；favicon 分别按系统配色选择，touch 图标保留黑底。构建产物为 apps/website/dist/。
+图标位于 public：导航与 favicon 固定使用 exts.svg，touch 图标使用同源黑底白色 PNG，不随主题切换。主体与生成规范维护在 assets/brand/；构建产物为 apps/website/dist/。

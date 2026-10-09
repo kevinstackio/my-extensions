@@ -91,6 +91,8 @@ docs/
 
 ## 已完成
 
+- [统一跨平台图标主体与规范制作方式](./issues/2026-10-09-repo-unify-platform-icons-issue.md) · [Commit 记录](./commits/2026-10-09-repo-unify-platform-icons-commit.md)
+
 - [整理 main 直线历史并压缩 Git 存储](./issues/2026-10-09-repo-linear-git-history-issue.md)
   - [Commit 记录](./commits/2026-10-09-repo-linear-git-history-commit.md)
   - main 已整理并同步，文件一致性与 Git 完整性验证通过；用户批准本地记录提交，发布标签迁移未批准
