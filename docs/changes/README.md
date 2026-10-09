@@ -91,6 +91,10 @@ docs/
 
 ## 已完成
 
+- [整理 main 直线历史并压缩 Git 存储](./issues/2026-10-09-repo-linear-git-history-issue.md)
+  - [Commit 记录](./commits/2026-10-09-repo-linear-git-history-commit.md)
+  - main 已整理并同步，文件一致性与 Git 完整性验证通过；用户批准本地记录提交，发布标签迁移未批准
+
 - [建立 exts 应用结构并迁入首批功能](./issues/2026-10-08-repo-app-foundations-root-commands-issue.md)
   - [Commit 记录](./commits/2026-10-08-repo-app-foundations-root-commands-commit.md)
   - [Plan](../superpowers/plans/2026-10-08-repo-app-foundations-root-commands.md)
