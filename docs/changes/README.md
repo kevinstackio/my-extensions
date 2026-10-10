@@ -79,11 +79,12 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+- [重建 Exts 产品官网](./issues/2026-10-11-website-product-homepage-issue.md) · [Commit 记录](./commits/2026-10-11-website-product-homepage-commit.md) · [设计](../superpowers/specs/2026-10-11-website-product-homepage-design.md)
+  - 状态：待提交；用户已确认验收通过，React/shadcn 官网与根版本两端直链完成，两次本地 Commit 的拆分与 message 待最终批准；[Plan](../superpowers/plans/2026-10-11-website-product-homepage.md) 已执行，未提交或部署。
 
 ## Issue 队列
 
-当前没有其他排队 Issue。
+- 部署 Exts 官网到 GitHub Pages 并接入 exts.linguio.dev：用户已确认后续交付目标；当前网站 Issue 最终交付 Commit 成功后再创建对应 Issue 与 Commit 记录，范围包含部署流程、必要 DNS 和 HTTPS 验证。
 
 ## 待办
 
