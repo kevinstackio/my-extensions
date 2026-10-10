@@ -2,13 +2,13 @@
 
 ## 网站图标
 
-- 网站品牌图标的来源为 [Simple Icons](https://simpleicons.org/)。
+- 网站图标的原始参考优先使用 [Simple Icons](https://simpleicons.org/)。
 - 图标资源仓库为 [simple-icons/simple-icons](https://github.com/simple-icons/simple-icons)。
-- `src/modules/newtab/assets/brand/` 中的书签图标必须优先从 Simple Icons 查找；不适用于通用工具资源 `src/modules/newtab/assets/tools/` 和插件自身图标 `src/assets/logo/`。
-- 仅当 Simple Icons 没有对应图标时，才根据用户提供的图片重绘原生 SVG，不直接嵌入或引用位图。
-- 重绘 SVG 必须使用 `viewBox="0 0 24 24"`，不写 `width`、`height`；并包含 `role="img"`、可访问的 `<title>` 与一个或多个 `<path>`。
-- 书签 SVG 的统一色值为黑色 `#000000`：优先省略 `fill` 以使用 SVG 默认黑色；如需显式声明，必须使用 `fill="#000000"`。不得使用其他色值、渐变、阴影、纹理或透明度效果，并保留小尺寸下可辨识的核心特征。
-- 文字类书签 SVG 统一命名为 `text-<书签 id>.svg`（例如 `text-pmi.svg`），文字置于透明 `128×128` 画布中央；允许通过等比或非等比缩放让文字主体更饱满，但不得超出安全边距。
+- `src/modules/newtab/assets/brand/` 中的书签图标优先从 Simple Icons 查找参考；允许按用户确认的范围参考原图手绘、调整大小与绘制细节，形成统一风格。有现成图标不限制手绘；没有对应资源时使用用户提供的参考。不直接嵌入或引用位图。
+- 是否带框由用户逐图确认，不按品牌身份决定；带框时复用共同外框，无框时不添加。手绘源稿及登记规则见 [V3 图标规范](../../docs/ohmy-icon-system.md)；未确认的图标不得擅自重绘、加框、去框或替换。
+- 本轮统一风格的正式 SVG 使用 `viewBox="0 0 1024 1024"`，不写固定 `width`、`height`；包含 `role="img"`、可访问的 `<title>` 与一个或多个 `<path>`。每个图标只维护一份正式 SVG，不另生成 24×24 接入版，实际显示大小与渲染适配由使用方负责；未调整的既有资源不自动转换。
+- 本轮正式 SVG 采用透明背景、单色 `currentColor`，不维护独立黑色、深浅主题或上传版本；不得添加渐变、阴影、纹理或透明度效果，并保留小尺寸下可辨识的核心特征。未调整的既有黑色资源不在本次文档工作中改色。
+- 文字类书签 SVG 统一命名为 `text-<书签 id>.svg`（例如 `text-pmi.svg`）；本轮统一风格的新正式源稿同样使用透明 `1024×1024` 坐标画布，按视觉重量居中并保留安全边距，不另设一套交付尺寸。未调整的既有文字资源保持原状。
 
 ## shadcn/ui 受控引入
 

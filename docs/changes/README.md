@@ -91,6 +91,8 @@ docs/
 
 ## 已完成
 
+- [整理 V3 图标与插头 Logo 独立规范](./issues/2026-10-10-repo-ohmy-icon-system-docs-issue.md) · [Commit 记录](./commits/2026-10-10-repo-ohmy-icon-system-docs-commit.md)
+
 - [记录统一构建与本地分发规范](./issues/2026-10-10-repo-build-release-docs-issue.md) · [Commit 记录](./commits/2026-10-10-repo-build-release-docs-commit.md)
 
 - [统一构建产物、版本来源与分发入口](./issues/2026-10-10-repo-unify-build-release-issue.md) · [Commit 记录](./commits/2026-10-10-repo-unify-build-release-commit.md)
