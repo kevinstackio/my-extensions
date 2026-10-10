@@ -79,7 +79,7 @@ docs/
 
 ## 当前 Issue
 
-当前没有活动 Issue。
+[建立扩展发布并验证首版打包](./issues/2026-10-10-exts-first-release-issue.md) · [Commit 记录](./commits/2026-10-10-exts-first-release-commit.md)；本地阶段已验收，用户批准单个实现提交；Issue 保持开放，远程 Action、Tag 和公开发布未执行。
 
 ## Issue 队列
 

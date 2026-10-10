@@ -65,6 +65,8 @@ exts/
 
 `pnpm release` 在 macOS 统一构建后生成根 `dist/release/` 的 ZIP 与 DMG；同版本包已存在时报错，不自动推送或发布。
 
+首版仅发布浏览器扩展：`pnpm ext:release` 独立构建并校验 `dist/release/exts-chrome-1.0.0.zip`，不构建网站或 desktop。手动 GitHub Actions 在验证通过后生成 `v1.0.0` Tag 与 Release 草稿，用户验收后公开；后续 Mac 附件使用 `exts-mac-<版本>.dmg`。
+
 构建缓存也统一放在根 `dist/.cache/`；应用内部不再生成 `dist` 或 `DerivedData`。完整命令、版本、目录与分发规则见 [构建与分发规范](docs/build-release.md)。
 
 内部包统一使用 `@exts/*`。品牌源稿和分平台资源见 [assets/brand](assets/brand/README.md)。未迁入功能不建立空模块；归档与历史文档保留原名。

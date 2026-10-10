@@ -1,0 +1,98 @@
+name: Exts Chrome Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: exts-chrome-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@v5.0.0
+        with:
+          fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+        with:
+          version: 12.4.2
+      - name: Setup Node.js
+        uses: actions/setup-node@v5.0.0
+        with:
+          node-version: 24.16.0
+      - name: Read product version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node scripts/version.mjs)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+          echo "zip=dist/release/exts-chrome-$version.zip" >> "$GITHUB_OUTPUT"
+      - name: Check tag and release conflicts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          releases="$(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate --jq '.[] | .tag_name')"
+          if printf '%s\n' "$releases" | grep -Fxq "$TAG"; then
+            echo "Release $TAG 已存在，禁止覆盖。失败草稿需人工检查后处理。" >&2
+            exit 1
+          fi
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            target="$(git rev-parse "$TAG^{commit}")"
+            if [[ "$target" != "$GITHUB_SHA" ]]; then
+              echo "Tag $TAG 指向其他提交，禁止移动标签。" >&2
+              exit 1
+            fi
+          fi
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Test release behavior
+        run: node --test tests/build-release.test.mjs tests/extension-release.test.mjs
+      - name: Test stable extension publication
+        run: pnpm --filter @exts/stable-extension-dev test
+      - name: Test extension
+        run: pnpm --filter @exts/extension test
+      - name: Typecheck extension
+        run: pnpm --filter @exts/extension typecheck
+      - name: Build and package Chrome extension
+        run: pnpm ext:release
+      - name: Check bundle budget
+        run: pnpm --filter @exts/extension check:bundle-size
+      - name: Create tag and draft release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.version }}
+          ZIP: ${{ steps.version.outputs.zip }}
+        run: |
+          set -euo pipefail
+          if ! git show-ref --verify --quiet "refs/tags/$TAG"; then
+            git tag "$TAG" "$GITHUB_SHA"
+          fi
+          git push origin "refs/tags/$TAG"
+          cat > "$RUNNER_TEMP/exts-release-notes.md" <<'NOTES'
+          Exts 浏览器扩展：新标签页、书签、Dock 和标签组。
+
+          下载 exts-chrome-<版本>.zip 附件，解压后在 Chrome 扩展管理页开启开发者模式，选择“加载已解压的扩展程序”。经实际验收后也可在 Edge 中加载。
+
+          此版本只包含浏览器扩展。GitHub 自动生成的 Source code 压缩包是源码，不是扩展安装包。
+          NOTES
+          gh release create "$TAG" "$ZIP" --verify-tag --draft \
+            --title "Exts $VERSION" --notes-file "$RUNNER_TEMP/exts-release-notes.md"
+          gh release view "$TAG" --json url,tagName,isDraft,assets >> "$GITHUB_STEP_SUMMARY"
+          echo '草稿已生成；浏览器验收并公开 Release 后才有公开下载入口。' >> "$GITHUB_STEP_SUMMARY"

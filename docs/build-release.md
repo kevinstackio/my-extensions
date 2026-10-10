@@ -23,6 +23,7 @@ node scripts/version.mjs
 | pnpm desk:dev | 构建并打开独立桌面开发应用 | macOS |
 | pnpm web:build | 单独构建网站 | Windows、macOS |
 | pnpm ext:build | 单独构建正式扩展 | Windows、macOS |
+| pnpm ext:release | 独立构建并校验 Chrome 扩展 ZIP | Windows、macOS、Linux |
 | pnpm desk:build | 单独构建正式桌面应用 | macOS |
 | pnpm build | 串行构建 website、extension、desktop | macOS |
 | pnpm release | 完整构建后生成本地 ZIP、DMG | macOS |
@@ -47,8 +48,8 @@ dist/
 │  ├─ chrome-mv3/
 │  └─ exts.app/
 └─ release/
-   ├─ exts-extension-<版本号>.zip
-   └─ exts-macos-<版本号>.dmg
+   ├─ exts-chrome-<版本号>.zip
+   └─ exts-mac-<版本号>.dmg
 ```
 
 - 应用内部不再生成 dist 或 DerivedData；dist 不纳入 Git。每端仅清理、更新自己的目标，禁止清空公共 dist、dev、build 或 release。
@@ -84,6 +85,14 @@ dist/
 project.yml 是原生配置入口，desk 命令先用 XcodeGen 生成工程再构建并传入根版本；不要依赖尚未重新生成的旧工程直接验证新身份。桌面 dev 构建后打开应用，不提供源码自动热更新。
 
 ## 分发包
+
+附件统一使用产品名、平台和根版本：exts-chrome-<版本>.zip、exts-mac-<版本>.dmg；Tag 使用 v<版本>，Release 标题使用 Exts <版本>。首版 1.0.0 只发布 Chrome 扩展，不构建或发布 desktop。
+
+pnpm ext:release 独立构建扩展，检查 Manifest 版本、新标签页入口及图标资源，生成 ZIP 并校验后发布到根 dist/release。同版本文件已存在时拒绝覆盖。Windows 使用系统 PowerShell/.NET ZIP，Linux/macOS 使用 zip/unzip；此命令不构建网站或桌面，不创建 Tag 或上传。
+
+手动流程 .github/workflows/exts-chrome-release.yml 仅允许 main，执行冻结安装、发布脚本与稳定目录测试、扩展测试、类型检查、构建打包与体积检查。全部通过后创建指向本次构建提交的 v<版本> Tag 与 Release 草稿，只上传 Chrome ZIP。已有 Release 拒绝覆盖，已有 Tag 指向不同提交时失败；失败草稿需人工检查，不自动删除或覆盖。
+
+首次运行需先提交并推送 workflow 到 main，再从 Actions 手动运行。下载草稿 ZIP 后由用户解压并在 Chrome/Edge 扩展管理页加载验收；公开 Release 后核实附件下载地址。草稿和成功打包都不等于公开发布成功，GitHub 自动生成的 Source code ZIP 不是扩展安装包。
 
 pnpm release 先检查版本、平台、工具与同版本文件冲突，再调用统一 build。正式扩展 ZIP 根层直接包含 manifest.json；DMG 含正式 exts.app 和 Applications 安装入口，使用系统 zip、unzip、ditto、hdiutil 等工具生成和校验，不引入打包依赖。
 

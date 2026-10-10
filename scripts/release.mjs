@@ -1,9 +1,65 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, linkSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildAll } from './build.mjs';
 import { readProjectVersion, repositoryDirectory } from './version.mjs';
+
+export function releaseExtension({
+  platform = process.platform,
+  run = spawnSync,
+  extensionDir = join(repositoryDirectory, 'dist/build/chrome-mv3'),
+  releaseDirectory = join(repositoryDirectory, 'dist/release'),
+  build,
+} = {}) {
+  const version = readProjectVersion();
+  const zipPath = join(releaseDirectory, `exts-chrome-${version}.zip`);
+  if (existsSync(zipPath)) throw new Error(`同版本分发包已存在，不覆盖：${zipPath}`);
+  const execute = (label, command, args, options = {}) => {
+    const result = run(command, args, { stdio: 'inherit', ...options });
+    if (result.error || result.status !== 0) throw new Error(`${label}失败，退出码 ${result.status ?? '未知'}`, { cause: result.error });
+    return result.stdout;
+  };
+  if (build) build();
+  else if (platform === 'win32') {
+    execute('构建扩展', 'powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', 'pnpm ext:build; exit $LASTEXITCODE'], { cwd: repositoryDirectory });
+  } else execute('构建扩展', 'pnpm', ['ext:build'], { cwd: repositoryDirectory });
+  readProjectVersion(version);
+  const manifest = JSON.parse(readFileSync(join(extensionDir, 'manifest.json'), 'utf8'));
+  if (manifest.version !== version || manifest.manifest_version !== 3 || !manifest.name) throw new Error('扩展 Manifest 版本或格式不一致');
+  const entry = manifest.chrome_url_overrides?.newtab;
+  const resources = [entry, ...Object.values(manifest.icons ?? {}), ...Object.values(manifest.action?.default_icon ?? {})];
+  for (const resource of resources) {
+    if (typeof resource !== 'string' || !resource) throw new Error('扩展入口缺失');
+    // Manifest 的前导斜杠表示扩展根目录，不是系统磁盘根目录。
+    const path = resolve(extensionDir, resource.replace(/^\/+/, ''));
+    const offset = relative(extensionDir, path);
+    if (isAbsolute(offset) || offset.startsWith('..') || !existsSync(path)) throw new Error(`扩展入口或资源不存在：${resource}`);
+  }
+  mkdirSync(releaseDirectory, { recursive: true });
+  const stagingDirectory = mkdtempSync(join(releaseDirectory, '.exts-chrome-'));
+  const stagedZip = join(stagingDirectory, `exts-chrome-${version}.zip`);
+  try {
+    if (platform === 'win32') {
+      // 路径通过环境传递，避免拼接为 PowerShell 代码。
+      const command = "$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.IO.Compression.FileSystem; [IO.Compression.ZipFile]::CreateFromDirectory($env:EXTS_ZIP_SOURCE,$env:EXTS_ZIP_TARGET); $archive=[IO.Compression.ZipFile]::OpenRead($env:EXTS_ZIP_TARGET); try { foreach ($entry in $archive.Entries) { $stream=$entry.Open(); try { $stream.CopyTo([IO.Stream]::Null) } finally { $stream.Dispose() } }; $manifest=$archive.GetEntry('manifest.json'); if ($null -eq $manifest) { throw 'ZIP 根 Manifest 缺失' }; $reader=[IO.StreamReader]::new($manifest.Open()); try { $value=$reader.ReadToEnd() | ConvertFrom-Json; if ($value.version -ne $env:EXTS_ZIP_VERSION -or $value.manifest_version -ne 3) { throw 'ZIP Manifest 版本不一致' } } finally { $reader.Dispose() } } finally { $archive.Dispose() }";
+      execute('生成并校验扩展 ZIP', 'powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', command], {
+        env: { ...process.env, EXTS_ZIP_SOURCE: extensionDir, EXTS_ZIP_TARGET: stagedZip, EXTS_ZIP_VERSION: version },
+      });
+    } else {
+      execute('生成扩展 ZIP', 'zip', ['-qr', stagedZip, '.'], { cwd: extensionDir });
+      execute('校验扩展 ZIP', 'unzip', ['-tq', stagedZip]);
+      const packedManifest = JSON.parse(execute('读取 ZIP 根 Manifest', 'unzip', ['-p', stagedZip, 'manifest.json'], { stdio: 'pipe', encoding: 'utf8' }));
+      if (packedManifest.version !== version || packedManifest.manifest_version !== 3) throw new Error('ZIP Manifest 版本不一致');
+    }
+    readProjectVersion(version);
+    // 同盘硬链接在同版本文件已存在时失败，不覆盖历史附件。
+    linkSync(stagedZip, zipPath);
+    return { version, zipPath };
+  } finally {
+    rmSync(stagingDirectory, { recursive: true, force: true });
+  }
+}
 
 export function releaseAll({
   platform = process.platform,
@@ -13,8 +69,8 @@ export function releaseAll({
 } = {}) {
   if (platform !== 'darwin') throw new Error('完整 release 需要 macOS，Windows 不生成 ZIP 或 DMG');
   const version = readProjectVersion();
-  const zipName = `exts-extension-${version}.zip`;
-  const dmgName = `exts-macos-${version}.dmg`;
+  const zipName = `exts-chrome-${version}.zip`;
+  const dmgName = `exts-mac-${version}.dmg`;
   const zipPath = join(releaseDirectory, zipName);
   const dmgPath = join(releaseDirectory, dmgName);
   const checkConflicts = () => {
@@ -81,8 +137,9 @@ export function releaseAll({
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    const output = releaseAll();
-    console.log(`本地分发包完成：${output.version}\n${output.zipPath}\n${output.dmgPath}`);
+    if (process.argv.slice(2).some(value => value !== '--extension')) throw new Error('只支持 --extension 或完整 release');
+    const output = process.argv.includes('--extension') ? releaseExtension() : releaseAll();
+    console.log(`本地分发包完成：${output.version}\n${output.zipPath}${output.dmgPath ? `\n${output.dmgPath}` : ''}`);
   } catch (error) {
     console.error(error.message);
     process.exitCode = 1;

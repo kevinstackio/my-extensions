@@ -17,6 +17,7 @@
     "web:build": "pnpm --filter @exts/website build",
     "ext:dev": "pnpm --filter @exts/extension dev",
     "ext:build": "pnpm --filter @exts/extension build",
+    "ext:release": "node scripts/release.mjs --extension",
     "desk:dev": "node apps/desktop/scripts/desk.mjs dev",
     "desk:build": "node apps/desktop/scripts/desk.mjs build"
   },

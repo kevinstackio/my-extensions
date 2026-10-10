@@ -66,7 +66,7 @@ test('同版本分发包已存在时拒绝覆盖且不启动构建', async () =>
   const { readProjectVersion } = await import(versionModule);
   const root = mkdtempSync(join(tmpdir(), 'exts-release-conflict-'));
   try {
-    const existing = join(root, `exts-extension-${readProjectVersion()}.zip`);
+    const existing = join(root, `exts-chrome-${readProjectVersion()}.zip`);
     writeFileSync(existing, 'previous');
     assert.throws(() => releaseAll({ platform: 'darwin', releaseDirectory: root, build() { assert.fail('不得构建'); }, run() { assert.fail('不得启动工具'); } }), /已存在/);
     assert.equal(readFileSync(existing, 'utf8'), 'previous');
@@ -102,7 +102,7 @@ test('ZIP 校验失败不发布残缺文件并清理本次暂存', async () => {
         return { status: args.includes('-tq') ? 2 : 0 };
       },
     }), /ZIP/);
-    assert(!existsSync(join(root, `exts-extension-${readProjectVersion()}.zip`)));
+    assert(!existsSync(join(root, `exts-chrome-${readProjectVersion()}.zip`)));
     assert.deepEqual(readdirSync(root), []);
   } finally {
     rmSync(root, { recursive: true, force: true });
