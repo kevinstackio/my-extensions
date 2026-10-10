@@ -1,6 +1,6 @@
 # Exts 产品官网
 
-React 单页产品官网，使用 Vite、TypeScript、Tailwind CSS 与 shadcn/ui。网站显示 Exts 标语、现有品牌 logo、Chrome 与 macOS 版本直链入口；页脚为 © 2026 Lin Gui。
+React 单页产品官网，使用 Vite、TypeScript、Tailwind CSS 与 shadcn/ui。网站显示 Exts 标语、现有品牌 logo、Chrome 与 macOS latest 直链入口；页脚为 © 2026 Lin Gui。
 
 ## 开发与构建
 
@@ -27,7 +27,7 @@ pnpm web:build
 - src/pages/home：首页正文布局，组合布局组件与下载模块。
 - src/components/layout：网站页头、页脚；src/components/ui：纳入 Git 的 shadcn 基础组件。
 - src/features/download：组合 shadcn 平台下载链接。
-- src/config/site.ts：产品文案、GitHub 地址、根版本下载链接与署名。
+- src/config/site.ts：产品文案、GitHub 地址、固定 latest 下载链接与署名。
 - src/assets：用户提供的单色 Chrome、Apple 与 GitHub 品牌 SVG；public：已有正式品牌资源、favicon 与第三方许可声明。
 - src/lib/utils.ts：class-variance-authority 配合的本地样式合并工具，不提取共享 UI 包。
 
@@ -39,9 +39,9 @@ Lucide React 用于通用状态图标，平台与 GitHub 用品牌 SVG。Google 
 
 ## 下载行为
 
-构建通过 scripts/version.mjs 读取根 package.json 的 version，并注入 __EXTS_VERSION__。Chrome 与 macOS 分别直接链接 GitHub v<版本> 下的 exts-chrome-<版本>.zip、exts-mac-<版本>.dmg，不维护第二份版本。
+构建通过 scripts/version.mjs 校验根产品版本，但不向下载链接注入版本。Chrome 与 macOS 分别使用 https://github.com/linguio/exts/releases/latest/download/exts-chrome.zip、https://github.com/linguio/exts/releases/latest/download/exts-mac.dmg，正式 Release 为 Latest 且包含同名附件时直接转向对应包。
 
-不查询 API、不检查文件存在、不判断下载结果，不添加加载状态或成功/失败提示。用户已知当前 DMG 地址不存在，仍要求开放链接。版本修改后需重新构建和部署网站。源码入口为 https://github.com/linguio/exts。
+不查询 API、不检查文件存在、不判断下载结果，不添加加载状态或成功/失败提示。用户已知当前 DMG 地址不存在，仍要求开放链接。后续产品版本发布不需要为下载链接重新构建官网；缺少对应附件时不自动回退旧包。源码入口为 https://github.com/linguio/exts。
 
 扩展 ZIP 需解压后在 Chrome 扩展管理页开启开发者模式并选择“加载已解压的扩展程序”，不是 Chrome 商店安装包。此版官网仅标注 Chrome，未宣称 Edge 已通过验收。
 

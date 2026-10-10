@@ -93,7 +93,7 @@ export default defineConfig({
   manifest: {
     name: 'Exts',
     version: readProjectVersion(),
-    description: '我的标签页，保存和组织我喜爱的网站。',
+    description: '将想法与能力延伸为实用工具',
     permissions: ['tabGroups'],
     icons: actionIcons,
     action: {

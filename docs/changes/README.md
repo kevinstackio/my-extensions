@@ -80,7 +80,7 @@ docs/
 ## 当前 Issue
 
 - [固定发布包名并接入官网最新下载](./issues/2026-10-11-exts-fixed-release-assets-issue.md) · [Commit 记录](./commits/2026-10-11-exts-fixed-release-assets-commit.md)
-  - 状态：待提交；用户已验收本地阶段并批准三笔提交；旧 v1.0.0 已删除，新发布待代码提交后重建。
+  - 状态：实施中；用户已验收并批准三笔本地代码交付；旧 v1.0.0 已删除，新发布与 Latest 远程验证尚未执行，Issue 保持活动状态。
 
 ## Issue 队列
 
