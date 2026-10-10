@@ -1,10 +1,15 @@
 import { defineConfig } from 'vitepress'
+import { fileURLToPath } from 'node:url'
+import { readProjectVersion } from '../../../scripts/version.mjs'
+
+readProjectVersion()
 
 // VitePress 站点配置
 export default defineConfig({
   title: "Exts",
   description: "将想法与能力延伸为实用工具，汇集浏览器扩展、应用、AI Skills 与开发工具。",
-  outDir: 'dist',
+  outDir: fileURLToPath(new URL('../../../dist/build/exts-web', import.meta.url)),
+  cacheDir: fileURLToPath(new URL('../../../dist/.cache/website', import.meta.url)),
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/exts.svg' }],
     ['link', { rel: 'apple-touch-icon', href: '/exts-180.png' }]

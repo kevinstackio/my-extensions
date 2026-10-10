@@ -79,6 +79,14 @@ createStableDevelopmentHooks({ suffix: '-browser' });
 
 ## 直接使用发布器
 
+统一应用可以配置绝对稳定目标目录，将临时目录放到根缓存目录，完整稳定产物发布到根开发目录：
+
+```ts
+createStableDevelopmentHooks({ targetDir: '/absolute/repository/dist/dev/chrome-mv3-dev-stable' });
+```
+
+省略 targetDir 时继续采用同级后缀；配置目标也保留相同的完整性校验、暂存和异常恢复规则。
+
 如果项目需要自行控制 WXT hook，也可以直接调用 `publishStableBuild`：
 
 ```ts

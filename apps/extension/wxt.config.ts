@@ -1,10 +1,12 @@
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import tailwindcss from '@tailwindcss/vite';
 import { createStableDevelopmentHooks } from '@exts/stable-extension-dev';
 import { defineConfig } from 'wxt';
 
 import { createBundleSizeWarningHook } from './scripts/bundle-size.mjs';
+import { readProjectVersion } from '../../scripts/version.mjs';
 
 const assetFiles = [
   'modules/newtab/assets/brand/bilibili.svg',
@@ -48,12 +50,15 @@ const actionIcons = {
   128: '/src/assets/logo/exts-128.png',
 };
 
-const stableDevelopmentHooks = createStableDevelopmentHooks();
+const applicationDirectory = fileURLToPath(new URL('.', import.meta.url));
+const stableDevelopmentHooks = createStableDevelopmentHooks({
+  targetDir: resolve(applicationDirectory, '../../dist/dev/chrome-mv3-dev-stable'),
+});
 const bundleSizeWarningHook = createBundleSizeWarningHook();
 
 export default defineConfig({
   srcDir: 'src',
-  outDir: 'dist',
+  outDir: resolve(applicationDirectory, '../../dist/.cache/extension'),
   modules: ['@wxt-dev/module-react'],
   vite: () => ({
     plugins: [tailwindcss()],
@@ -64,6 +69,13 @@ export default defineConfig({
   }),
   hooks: {
     ...stableDevelopmentHooks,
+    'config:resolved': (wxt) => {
+      // 开发临时目录集中在根缓存；正式构建保留 WXT 浏览器目录名。
+      if (wxt.config.command === 'serve') return;
+      const outputName = basename(wxt.config.outDir);
+      // 基础目录只含扩展缓存，避免 WXT clean 清理其他应用的产物。
+      wxt.config.outDir = resolve(applicationDirectory, '../../dist/build', outputName);
+    },
     // 稳定目录发布成功后再测量开发产物，预警失败不能阻断 WXT dev 的持续重建。
     'build:done': async (wxt, output) => {
       await stableDevelopmentHooks['build:done'](wxt, output);
@@ -78,7 +90,7 @@ export default defineConfig({
   },
   manifest: {
     name: 'Exts',
-    version: '1.0.0',
+    version: readProjectVersion(),
     description: '我的标签页，保存和组织我喜爱的网站。',
     permissions: ['tabGroups'],
     icons: actionIcons,

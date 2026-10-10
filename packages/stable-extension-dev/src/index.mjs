@@ -129,7 +129,7 @@ export async function publishStableBuild({
   }
 }
 
-export function createStableDevelopmentHooks({ suffix = '-stable' } = {}) {
+export function createStableDevelopmentHooks({ suffix = '-stable', targetDir } = {}) {
   if (!suffix || suffix.includes('/') || suffix.includes('\\')) {
     throw new StableDevelopmentError('稳定目录后缀必须是单一目录名片段');
   }
@@ -149,7 +149,7 @@ export function createStableDevelopmentHooks({ suffix = '-stable' } = {}) {
       ];
       const result = await publishStableBuild({
         sourceDir: wxt.config.outDir,
-        targetDir: `${wxt.config.outDir}${suffix}`,
+        targetDir: targetDir ?? `${wxt.config.outDir}${suffix}`,
         requiredFiles,
       });
 

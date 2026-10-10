@@ -12,7 +12,7 @@
     "fontBytes": 71680
   },
   "measurement": {
-    "directory": "dist/chrome-mv3",
+    "directory": "../../dist/build/chrome-mv3",
     "excludes": [
       "*.map"
     ],

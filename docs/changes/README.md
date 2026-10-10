@@ -83,13 +83,15 @@ docs/
 
 ## Issue 队列
 
-当前没有其他排队 Issue。
+- 2026-10-10-repo-build-release-docs：记录统一构建与本地分发规范；已批准独立文档提交，实现 Commit 成功后创建对应工作记录。
 
 ## 待办
 
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [统一构建产物、版本来源与分发入口](./issues/2026-10-10-repo-unify-build-release-issue.md) · [Commit 记录](./commits/2026-10-10-repo-unify-build-release-commit.md)
 
 - [删除本地与远程旧发布标签](./issues/2026-10-10-repo-remove-release-tag-issue.md) · [Commit 记录](./commits/2026-10-10-repo-remove-release-tag-commit.md)
 

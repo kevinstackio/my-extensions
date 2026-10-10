@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const projectDirectory = resolve(scriptDirectory, '..');
-const defaultBuildDirectory = resolve(projectDirectory, 'dist/chrome-mv3');
-const defaultDevelopmentBuildDirectory = resolve(projectDirectory, 'dist/chrome-mv3-dev');
+const defaultBuildDirectory = resolve(projectDirectory, '../../dist/build/chrome-mv3');
+const defaultDevelopmentBuildDirectory = resolve(projectDirectory, '../../dist/.cache/extension/chrome-mv3-dev');
 const defaultBudgetPath = resolve(projectDirectory, 'bundle-budget.json');
 
 async function collectFiles(directory) {
@@ -174,7 +174,7 @@ async function writeBaseline(buildDirectory, budgetPath) {
       fontBytes: 70 * 1024,
     },
     measurement: {
-      directory: 'dist/chrome-mv3',
+      directory: '../../dist/build/chrome-mv3',
       excludes: ['*.map'],
       gzip: 'node:zlib.gzipSync(level=9, mtime=0)',
     },

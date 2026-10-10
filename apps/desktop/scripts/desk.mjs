@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readProjectVersion } from '../../../scripts/version.mjs';
 
 const projectDirectory = fileURLToPath(new URL('..', import.meta.url));
 const buildScript = fileURLToPath(new URL('build.sh', import.meta.url));
@@ -26,7 +27,18 @@ export function runDesk(mode, { platform = process.platform, run = spawnSync, re
     }
   }
 
-  const result = run('/bin/zsh', [buildScript, mode], { cwd: projectDirectory, stdio: 'inherit' });
+  let version;
+  try {
+    version = readProjectVersion();
+  } catch (error) {
+    report(error.message);
+    return 1;
+  }
+  const result = run('/bin/zsh', [buildScript, mode], {
+    cwd: projectDirectory,
+    stdio: 'inherit',
+    env: { ...process.env, EXTS_BUILD_VERSION: version },
+  });
   if (result.error || result.status === null) {
     report(`桌面构建进程未正常结束${result.error ? `：${result.error.message}` : ''}`);
     return 1;

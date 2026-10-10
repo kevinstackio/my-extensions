@@ -164,6 +164,19 @@ describe('publishStableBuild', () => {
 });
 
 describe('createStableDevelopmentHooks', () => {
+  it('发布到指定根目标且缺失文件时保留上一份稳定产物', async () => {
+    const { root, sourceDir } = await createFixture();
+    const targetDir = join(root, 'dist', 'dev', 'chrome-mv3-dev-stable');
+    const hooks = createStableDevelopmentHooks({ targetDir });
+    const wxt = { config: { command: 'serve', outDir: sourceDir }, logger: { info() {} } };
+    await hooks['build:done'](wxt, { publicAssets: [], steps: [{ chunks: [{ fileName: 'background.js' }] }] });
+    const previous = await readFile(join(targetDir, 'background.js'), 'utf8');
+    expect(previous).toContain('new');
+    await rm(join(sourceDir, 'background.js'));
+    await expect(hooks['build:done'](wxt, { publicAssets: [], steps: [{ chunks: [{ fileName: 'background.js' }] }] })).rejects.toThrow();
+    expect(await readFile(join(targetDir, 'background.js'), 'utf8')).toBe(previous);
+  });
+
   it('publishes serve output to the stable sibling directory', async () => {
     const root = await mkdtemp(join(tmpdir(), 'stable-extension-dev-hook-'));
     temporaryDirectories.push(root);

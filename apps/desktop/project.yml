@@ -7,6 +7,8 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "27.0"
+    MARKETING_VERSION: "$(EXTS_BUILD_VERSION)"
+    CURRENT_PROJECT_VERSION: "$(EXTS_BUILD_VERSION)"
 targets:
   exts:
     type: application
@@ -21,6 +23,13 @@ targets:
         INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © 2026 Kevin
         GENERATE_INFOPLIST_FILE: YES
         OTHER_LDFLAGS: "$(inherited) -framework ImageCaptureCore -lsqlite3"
+      configs:
+        Debug:
+          PRODUCT_BUNDLE_IDENTIFIER: dev.linguio.exts.dev
+          INFOPLIST_KEY_CFBundleDisplayName: Exts Dev
+        Release:
+          PRODUCT_BUNDLE_IDENTIFIER: dev.linguio.exts
+          INFOPLIST_KEY_CFBundleDisplayName: Exts
   extsTests:
     type: bundle.unit-test
     platform: macOS

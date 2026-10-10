@@ -52,6 +52,8 @@ export function publishStableBuild(
 /** 配置稳定目录名称后缀。 */
 export interface StableDevelopmentHookOptions {
   suffix?: string;
+  /** 可选稳定目标；省略时使用源目录旁的固定后缀。 */
+  targetDir?: string;
 }
 
 /** 创建仅在 WXT 开发命令中发布稳定目录的构建钩子。 */

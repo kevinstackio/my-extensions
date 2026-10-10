@@ -4,10 +4,7 @@ final class ThumbnailDiskStore {
     private let rootURL: URL
 
     init(rootURL: URL? = nil) throws {
-        self.rootURL = rootURL ?? FileManager.default.urls(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask
-        )[0].appendingPathComponent("OhMy Photos/Thumbnails", isDirectory: true)
+        self.rootURL = rootURL ?? AppStoragePaths.current.thumbnailDirectory
         try FileManager.default.createDirectory(
             at: self.rootURL,
             withIntermediateDirectories: true

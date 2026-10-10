@@ -4,16 +4,19 @@ import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
 import { runDesk } from '../../scripts/desk.mjs';
+import { readProjectVersion } from '../../../../scripts/version.mjs';
 
-test('非 macOS 明确提示并在运行工具前退出', () => {
+test('非 macOS 的 dev 和 build 均明确提示并在运行工具前退出', () => {
   const messages = [];
-  const status = runDesk('dev', {
-    platform: 'win32',
-    run() { assert.fail('非 macOS 不应执行任何工具'); },
-    report(message) { messages.push(message); },
-  });
-  assert.equal(status, 1);
-  assert.match(messages[0], /桌面应用需要在 macOS 上运行和构建/);
+  for (const mode of ['dev', 'build']) {
+    const status = runDesk(mode, {
+      platform: 'win32',
+      run() { assert.fail('非 macOS 不应执行任何工具'); },
+      report(message) { messages.push(message); },
+    });
+    assert.equal(status, 1);
+    assert.match(messages[0], /桌面应用需要在 macOS 上运行和构建/);
+  }
 });
 
 test('macOS 工具缺失时给出提示且不执行构建', async (context) => {
@@ -53,6 +56,7 @@ test('dev 和 build 在应用目录执行对应模式', async (context) => {
       assert.equal(build.args[1], mode);
       assert.equal(build.options.cwd, projectDirectory);
       assert.equal(build.options.stdio, 'inherit');
+      assert.equal(build.options.env.EXTS_BUILD_VERSION, readProjectVersion());
     });
   }
 });
