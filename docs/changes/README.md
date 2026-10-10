@@ -79,7 +79,7 @@ docs/
 
 ## 当前 Issue
 
-[建立扩展发布并验证首版打包](./issues/2026-10-10-exts-first-release-issue.md) · [Commit 记录](./commits/2026-10-10-exts-first-release-commit.md)；本地阶段已验收，用户批准单个实现提交；Issue 保持开放，远程 Action、Tag 和公开发布未执行。
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -90,6 +90,10 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [添加 npm 与 Simple Icons 书签](./issues/2026-10-10-extension-npm-simpleicons-bookmarks-issue.md) · [Commit 记录](./commits/2026-10-10-extension-npm-simpleicons-bookmarks-commit.md)；用户已验收通过并批准本地提交。
+
+- [建立扩展发布并验证首版打包](./issues/2026-10-10-exts-first-release-issue.md) · [Commit 记录](./commits/2026-10-10-exts-first-release-commit.md)；本地实现已提交，用户于 2026-10-10 明确确认已完结，本轮未重新核验远程发布结果。
 
 - [整理 V3 图标与插头 Logo 独立规范](./issues/2026-10-10-repo-ohmy-icon-system-docs-issue.md) · [Commit 记录](./commits/2026-10-10-repo-ohmy-icon-system-docs-commit.md)
 

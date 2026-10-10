@@ -26,6 +26,9 @@ test('构建配置扫描源码入口并声明全部实际发布资源', async ()
   wxtConfig.hooks['build:publicAssets'](undefined, files);
   for (const file of files) await access(file.absoluteSrc);
   assert(files.some(file => file.relativeDest === 'src/modules/newtab/assets/brand/github.svg'));
+  for (const icon of ['npm', 'simpleicons']) {
+    assert(files.some(file => file.relativeDest === `src/modules/newtab/assets/brand/${icon}.svg`));
+  }
 });
 
 test('临时目录集中到根缓存且生产输出独立于网站目录', () => {

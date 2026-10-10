@@ -16,6 +16,8 @@ const assetFiles = [
   'modules/newtab/assets/brand/linear.svg',
   'modules/newtab/assets/brand/namecheap.svg',
   'modules/newtab/assets/brand/notion.svg',
+  'modules/newtab/assets/brand/npm.svg',
+  'modules/newtab/assets/brand/simpleicons.svg',
   'modules/newtab/assets/brand/text-chsi.svg',
   'modules/newtab/assets/brand/text-ielts.svg',
   'modules/newtab/assets/brand/text-jlpt.svg',

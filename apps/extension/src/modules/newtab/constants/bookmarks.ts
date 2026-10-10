@@ -20,6 +20,7 @@ export const BOOKMARK_GRID: BookmarkGridItem[] = [
     items: [
       { id: 'namecheap', name: 'Namecheap', url: 'https://www.namecheap.com', icon: 'brand/namecheap.svg', iconTone: 'adaptive' },
       { id: 'vercel', name: 'Vercel', url: 'https://vercel.com', icon: 'brand/vercel.svg', iconTone: 'adaptive' },
+      { id: 'npm', name: 'npm', url: 'https://www.npmjs.com/', icon: 'brand/npm.svg', iconTone: 'adaptive' },
     ],
   },
   {
@@ -64,6 +65,7 @@ export const DOCK_COMPONENTS: BookmarkGroup = {
     { type: 'bookmark', id: 'antd', name: 'Ant Design', url: 'https://ant.design', icon: 'tools/antd.svg' },
     { type: 'bookmark', id: 'element-ui', name: 'Element UI', url: 'https://element.eleme.io', icon: 'tools/element-ui.svg' },
     { type: 'bookmark', id: 'element-plus', name: 'Element Plus', url: 'https://element-plus.org', icon: 'tools/element-plus.svg' },
+    { type: 'bookmark', id: 'simpleicons', name: 'Simple Icons', url: 'https://simpleicons.org/', icon: 'brand/simpleicons.svg', iconTone: 'adaptive' },
   ],
 };
 
