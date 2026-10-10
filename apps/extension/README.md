@@ -15,8 +15,10 @@
 
 ## 根目录用法
 
-`pnpm ext:dev` 启动 WXT；Chrome／Edge 只加载 `apps/extension/dist/chrome-mv3-dev-stable/`，不能加载会被重建清空的临时目录。
+`pnpm ext:dev` 启动 WXT；Chrome／Edge 只加载根 `dist/dev/chrome-mv3-dev-stable/`，不能加载会被重建清空的根 `dist/.cache/extension/chrome-mv3-dev/` 临时目录。应用内部不再生成 dist；修改路径后停止并重新启动旧开发进程。
 
-`pnpm ext:build` 生成生产产物 `apps/extension/dist/chrome-mv3/`。包内 `pnpm test`、`pnpm typecheck`、`pnpm check:bundle-size` 负责逻辑与构建验证，不执行视觉或交互验收。
+`pnpm ext:build` 生成根 `dist/build/chrome-mv3/`。Manifest 产品版本由根 `scripts/version.mjs` 读取根 `package.json` 的 `version`，不在子项目维护。包内 `pnpm test`、`pnpm typecheck`、`pnpm check:bundle-size` 负责逻辑与构建验证，不执行视觉或交互验收。
 
 应用图标为透明黑／白 PNG，系统配色偏好在新标签页挂载后同步到工具栏及 favicon。用户自行检查真实浏览器主题效果；扩展 ID 或加载目录变化不保证旧存储自动继承。
+
+根 `pnpm release` 生成本地正式 ZIP。完整版本、产物和稳定目录规则见 [构建与分发规范](../../docs/build-release.md)。

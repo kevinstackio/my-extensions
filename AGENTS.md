@@ -86,6 +86,10 @@
 - `package.json` 中不得使用 `^`、`~`、`*`、`latest`、`next` 或其他浮动版本与版本范围。
 - 依赖升级必须由明确任务触发，并同步更新所有相关 `package.json`、`pnpm-lock.yaml` 与版本管理配置；更新后必须重新执行安装、构建和测试验证。
 
+## 构建与分发规范
+
+构建、产品版本与本地分发规则统一维护在 [docs/build-release.md](docs/build-release.md)：根 package.json 为唯一产品版本源，产物及可配置构建缓存统一生成在根 dist；开发命令独立，根 build/release 仅支持 macOS。应用内部不再生成 dist 或 DerivedData，禁止各端清空公共产物父目录。
+
 ## 自动化测试规范
 
 - 目录迁移前必须保留并调整既有行为测试，不得因迁移删除测试覆盖。
@@ -172,7 +176,7 @@ fix(ohmy-tabs): 修复深色模式首屏白闪
 
 - 基于 WXT 的扩展开发时，浏览器不得直接加载会在构建开始时被清空的 `dist/<browser>-mv<manifest>-dev` 临时目录。
 - 公共稳定发布工具位于 `packages/stable-extension-dev`；WXT 子项目在 `wxt.config.ts` 中接入 `createStableDevelopmentHooks()`，不自行实现复制、校验或目录替换逻辑。
-- 开发命令必须保持项目原有用法不变；公共 hook 在 WXT `build:done` 成功后，将完整产物发布到同级 `dist/<browser>-mv<manifest>-dev-stable` 目录，浏览器只加载该稳定目录。
+- 开发命令必须保持项目原有用法不变；扩展临时产物生成在根 `dist/.cache/extension/<browser>-mv<manifest>-dev`，公共 hook 在 WXT `build:done` 成功后发布到根 `dist/dev/<browser>-mv<manifest>-dev-stable`；浏览器只加载稳定目录。路径规范见 [docs/build-release.md](docs/build-release.md)。
 - 发布前必须确认 `manifest.json` 可解析、Manifest 字段完整，并确认构建输出报告中的全部文件存在；校验或构建失败不得删除或覆盖上一份稳定产物。
 - 稳定目录更新必须通过同文件系统的暂存目录和目录替换完成；Windows 文件占用或替换异常时必须保留旧稳定目录并返回可诊断错误。
 - 公共工具必须有自动化测试覆盖成功发布、失败保留旧产物、无效或不完整产物拒绝发布和 Windows 替换异常；接入扩展还必须完成 Chrome 或 Edge 的成功→失败→恢复成功实际加载验证。

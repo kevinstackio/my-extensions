@@ -31,6 +31,8 @@ exts/
 ├─ skills/
 │  └─ local-issue-commit-workflow/ # 本地 Issue 与 Commit 工作流
 ├─ docs/                          # 项目文档
+├─ scripts/                       # 唯一版本读取、统一构建与分发入口
+├─ dist/                          # 开发、正式构建与分发产物，不纳入 Git
 ├─ AGENTS.md                      # 仓库协作规范
 ├─ LICENSE                        # 开源许可证
 ├─ package.json                   # 根目录命令
@@ -55,6 +57,14 @@ exts/
 
 先运行 `pnpm i`。Node 24.16.0、pnpm 12.4.2；原生桌面需要 macOS 27、Xcode 27 和 xcodegen。
 
-扩展开发只加载 `apps/extension/dist/chrome-mv3-dev-stable/`；生产产物为 `apps/extension/dist/chrome-mv3/`。桌面 Release 为 `apps/desktop/dist/exts.app`，官网构建为 `apps/website/dist/`。
+`pnpm build` 在 macOS 串行构建三端，开始前检查桌面工具；Windows 明确退出，仍可单独运行官网与扩展命令。开发命令保持独立。
+
+扩展开发只加载根 `dist/dev/chrome-mv3-dev-stable/`；生产产物为 `dist/build/chrome-mv3/`。桌面开发为 `dist/dev/exts-dev.app`，正式为 `dist/build/exts.app`；官网构建为 `dist/build/exts-web/`，部署直接取该完整目录。每端仅更新自己的产物。
+
+根 `package.json` 的 `version` 是唯一产品版本源，初始 `1.0.0`，由用户手动维护；所有应用构建通过 `scripts/version.mjs` 读取和校验，不自动升级。桌面正式与开发身份、默认数据目录独立；正式已有数据不迁移。
+
+`pnpm release` 在 macOS 统一构建后生成根 `dist/release/` 的 ZIP 与 DMG；同版本包已存在时报错，不自动推送或发布。
+
+构建缓存也统一放在根 `dist/.cache/`；应用内部不再生成 `dist` 或 `DerivedData`。完整命令、版本、目录与分发规则见 [构建与分发规范](docs/build-release.md)。
 
 内部包统一使用 `@exts/*`。品牌源稿和分平台资源见 [assets/brand](assets/brand/README.md)。未迁入功能不建立空模块；归档与历史文档保留原名。
