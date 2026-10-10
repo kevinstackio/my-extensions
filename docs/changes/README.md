@@ -79,18 +79,19 @@ docs/
 
 ## 当前 Issue
 
-- [固定发布包名并接入官网最新下载](./issues/2026-10-11-exts-fixed-release-assets-issue.md) · [Commit 记录](./commits/2026-10-11-exts-fixed-release-assets-commit.md)
-  - 状态：实施中；用户已验收并批准三笔本地代码交付；旧 v1.0.0 已删除，新发布与 Latest 远程验证尚未执行，Issue 保持活动状态。
+无；前一项已完成，下一项官网部署进入讨论。
 
 ## Issue 队列
 
-- 部署 Exts 官网到 GitHub Pages 并接入 exts.linguio.dev：用户已确认后续交付目标；当前网站 Issue 最终交付 Commit 成功后再创建对应 Issue 与 Commit 记录，范围包含部署流程、必要 DNS 和 HTTPS 验证。
+- 部署 Exts 官网到 GitHub Pages 并接入 exts.linguio.dev：用户已确认后续交付目标；前置发布 Issue 结项 Commit 成功后再创建对应 Issue 与 Commit 记录，范围包含部署流程、必要 DNS 和 HTTPS 验证。
 
 ## 待办
 
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [固定发布包名并接入官网最新下载](./issues/2026-10-11-exts-fixed-release-assets-issue.md) · [Commit 记录](./commits/2026-10-11-exts-fixed-release-assets-commit.md)；用户明确确认前述事项全部验证完成并批准本地结项提交，远程验收以用户确认作为依据，本轮代理未独立复核。
 
 - [重建 Exts 产品官网](./issues/2026-10-11-website-product-homepage-issue.md) · [Commit 记录](./commits/2026-10-11-website-product-homepage-commit.md)；用户已验收并明确批准两次本地提交，React/shadcn 官网与根版本 macOS/Chrome 直链已交付，域名部署留在后续队列。
 
