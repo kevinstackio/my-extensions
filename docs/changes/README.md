@@ -91,6 +91,8 @@ docs/
 
 ## 已完成
 
+- [删除本地与远程旧发布标签](./issues/2026-10-10-repo-remove-release-tag-issue.md) · [Commit 记录](./commits/2026-10-10-repo-remove-release-tag-commit.md)
+
 - [统一跨平台图标主体与规范制作方式](./issues/2026-10-09-repo-unify-platform-icons-issue.md) · [Commit 记录](./commits/2026-10-09-repo-unify-platform-icons-commit.md)
 
 - [整理 main 直线历史并压缩 Git 存储](./issues/2026-10-09-repo-linear-git-history-issue.md)
