@@ -38,7 +38,7 @@ jobs:
           version="$(node scripts/version.mjs)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "tag=v$version" >> "$GITHUB_OUTPUT"
-          echo "zip=dist/release/exts-chrome-$version.zip" >> "$GITHUB_OUTPUT"
+          echo "zip=dist/release/exts-chrome.zip" >> "$GITHUB_OUTPUT"
       - name: Check tag and release conflicts
         shell: bash
         env:
@@ -88,7 +88,7 @@ jobs:
           cat > "$RUNNER_TEMP/exts-release-notes.md" <<'NOTES'
           Exts 浏览器扩展：新标签页、书签、Dock 和标签组。
 
-          下载 exts-chrome-<版本>.zip 附件，解压后在 Chrome 扩展管理页开启开发者模式，选择“加载已解压的扩展程序”。经实际验收后也可在 Edge 中加载。
+          下载 exts-chrome.zip 附件，解压后在 Chrome 扩展管理页开启开发者模式，选择“加载已解压的扩展程序”。经实际验收后也可在 Edge 中加载。
 
           此版本只包含浏览器扩展。GitHub 自动生成的 Source code 压缩包是源码，不是扩展安装包。
           NOTES

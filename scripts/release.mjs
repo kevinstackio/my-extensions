@@ -1,9 +1,41 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildAll } from './build.mjs';
 import { readProjectVersion, repositoryDirectory } from './version.mjs';
+
+export function publishReleaseFiles(files, stagingDirectory, { rename = renameSync } = {}) {
+  // 先保留旧文件的同盘硬链接，全部备份就绪后才替换正式目标。
+  const entries = files.map((file, index) => {
+    const backup = existsSync(file.target) ? join(stagingDirectory, `.previous-${index}`) : null;
+    if (backup) linkSync(file.target, backup);
+    return { ...file, backup };
+  });
+  const published = [];
+  try {
+    for (const entry of entries) {
+      rename(entry.source, entry.target);
+      published.push(entry);
+    }
+  } catch (cause) {
+    const failures = [];
+    for (const entry of published.reverse()) {
+      try {
+        if (entry.backup) rename(entry.backup, entry.target);
+        else rmSync(entry.target);
+      } catch (error) {
+        failures.push(error);
+      }
+    }
+    if (failures.length) {
+      const error = new AggregateError([cause, ...failures], `发布失败且未能完全恢复旧包，备份保留在：${stagingDirectory}`);
+      error.recoveryDirectory = stagingDirectory;
+      throw error;
+    }
+    throw cause;
+  }
+}
 
 export function releaseExtension({
   platform = process.platform,
@@ -13,8 +45,7 @@ export function releaseExtension({
   build,
 } = {}) {
   const version = readProjectVersion();
-  const zipPath = join(releaseDirectory, `exts-chrome-${version}.zip`);
-  if (existsSync(zipPath)) throw new Error(`同版本分发包已存在，不覆盖：${zipPath}`);
+  const zipPath = join(releaseDirectory, 'exts-chrome.zip');
   const execute = (label, command, args, options = {}) => {
     const result = run(command, args, { stdio: 'inherit', ...options });
     if (result.error || result.status !== 0) throw new Error(`${label}失败，退出码 ${result.status ?? '未知'}`, { cause: result.error });
@@ -37,8 +68,9 @@ export function releaseExtension({
     if (isAbsolute(offset) || offset.startsWith('..') || !existsSync(path)) throw new Error(`扩展入口或资源不存在：${resource}`);
   }
   mkdirSync(releaseDirectory, { recursive: true });
-  const stagingDirectory = mkdtempSync(join(releaseDirectory, '.exts-chrome-'));
-  const stagedZip = join(stagingDirectory, `exts-chrome-${version}.zip`);
+  const stagingDirectory = mkdtempSync(join(releaseDirectory, '.exts-staging-'));
+  const stagedZip = join(stagingDirectory, 'exts-chrome.zip');
+  let keepStaging = false;
   try {
     if (platform === 'win32') {
       // 路径通过环境传递，避免拼接为 PowerShell 代码。
@@ -53,11 +85,13 @@ export function releaseExtension({
       if (packedManifest.version !== version || packedManifest.manifest_version !== 3) throw new Error('ZIP Manifest 版本不一致');
     }
     readProjectVersion(version);
-    // 同盘硬链接在同版本文件已存在时失败，不覆盖历史附件。
-    linkSync(stagedZip, zipPath);
+    publishReleaseFiles([{ source: stagedZip, target: zipPath }], stagingDirectory);
     return { version, zipPath };
+  } catch (error) {
+    keepStaging = Boolean(error.recoveryDirectory);
+    throw error;
   } finally {
-    rmSync(stagingDirectory, { recursive: true, force: true });
+    if (!keepStaging) rmSync(stagingDirectory, { recursive: true, force: true });
   }
 }
 
@@ -69,15 +103,10 @@ export function releaseAll({
 } = {}) {
   if (platform !== 'darwin') throw new Error('完整 release 需要 macOS，Windows 不生成 ZIP 或 DMG');
   const version = readProjectVersion();
-  const zipName = `exts-chrome-${version}.zip`;
-  const dmgName = `exts-mac-${version}.dmg`;
+  const zipName = 'exts-chrome.zip';
+  const dmgName = 'exts-mac.dmg';
   const zipPath = join(releaseDirectory, zipName);
   const dmgPath = join(releaseDirectory, dmgName);
-  const checkConflicts = () => {
-    for (const path of [zipPath, dmgPath]) {
-      if (existsSync(path)) throw new Error(`同版本分发包已存在，不覆盖：${path}`);
-    }
-  };
   const execute = (label, command, args, options = {}) => {
     const result = run(command, args, { stdio: 'inherit', ...options });
     if (result.error || result.status !== 0) {
@@ -86,17 +115,15 @@ export function releaseAll({
     return result.stdout;
   };
 
-  checkConflicts();
   for (const [command, args] of [['/usr/bin/zip', ['-v']], ['/usr/bin/unzip', ['-v']], ['/usr/bin/hdiutil', ['help']]]) {
     execute(`检查打包工具 ${command}`, command, args, { stdio: 'ignore' });
   }
   const output = build({ platform, run });
   if (output.version !== version) throw new Error('构建产物版本与本次 release 版本不一致');
   readProjectVersion(version);
-  checkConflicts();
   mkdirSync(releaseDirectory, { recursive: true });
-  const stagingDirectory = mkdtempSync(join(releaseDirectory, '.exts-release-'));
-  const published = [];
+  const stagingDirectory = mkdtempSync(join(releaseDirectory, '.exts-staging-'));
+  let keepStaging = false;
 
   try {
     const stagedZip = join(stagingDirectory, zipName);
@@ -120,18 +147,16 @@ export function releaseAll({
     execute('校验 DMG', '/usr/bin/hdiutil', ['verify', stagedDmg]);
     readProjectVersion(version);
 
-    // 暂存与最终文件同盘；硬链接原子创建，目标已存在时失败而不覆盖。
-    for (const [source, target] of [[stagedZip, zipPath], [stagedDmg, dmgPath]]) {
-      linkSync(source, target);
-      published.push(target);
-    }
+    publishReleaseFiles([
+      { source: stagedZip, target: zipPath },
+      { source: stagedDmg, target: dmgPath },
+    ], stagingDirectory);
     return { version, zipPath, dmgPath };
   } catch (error) {
-    // 只撤销本次已经创建的文件，不删除其他版本或先前存在的包。
-    for (const path of published) rmSync(path, { force: true });
+    keepStaging = Boolean(error.recoveryDirectory);
     throw error;
   } finally {
-    rmSync(stagingDirectory, { recursive: true, force: true });
+    if (!keepStaging) rmSync(stagingDirectory, { recursive: true, force: true });
   }
 }
 

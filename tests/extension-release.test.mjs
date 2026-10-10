@@ -7,7 +7,7 @@ import { test } from 'node:test';
 import * as release from '../scripts/release.mjs';
 import { readProjectVersion } from '../scripts/version.mjs';
 
-test('扩展打包生成真实 ZIP，根 Manifest 和入口内容完整，重试不覆盖旧包', () => {
+test('扩展打包生成真实 ZIP，根 Manifest 和入口内容完整，再次打包安全替换旧包', () => {
   assert.equal(typeof release.releaseExtension, 'function');
   const root = mkdtempSync(join(tmpdir(), 'exts-chrome-'));
   try {
@@ -18,7 +18,7 @@ test('扩展打包生成真实 ZIP，根 Manifest 和入口内容完整，重试
     writeFileSync(join(extensionDir, 'icon.png'), 'fixture');
     writeFileSync(join(extensionDir, 'newtab.html'), '<html>首版扩展</html>');
     const output = release.releaseExtension({ extensionDir, releaseDirectory, build() {} });
-    assert.equal(output.zipPath, join(releaseDirectory, `exts-chrome-${readProjectVersion()}.zip`));
+    assert.equal(output.zipPath, join(releaseDirectory, 'exts-chrome.zip'));
     assert(existsSync(output.zipPath));
     const archive = process.platform === 'win32'
       ? spawnSync('tar', ['-tf', output.zipPath], { encoding: 'utf8' })
@@ -31,9 +31,14 @@ test('扩展打包生成真实 ZIP，根 Manifest 和入口内容完整，重试
       : spawnSync('unzip', ['-p', output.zipPath, 'newtab.html'], { encoding: 'utf8' });
     assert.equal(entry.status, 0, entry.stderr);
     assert.equal(entry.stdout, '<html>首版扩展</html>');
-    const previous = readFileSync(output.zipPath);
-    assert.throws(() => release.releaseExtension({ extensionDir, releaseDirectory, build() { assert.fail('冲突时不得构建'); } }), /已存在/);
-    assert.deepEqual(readFileSync(output.zipPath), previous);
+    writeFileSync(join(extensionDir, 'newtab.html'), '<html>重新打包</html>');
+    const updated = release.releaseExtension({ extensionDir, releaseDirectory, build() {} });
+    assert.equal(updated.zipPath, output.zipPath);
+    const content = process.platform === 'win32'
+      ? spawnSync('tar', ['-xOf', updated.zipPath, 'newtab.html'], { encoding: 'utf8' })
+      : spawnSync('unzip', ['-p', updated.zipPath, 'newtab.html'], { encoding: 'utf8' });
+    assert.equal(content.status, 0, content.stderr);
+    assert.equal(content.stdout, '<html>重新打包</html>');
     assert.deepEqual(readdirSync(releaseDirectory), [output.zipPath.split(/[\\/]/).at(-1)]);
   } finally {
     rmSync(root, { recursive: true, force: true });

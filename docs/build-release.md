@@ -1,12 +1,12 @@
 # 构建、版本与本地分发规范
 
-三端产品共用根版本，开发命令保持独立；最终产物及可配置的构建缓存统一生成在仓库根 dist。本文是命令、产物路径和版本消费规则的维护入口，动态实施及验收状态以 [Issue](changes/issues/2026-10-10-repo-unify-build-release-issue.md) 为准。
+三端产品共用根版本，开发命令保持独立；最终产物及可配置的构建缓存统一生成在仓库根 dist。本文是命令、产物路径和版本消费规则的维护入口，当前固定附件与发布改造状态以 [Issue](changes/issues/2026-10-11-exts-fixed-release-assets-issue.md) 为准。
 
 ## 唯一产品版本
 
 只手动修改根 package.json 的 version，初始版本为 1.0.0。scripts/version.mjs 是所有需要产品版本的步骤共用的读取与校验入口，不改写文件、不自动升级、不从环境变量、子应用、Git 标签或默认值获取替代版本。
 
-版本必须为三段数字，主版本范围 1–9999，次版本和修订版本范围 0–99；无前导零和预发布后缀。同一值用于扩展 Manifest、桌面营销版本、桌面构建编号及 ZIP/DMG 文件名。内部工具包和第三方依赖版本独立维护，不参与产品版本同步。
+版本必须为三段数字，主版本范围 1–9999，次版本和修订版本范围 0–99；无前导零和预发布后缀。同一值用于扩展 Manifest、桌面营销版本、桌面构建编号及 Release Tag；ZIP/DMG 附件文件名固定，不包含版本。内部工具包和第三方依赖版本独立维护，不参与产品版本同步。
 
 ```sh
 node scripts/version.mjs
@@ -48,8 +48,8 @@ dist/
 │  ├─ chrome-mv3/
 │  └─ exts.app/
 └─ release/
-   ├─ exts-chrome-<版本号>.zip
-   └─ exts-mac-<版本号>.dmg
+   ├─ exts-chrome.zip
+   └─ exts-mac.dmg
 ```
 
 - 应用内部不再生成 dist 或 DerivedData；dist 不纳入 Git。每端仅清理、更新自己的目标，禁止清空公共 dist、dev、build 或 release。
@@ -84,19 +84,21 @@ dist/
 
 project.yml 是原生配置入口，desk 命令先用 XcodeGen 生成工程再构建并传入根版本；不要依赖尚未重新生成的旧工程直接验证新身份。桌面 dev 构建后打开应用，不提供源码自动热更新。
 
+官网固定使用 https://github.com/linguio/exts/releases/latest/download/exts-chrome.zip 与 exts-mac.dmg 对应地址，不查询 API、不使用网站构建版本拼接。正式发布必须设置 Latest 并包含对应固定附件；缺少 macOS 包时该链接可不存在。发布新产品版本无需为下载地址重新构建官网。
+
 ## 分发包
 
-附件统一使用产品名、平台和根版本：exts-chrome-<版本>.zip、exts-mac-<版本>.dmg；Tag 使用 v<版本>，Release 标题使用 Exts <版本>。首版 1.0.0 只发布 Chrome 扩展，不构建或发布 desktop。
+附件固定为 exts-chrome.zip、exts-mac.dmg，不上传带版本号副本；包内版本仍取根版本；Tag 使用 v<版本>，Release 标题使用 Exts <版本>。首版 1.0.0 只发布 Chrome 扩展，不构建或发布 desktop。
 
-pnpm ext:release 独立构建扩展，检查 Manifest 版本、新标签页入口及图标资源，生成 ZIP 并校验后发布到根 dist/release。同版本文件已存在时拒绝覆盖。Windows 使用系统 PowerShell/.NET ZIP，Linux/macOS 使用 zip/unzip；此命令不构建网站或桌面，不创建 Tag 或上传。
+pnpm ext:release 独立构建扩展，检查 Manifest 版本、新标签页入口及图标资源，生成 ZIP 并校验后发布到根 dist/release。本地允许再次打包，完成暂存生成与校验后替换固定文件，失败保留旧包。Windows 使用系统 PowerShell/.NET ZIP，Linux/macOS 使用 zip/unzip；此命令不构建网站或桌面，不创建 Tag 或上传。
 
-手动流程 .github/workflows/exts-chrome-release.yml 仅允许 main，执行冻结安装、发布脚本与稳定目录测试、扩展测试、类型检查、构建打包与体积检查。全部通过后创建指向本次构建提交的 v<版本> Tag 与 Release 草稿，只上传 Chrome ZIP。已有 Release 拒绝覆盖，已有 Tag 指向不同提交时失败；失败草稿需人工检查，不自动删除或覆盖。
+手动流程 .github/workflows/exts-chrome-release.yml 仅允许 main，执行冻结安装、发布脚本与稳定目录测试、扩展测试、类型检查、构建打包与体积检查。全部通过后创建指向本次构建提交的 v<版本> Tag 与 Release 草稿，只上传固定名 exts-chrome.zip。已有 Release 拒绝覆盖，已有 Tag 指向不同提交时失败；失败草稿需人工检查，不自动删除或覆盖。
 
 首次运行需先提交并推送 workflow 到 main，再从 Actions 手动运行。下载草稿 ZIP 后由用户解压并在 Chrome/Edge 扩展管理页加载验收；公开 Release 后核实附件下载地址。草稿和成功打包都不等于公开发布成功，GitHub 自动生成的 Source code ZIP 不是扩展安装包。
 
-pnpm release 先检查版本、平台、工具与同版本文件冲突，再调用统一 build。正式扩展 ZIP 根层直接包含 manifest.json；DMG 含正式 exts.app 和 Applications 安装入口，使用系统 zip、unzip、ditto、hdiutil 等工具生成和校验，不引入打包依赖。
+pnpm release 先检查版本、平台与工具，再调用统一 build；本地旧固定包不阻止构建。正式扩展 ZIP 根层直接包含 manifest.json；DMG 含正式 exts.app 和 Applications 安装入口，使用系统 zip、unzip、ditto、hdiutil 等工具生成和校验，不引入打包依赖。
 
-同版本 ZIP 或 DMG 任一已存在时，开始前报错，不覆盖旧包。构建或校验失败不报告成功，临时文件清理，本次失败的包不留下正式名称。成功发布最终文件名时再次防止覆盖；不同版本的旧包保留。
+新包在 dist/release/.exts-staging-<随机值> 中生成并校验；两包全部校验后备份旧目标，再以同盘重命名替换固定文件。本地成功替换后清理暂存，生成/校验失败不改旧包；部分替换失败撤销新文件并恢复旧文件。恢复也失败时保留备份目录并给出可诊断路径，不报告成功或删除备份。不清空 release，不删除既有无关或历史文件；正式历史附件保存在各自 GitHub Release。
 
 .app 是可运行的应用，.dmg 是分发容器。当前 DMG 使用本机构建架构，未做 Apple 分发签名、公证、通用架构或自动更新；生成本地镜像不等同于具备完整公开分发条件。
 

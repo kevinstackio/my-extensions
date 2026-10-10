@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -9,6 +9,68 @@ import { test } from 'node:test';
 const versionModule = new URL('../scripts/version.mjs', import.meta.url);
 const buildModule = new URL('../scripts/build.mjs', import.meta.url);
 const releaseModule = new URL('../scripts/release.mjs', import.meta.url);
+
+test('固定两包中第二个替换失败时恢复旧包，无旧包时撤销新包', async (context) => {
+  const { publishReleaseFiles } = await import(releaseModule);
+  assert.equal(typeof publishReleaseFiles, 'function');
+  for (const hasPrevious of [false, true]) {
+    await context.test(hasPrevious ? '恢复旧包' : '撤销新包', () => {
+      const root = mkdtempSync(join(tmpdir(), 'exts-replace-'));
+      const stagingDirectory = join(root, '.exts-staging-test');
+      mkdirSync(stagingDirectory);
+      const files = ['exts-chrome.zip', 'exts-mac.dmg'].map((name) => ({ source: join(stagingDirectory, name), target: join(root, name) }));
+      try {
+        for (const file of files) {
+          writeFileSync(file.source, 'new-package');
+          if (hasPrevious) writeFileSync(file.target, 'old-package');
+        }
+        assert.throws(() => publishReleaseFiles(files, stagingDirectory, {
+          rename(source, target) {
+            if (source === files[1].source) throw new Error('模拟文件占用');
+            renameSync(source, target);
+          },
+        }), /模拟文件占用/);
+        for (const file of files) {
+          if (hasPrevious) assert.equal(readFileSync(file.target, 'utf8'), 'old-package');
+          else assert(!existsSync(file.target));
+        }
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    });
+  }
+});
+
+test('恢复操作也被文件占用阻止时保留旧包备份并给出恢复目录', async () => {
+  const { publishReleaseFiles } = await import(releaseModule);
+  assert.equal(typeof publishReleaseFiles, 'function');
+  const root = mkdtempSync(join(tmpdir(), 'exts-recovery-'));
+  const stagingDirectory = join(root, '.exts-staging-test');
+  mkdirSync(stagingDirectory);
+  const files = ['exts-chrome.zip', 'exts-mac.dmg'].map((name) => ({ source: join(stagingDirectory, name), target: join(root, name) }));
+  try {
+    for (const file of files) {
+      writeFileSync(file.source, 'new-package');
+      writeFileSync(file.target, 'old-package');
+    }
+    let count = 0;
+    assert.throws(() => publishReleaseFiles(files, stagingDirectory, {
+      rename(source, target) {
+        if (++count > 1) throw new Error('模拟替换及恢复失败');
+        renameSync(source, target);
+      },
+    }), (error) => {
+      assert.equal(error.recoveryDirectory, stagingDirectory);
+      assert(error.message.includes(stagingDirectory));
+      return true;
+    });
+    const retained = readdirSync(stagingDirectory).filter((name) => name.startsWith('.previous-'));
+    assert.equal(retained.length, 2);
+    assert(retained.every((name) => readFileSync(join(stagingDirectory, name), 'utf8') === 'old-package'));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
 
 test('产品版本校验拒绝缺失、非数字、前导零和平台不兼容版本', async () => {
   const { validateProjectVersion } = await import(versionModule);
@@ -61,14 +123,14 @@ test('非 macOS release 不启动构建或打包工具', async () => {
   assert.throws(() => releaseAll({ platform: 'win32', build() { assert.fail('不得构建'); }, run() { assert.fail('不得打包'); } }), /macOS/);
 });
 
-test('同版本分发包已存在时拒绝覆盖且不启动构建', async () => {
+test('已有固定包时构建失败仍保留旧包', async () => {
   const { releaseAll } = await import(releaseModule);
   const { readProjectVersion } = await import(versionModule);
   const root = mkdtempSync(join(tmpdir(), 'exts-release-conflict-'));
   try {
-    const existing = join(root, `exts-chrome-${readProjectVersion()}.zip`);
+    const existing = join(root, 'exts-chrome.zip');
     writeFileSync(existing, 'previous');
-    assert.throws(() => releaseAll({ platform: 'darwin', releaseDirectory: root, build() { assert.fail('不得构建'); }, run() { assert.fail('不得启动工具'); } }), /已存在/);
+    assert.throws(() => releaseAll({ platform: 'darwin', releaseDirectory: root, build() { throw new Error('构建失败'); }, run() { return { status: 0 }; } }), /构建失败/);
     assert.equal(readFileSync(existing, 'utf8'), 'previous');
     assert.deepEqual(readdirSync(root), [existing.split(/[\\/]/).at(-1)]);
   } finally {
@@ -102,14 +164,14 @@ test('ZIP 校验失败不发布残缺文件并清理本次暂存', async () => {
         return { status: args.includes('-tq') ? 2 : 0 };
       },
     }), /ZIP/);
-    assert(!existsSync(join(root, `exts-chrome-${readProjectVersion()}.zip`)));
+    assert(!existsSync(join(root, 'exts-chrome.zip')));
     assert.deepEqual(readdirSync(root), []);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
 });
 
-test('release 在系统命令成功时发布两包，DMG 校验失败时不发布任何包', async (context) => {
+test('release 成功时替换固定两包，DMG 校验失败保留旧包', async (context) => {
   const { releaseAll } = await import(releaseModule);
   const { readProjectVersion } = await import(versionModule);
   for (const failVerify of [false, true]) {
@@ -117,6 +179,9 @@ test('release 在系统命令成功时发布两包，DMG 校验失败时不发�
       const root = mkdtempSync(join(tmpdir(), 'exts-release-flow-'));
       const version = readProjectVersion();
       const releaseDirectory = join(root, 'release');
+      mkdirSync(releaseDirectory);
+      writeFileSync(join(releaseDirectory, 'exts-chrome.zip'), 'old-zip');
+      writeFileSync(join(releaseDirectory, 'exts-mac.dmg'), 'old-dmg');
       const extensionDir = join(root, 'extension');
       const desktopApp = join(root, 'exts.app');
       mkdirSync(extensionDir);
@@ -146,10 +211,14 @@ test('release 在系统命令成功时发布两包，DMG 校验失败时不发�
         };
         if (failVerify) {
           assert.throws(() => releaseAll(options), /校验 DMG.*9/);
-          assert.deepEqual(readdirSync(releaseDirectory), []);
+          assert.equal(readFileSync(join(releaseDirectory, 'exts-chrome.zip'), 'utf8'), 'old-zip');
+          assert.equal(readFileSync(join(releaseDirectory, 'exts-mac.dmg'), 'utf8'), 'old-dmg');
+          assert.deepEqual(readdirSync(releaseDirectory).sort(), ['exts-chrome.zip', 'exts-mac.dmg']);
         } else {
           const output = releaseAll(options);
           assert.equal(output.version, version);
+          assert.equal(output.zipPath, join(releaseDirectory, 'exts-chrome.zip'));
+          assert.equal(output.dmgPath, join(releaseDirectory, 'exts-mac.dmg'));
           assert.equal(readFileSync(output.zipPath, 'utf8'), 'zip-fixture');
           assert.equal(readFileSync(output.dmgPath, 'utf8'), 'dmg-fixture');
           assert.equal(readdirSync(releaseDirectory).length, 2);
