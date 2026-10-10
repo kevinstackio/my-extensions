@@ -79,8 +79,7 @@ docs/
 
 ## 当前 Issue
 
-- [重建 Exts 产品官网](./issues/2026-10-11-website-product-homepage-issue.md) · [Commit 记录](./commits/2026-10-11-website-product-homepage-commit.md) · [设计](../superpowers/specs/2026-10-11-website-product-homepage-design.md)
-  - 状态：待提交；用户已确认验收通过，React/shadcn 官网与根版本两端直链完成，两次本地 Commit 的拆分与 message 待最终批准；[Plan](../superpowers/plans/2026-10-11-website-product-homepage.md) 已执行，未提交或部署。
+当前没有活动 Issue。
 
 ## Issue 队列
 
@@ -91,6 +90,8 @@ docs/
 - [X Download 下载失败恢复](./todo.md)
 
 ## 已完成
+
+- [重建 Exts 产品官网](./issues/2026-10-11-website-product-homepage-issue.md) · [Commit 记录](./commits/2026-10-11-website-product-homepage-commit.md)；用户已验收并明确批准两次本地提交，React/shadcn 官网与根版本 macOS/Chrome 直链已交付，域名部署留在后续队列。
 
 - [添加 npm 与 Simple Icons 书签](./issues/2026-10-10-extension-npm-simpleicons-bookmarks-issue.md) · [Commit 记录](./commits/2026-10-10-extension-npm-simpleicons-bookmarks-commit.md)；用户已验收通过并批准本地提交。
 

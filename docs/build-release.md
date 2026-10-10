@@ -56,7 +56,7 @@ dist/
 - 网站和正式扩展直接输出到根 build，没有一份应用内部的正式副本。
 - 扩展临时重建输出在根 .cache/extension，成功后由公共稳定发布 hook 更新根 dev 稳定目录。两份目录分别用于构建和加载，不能合并；失败保留上一份稳定版本。
 - 桌面在根 .cache/desktop/DerivedData 编译，完整 .app 校验后发布到根 dev 或 build。桌面编译缓存、符号产物不复制到最终目录。
-- 网站开发不生成单独的 dev 分发目录。VitePress 构建缓存放在根 .cache/website。
+- 网站开发不生成单独的 dev 分发目录。React 网站使用 Vite 构建，Vite 缓存放在根 dist/.cache/website/vite，生产产物仍为根 dist/build/exts-web。
 - .wxt 类型目录、node_modules 及工具在依赖目录内部的缓存仍按工具约定保留；它们不是浏览器加载、运行、部署或分发的产物。
 - 调整输出位置后，应停止并重新启动此前的开发命令，避免旧进程继续使用旧配置；扩展应重新加载新的稳定目录。
 
