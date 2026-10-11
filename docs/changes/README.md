@@ -79,11 +79,12 @@ docs/
 
 ## 当前 Issue
 
-无；前一项已完成，下一项官网部署进入讨论。
+- [配置官网手动部署并统一 Actions 名称](./issues/2026-10-11-website-manual-pages-deploy-issue.md) · [Commit 记录](./commits/2026-10-11-website-manual-pages-deploy-commit.md)
+  - 状态：待验收；本地阶段已验收且用户已批准本地代码提交；实际 Actions、域名和 HTTPS 待用户操作确认。
 
 ## Issue 队列
 
-- 部署 Exts 官网到 GitHub Pages 并接入 exts.linguio.dev：用户已确认后续交付目标；前置发布 Issue 结项 Commit 成功后再创建对应 Issue 与 Commit 记录，范围包含部署流程、必要 DNS 和 HTTPS 验证。
+无。
 
 ## 待办
 

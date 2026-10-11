@@ -1,0 +1,56 @@
+name: Exts Website Deploy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: exts-website-deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout website commit
+        uses: actions/checkout@v5.0.0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+        with:
+          version: 12.4.2
+      - name: Setup Node.js
+        uses: actions/setup-node@v5.0.0
+        with:
+          node-version: 24.16.0
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5.0.0
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck website
+        run: pnpm --filter @exts/website typecheck
+      - name: Build website
+        run: pnpm web:build
+      - name: Upload website artifact
+        uses: actions/upload-pages-artifact@v4.0.0
+        with:
+          path: dist/build/exts-web
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy website to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5

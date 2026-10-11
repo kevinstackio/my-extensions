@@ -1,4 +1,4 @@
-name: Exts Chrome Release
+name: Exts Release Deploy
 
 on:
   workflow_dispatch:

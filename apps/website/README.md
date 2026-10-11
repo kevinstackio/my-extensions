@@ -49,7 +49,20 @@ Lucide React 用于通用状态图标，平台与 GitHub 用品牌 SVG。Google 
 
 使用类型检查、构建、产物直链核对与现有根构建边界测试；无 API 测试、假 DOM、截图或浏览器交互测试。页面布局、键盘与指针流程、真实下载由用户在 Chrome 验收。
 
-预定域名 https://exts.linguio.dev/；本工作项仅生成静态网站，不创建 CNAME、部署 workflow、修改 DNS 或开启 HTTPS。上线属于后续独立 Issue。
+## 手动部署
+
+官网 workflow 为 .github/workflows/exts-website-deploy.yml，Actions 显示名称为 Exts Website Deploy。仅支持手动触发并限制 main；提交代码不会自动部署。流程使用固定工具版本执行冻结安装、网站类型检查与 web:build，上传 dist/build/exts-web 后部署 GitHub Pages；检查或构建失败不会执行部署。同一时间只运行一条官网部署流水线，运行中的部署不会被新请求取消。
+
+首次上线先在仓库 Settings → Pages 将 Source 设为 GitHub Actions，将 Custom domain 保存为 exts.linguio.dev；随后在 DNS 管理平台配置 CNAME：exts → linguio.github.io。使用 Actions 发布时无需在源码添加 CNAME 文件。DNS 检查及证书就绪后开启 Enforce HTTPS。
+
+配置提交并推送到 main 后，用户打开 Actions → Exts Website Deploy → Run workflow，选择 main 并手动运行。成功后访问 https://exts.linguio.dev/，确认静态资源、页面与原有下载链接。其他分支触发会跳过构建和部署。实际网站视觉与交互由用户在 Chrome 或 Edge 验收。
+
+Exts Release Deploy 为独立产品发布流程，仍由用户从 main 手动触发，生成扩展 ZIP 与 Release 草稿；公开 Release 仍由用户审核操作。官网部署不会触发产品发布，产品发布也不会触发官网部署。官网依赖固定 latest 下载链接，不需要随产品版本重新部署。
+
+GitHub Pages 使用 workflow 的 GITHUB_TOKEN 与 OIDC，不需要额外 PAT 或部署密钥。仓库或组织的 Actions 策略及 github-pages 环境规则需要允许所用 Actions 与 main 部署；已有审批规则仍需由用户处理。
+
+- [部署 Issue](../../docs/changes/issues/2026-10-11-website-manual-pages-deploy-issue.md)
+- [GitHub 官方自定义 workflow 说明](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
 
 - [当前 Issue](../../docs/changes/issues/2026-10-11-website-product-homepage-issue.md)
 - [设计](../../docs/superpowers/specs/2026-10-11-website-product-homepage-design.md)
